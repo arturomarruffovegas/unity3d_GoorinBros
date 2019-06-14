@@ -5,12 +5,25 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
 
+public struct HatData
+{
+    public string hatId;
+    public string hatName;
+    public string hatBrand;
+    public Sprite hatPhoto;
+    public string[] hatColorList;
+    public string[] hatSizeList;
+    public string hatColor;
+}
+
 public class HatSlidingContentAR : MonoBehaviour
 {
-    public GameObject m_ContentHatPanel;
+    [Header("Panel Prefab")]
+    public GameObject m_ContentHatPanelPrefb;
+
+    //Swipe Movement
     private List<GameObject> m_ListContentHatPanel;
     private float m_ListElementOffsetX = 500.0f;
-
     private int m_CurrentIndexElement = 0;
     private bool m_IsDragging;
     private float m_Time;
@@ -18,18 +31,38 @@ public class HatSlidingContentAR : MonoBehaviour
 
     public HatArController m_HatArController;
 
+    //Test Data
+    public Sprite hatPhoto;
+    public Sprite hatPhoto2;
+    private List<HatData> m_HatData;
+
     // Start is called before the first frame update
     void Start()
     {
         m_ListContentHatPanel = new List<GameObject>();
         m_ListElementOffsetX = Screen.width;
 
-        List<GameObject> listContentHatPanel = new List<GameObject>();
-        //listContentHatPanel.Add(new GameObject());
-        //listContentHatPanel.Add(new GameObject());
-        //listContentHatPanel.Add(new GameObject());
-        //Debug.Log(listContentHatPanel.Count);
-        LoadContent(listContentHatPanel);
+        m_HatData = new List<HatData>();
+        HatData d1 = new HatData();
+        d1.hatId = "benjaminPaul";
+        d1.hatName = "hats_benjaminPaul";
+        d1.hatBrand = "Fedora";
+        d1.hatPhoto = hatPhoto;
+        d1.hatColorList = new string[] { "1", "2", "3" };
+        d1.hatSizeList = new string[] { "s", "m", "l" };
+        d1.hatColor = "black";
+
+        HatData d2 = new HatData();
+        d2.hatId = "countryLine";
+        d2.hatName = "hats_countryLine";
+        d2.hatBrand = "Fedora";
+        d2.hatPhoto = hatPhoto2;
+        d2.hatColorList = new string[] { "1", "2" };
+        d2.hatSizeList = new string[] { "m", "l" };
+        d2.hatColor = "black";
+
+        m_HatData.Add(d1);
+        m_HatData.Add(d2);
     }
 
     // Update is called once per frame
@@ -37,7 +70,9 @@ public class HatSlidingContentAR : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.L))
         {
-            SwipeMovement(-1.0f);
+            //SwipeMovement(-1.0f);
+            //List<GameObject> listContentHatPanel = new List<GameObject>();
+            LoadContent(m_HatData);
         }
     }
 
@@ -54,29 +89,41 @@ public class HatSlidingContentAR : MonoBehaviour
         SwipeMovement(diference);
     }
 
-    public void LoadContent(List<GameObject> listContentHatPanel)
+    public void LoadContent(List<HatData> listHatData)
     {
         //for(int i = 0; i < listContentHatPanel.Count; i++)
-        for(int i = 0; i < 3; i++)
+        for (int i = 0; i < listHatData.Count; i++)
         {
-            GameObject element = (GameObject)Instantiate(m_ContentHatPanel);
+            GameObject element = (GameObject)Instantiate(m_ContentHatPanelPrefb, transform);
             element.SetActive(true);
-            element.transform.parent = transform;            
+            //element.transform.parent = transform;            
             element.transform.position += new Vector3(m_ListElementOffsetX * i, 0, 0);
             element.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
             //Load data from list (Image, description, etc)
-
             element.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(ChangeHat);
+            //element.GetComponent<HatPanelArPrefab>().LoadInformation("hats_benjaminPaul", "hats_benjaminPaul",
+            //                                         "Fedora", hatPhoto, new string[] { "1", "2", "3" }, new string[] { "s", "m", "l" });
+
+            element.GetComponent<HatPanelArPrefab>().LoadInformation(listHatData[i].hatId,
+                                                                     listHatData[i].hatName,
+                                                                     listHatData[i].hatBrand,
+                                                                     listHatData[i].hatPhoto,
+                                                                     listHatData[i].hatColorList,
+                                                                     listHatData[i].hatSizeList,
+                                                                     listHatData[i].hatColor);
 
             m_ListContentHatPanel.Add(element);
-            
-        }        
+        }
+
+        //Load first element / Load current element 
+        m_HatArController.LoadHatBundle(listHatData[m_CurrentIndexElement].hatId, listHatData[m_CurrentIndexElement].hatColor);
     }
 
     public void ChangeHat()
     {
-        m_HatArController.LoadHat("Hat" + (m_CurrentIndexElement + 1));
+        //m_HatArController.LoadHat("Hat" + (m_CurrentIndexElement + 1));
+        m_HatArController.LoadHatBundle(m_HatData[m_CurrentIndexElement].hatId, m_HatData[m_CurrentIndexElement].hatColor);
     }
 
     public void SwipeMovement(float swipeDirection)
