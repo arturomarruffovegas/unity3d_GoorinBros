@@ -79,7 +79,6 @@ PlayerSettings:
   usePlayerLog: 1
   bakeCollisionMeshes: 0
   forceSingleInstance: 0
-  useFlipModelSwapchain: 1
   resizableWindow: 0
   useMacAppStoreValidation: 0
   macAppStoreCategory: public.app-category.games
@@ -160,7 +159,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.NextLatam.GoorinBros
+    Android: com.NextLatam.FaceTracking
     iPhone: com.NextLatam.GoorinBros
   buildNumber: {}
   AndroidBundleVersionCode: 1

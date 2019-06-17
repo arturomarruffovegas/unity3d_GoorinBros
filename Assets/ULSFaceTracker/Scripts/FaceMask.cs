@@ -130,6 +130,7 @@ class FaceMask : MonoBehaviour
 	bool pause = false;
 	bool enableTracker = true;
 
+    /*
 	void OnGUI() {
 #if DRAW_MARKERS
 		if (GUILayout.Button ("Show Markers", GUILayout.Height (80))) {
@@ -180,4 +181,5 @@ class FaceMask : MonoBehaviour
 		}
 
 	}
+	*/   
 }

@@ -108,43 +108,47 @@ class Object3D : MonoBehaviour
 		// get FOV for AR camera by calibration function
 		Plugins.ULS_UnityCalibration (intrinsic_camera_matrix, w, h, _fovx, _fovy);
 
-		//Debug.Log ("fovx:" + _fovx [0] + ",fovy:" + _fovy [0]);
-		//Debug.Log ("screen width:" + Screen.width + ",height:" + Screen.height);
-		//Debug.Log ("camera width:" + w + ",height:" + h);
-		//Debug.Log ("rotate: "+rotate);
+        //Debug.Log ("fovx:" + _fovx [0] + ",fovy:" + _fovy [0]);
+        //Debug.Log ("screen width:" + Screen.width + ",height:" + Screen.height);
+        //Debug.Log ("camera width:" + w + ",height:" + h);
+        //Debug.Log ("rotate: "+rotate);
 
-		// adjust transforom for mapping tracker points
+        // adjust transforom for mapping tracker points
 #if UNITY_STANDALONE || UNITY_EDITOR
-		// adjust scale and position to map tracker points
-		transform.localScale = new Vector3 (w, h, 1);
-		transform.localPosition = new Vector3 (w/2, h/2, 1);
-		transform.parent.localScale = new Vector3 (-1, -1, 1);
-		transform.parent.localPosition = new Vector3 (w/2, h/2, 0);
-		Camera.main.orthographicSize = h / 2;
-		ARCamera.fieldOfView = _fovy[0];
-		adjustMatrix = Matrix4x4.TRS (Vector3.zero, Quaternion.identity, new Vector3 (-1, -1, 1));
+        // adjust scale and position to map tracker points
+        transform.localScale = new Vector3(w, h, 1);
+        transform.localPosition = new Vector3(w / 2, h / 2, 1);
+        transform.parent.localScale = new Vector3(-1, -1, 1);
+        transform.parent.localPosition = new Vector3(w / 2, h / 2, 0);
+        Camera.main.orthographicSize = h / 2;
+        ARCamera.fieldOfView = _fovy[0];
+        adjustMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(-1, -1, 1));
 
 #elif UNITY_IOS || UNITY_ANDROID
-		transform.localScale = new Vector3 (w, h, 1);
-		transform.localPosition = new Vector3 (w/2, h/2, 1); //anchor: left-bottom
-		transform.parent.localPosition = Vector3.zero; //reset position for rotation
-		transform.parent.transform.eulerAngles = new Vector3 (0, 0, rotate); //orientation
-		transform.parent.localPosition = transform.parent.transform.TransformPoint(-transform.localPosition); //move to center
+        transform.localScale = new Vector3(w, h, 1);
+        transform.localPosition = new Vector3(w / 2, h / 2, 1); //anchor: left-bottom
+        transform.parent.localPosition = Vector3.zero; //reset position for rotation
+        transform.parent.transform.eulerAngles = new Vector3(0, 0, rotate); //orientation
+        transform.parent.localPosition = transform.parent.transform.TransformPoint(-transform.localPosition); //move to center
 
-		if (Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight) {
-			Camera.main.orthographicSize = h/2;			
-			float v =  (float)(w * Screen.height) / (h * Screen.width);
-			ARCamera.rect = new Rect ((1-v)*0.5f, 0, v, 1); // AR viewport
-			ARCamera.fieldOfView = _fovy[0];
-		} else {
-			float aspect = ((float)Screen.height)/((float)Screen.width)*h/w;
-			float v = 1f / aspect;
-			Camera.main.orthographicSize = w/2 * aspect; 
-			ARCamera.rect = new Rect (0, (1-v)*0.5f, 1, v); // AR viewport
-			ARCamera.fieldOfView = _fovx[0];
-		}
+        //if (Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight) {
+        //	Camera.main.orthographicSize = h/2;			
+        //	float v =  (float)(w * Screen.height) / (h * Screen.width);
+        //	ARCamera.rect = new Rect ((1-v)*0.5f, 0, v, 1); // AR viewport
+        //	ARCamera.fieldOfView = _fovy[0];
+        //} else {
+            float aspect = ((float)Screen.height) / ((float)Screen.width) * h / w;
+            float v = 1f / aspect;
+            //Camera.main.orthographicSize = w/2 * aspect; 
+            Camera.main.orthographicSize = h / 2;
+            //ARCamera.rect = new Rect (0, (1-v)*0.5f, 1, v); // AR viewport
+            ARCamera.rect = new Rect(0, 0, 1, 1); // AR viewport
+            ARCamera.fieldOfView = _fovx[0] / aspect;
 
-		adjustMatrix = Matrix4x4.TRS (Vector3.zero, Quaternion.Euler(new Vector3(0,0,rotate)), new Vector3 (1, 1, 1));
+            //ARCamera.fieldOfView = _fovx[0]/ 2;
+        //}
+
+        adjustMatrix = Matrix4x4.TRS (Vector3.zero, Quaternion.Euler(new Vector3(0,0,rotate)), new Vector3 (1, 1, 1));
 #endif
 
 		initDone = true;
@@ -171,15 +175,20 @@ class Object3D : MonoBehaviour
 			ARUtils.SetTransformFromMatrix(_anchor3d.transform, ref ARM);
 
 			// apply local scale to fit user's face
-			Plugins.ULS_UnityGetScale3D (_scaleX,_scaleY,_scaleZ);
-			Vector3 s = new Vector3 (_scaleX [0], _scaleY [0], _scaleZ [0]);
-			s.Scale (_original_scale);
-			_helmet.transform.localScale = s;
+			//Plugins.ULS_UnityGetScale3D (_scaleX,_scaleY,_scaleZ);
+			//Vector3 s = new Vector3 (_scaleX [0], _scaleY [0], _scaleZ [0]);
+			//s.Scale (_original_scale);
+			//_helmet.transform.localScale = s;
 		}
+        else
+        {
+            _anchor3d.transform.position = new Vector3(0, 0, -180.0f);
+        }
 	}
 
 	bool frontal = true;
 
+    /*
 	void OnGUI() {
 #if DRAW_MARKERS
 		if (GUILayout.Button ("Show Markers", GUILayout.Height (100))) {
@@ -206,4 +215,5 @@ class Object3D : MonoBehaviour
 			SceneManager.LoadScene ("faceMask");
 		}
 	}
+	*/
 }
