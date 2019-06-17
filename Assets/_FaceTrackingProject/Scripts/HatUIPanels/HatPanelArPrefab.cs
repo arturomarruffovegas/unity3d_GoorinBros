@@ -49,7 +49,7 @@ public class HatPanelArPrefab : MonoBehaviour
             //Change Color Temp
             col.GetComponent<Image>().color = Random.ColorHSV();
 
-            col.GetComponent<HatColorButtonAR>().InitializeValues(hatId, i.ToString());
+            col.GetComponent<HatColorButtonAR>().InitializeValues(hatId, hatColorList[i]);
             //m_HatColors.Add(col);
         }
 

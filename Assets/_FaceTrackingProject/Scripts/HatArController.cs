@@ -72,7 +72,8 @@ public class HatArController : MonoBehaviour
         
         m_CurrentHat = null;
         Debug.Log(hatId + "/hats_" + hatId + "_" + hatColor);
-        m_CurrentHat = (GameObject)Instantiate(Resources.Load(hatId + "/hats_" + hatId +"_" + hatColor));
+        //m_CurrentHat = (GameObject)Instantiate(Resources.Load(hatId + "/" + "/hats_" + hatId +"_" + hatColor));
+        m_CurrentHat = (GameObject)Instantiate(Resources.Load(hatId + "/" + hatId));
         m_CurrentId = hatId;
         m_CurrentHat.transform.parent = m_HatPosition;
         m_CurrentHat.transform.localPosition = Vector3.zero;

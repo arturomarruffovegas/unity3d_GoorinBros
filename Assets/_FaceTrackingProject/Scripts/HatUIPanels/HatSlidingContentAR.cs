@@ -50,7 +50,7 @@ public class HatSlidingContentAR : MonoBehaviour
         d1.hatName = "hats_benjaminPaul";
         d1.hatBrand = "Fedora";
         d1.hatPhoto = hatPhoto;
-        d1.hatColorList = new string[] { };
+        d1.hatColorList = new string[] { "black", "gray" };
         d1.hatSizeList = new string[] { "s", "m", "l" };
         d1.hatColor = "black";
 
@@ -59,7 +59,7 @@ public class HatSlidingContentAR : MonoBehaviour
         d2.hatName = "hats_countryLine";
         d2.hatBrand = "Fedora";
         d2.hatPhoto = hatPhoto2;
-        d2.hatColorList = new string[] { };
+        d2.hatColorList = new string[] { "black", "gray"};
         d2.hatSizeList = new string[] { "m", "l" };
         d2.hatColor = "black";
 
