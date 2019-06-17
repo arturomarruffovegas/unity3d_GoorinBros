@@ -76,7 +76,7 @@ class FaceMask : MonoBehaviour
 		// adjust scale and position to map tracker points
 #if UNITY_STANDALONE || UNITY_EDITOR
 		// adjust scale and position to map tracker points
-		transform.localScale = new Vector3 (w, -h, 1);
+		transform.localScale = new Vector3 (w, h, 1);
 		transform.localPosition = new Vector3 (w/2, h/2, 1);
 		transform.parent.localScale = new Vector3 (-1, -1, 1);
 		transform.parent.localPosition = new Vector3 (w/2, h/2, 0);
@@ -142,14 +142,16 @@ class FaceMask : MonoBehaviour
 			maskTextureIndex = (maskTextureIndex + 1) % _masks.Length;
 			faceMask.GetComponent<Renderer> ().material.mainTexture = _masks [maskTextureIndex];
 		}
-
 		GUILayout.Space (8);
+
 		if (GUILayout.Button ("Toggle Tracker", GUILayout.Height (100))) {
 			enableTracker ^= true;
 			Plugins.ULS_UnityTrackerEnable (enableTracker);
 		}
-
 		GUILayout.Space (8);
+
+#if UNITY_STANDALONE || UNITY_EDITOR
+#else
 		if (GUILayout.Button ("Switch Camera", GUILayout.Height (80))) {
 			frontal = !frontal;
 			if(frontal)
@@ -157,25 +159,25 @@ class FaceMask : MonoBehaviour
 			else
 				Plugins.ULS_UnitySetupCamera (1280, 720, 60, false);
 		}
-
 		GUILayout.Space (8);
-		if (GUILayout.Button ("Toogle FlashLight", GUILayout.Height (80))) {
-			flashLight = !flashLight;
-			Plugins.ULS_UnitySetFlashLight (flashLight);
+		if (GUILayout.Button ("Toggle FlashLight", GUILayout.Height (80))) {
+		flashLight = !flashLight;
+		Plugins.ULS_UnitySetFlashLight (flashLight);
 		}
-
 		GUILayout.Space (8);
-		if (GUILayout.Button ("Change Scene", GUILayout.Height (80))) {
-			Plugins.ULS_UnityTrackerTerminate ();
-			SceneManager.LoadScene ("Object3D");
-		}
+#endif
 
-		GUILayout.Space (8);
-		if (GUILayout.Button ("Pause camera", GUILayout.Height (80))) {
+		if (GUILayout.Button ("Toggle Camera", GUILayout.Height (80))) {
 			pause = !pause;
 			Plugins.ULS_UnityPauseCamera (pause);
 		}
+		GUILayout.Space (8);
 
-		GUILayout.Label ("FlashLight:" + Plugins.ULS_UnityGetFlashLight ());
+		if (GUILayout.Button ("Change Scene", GUILayout.Height (80))) {
+			Plugins.ULS_UnityTrackerTerminate ();
+			Debug.Log ("Change Scene");
+			SceneManager.LoadScene ("Object3D");
+		}
+
 	}
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>622431147626-t8gqf4j08cr8gk2g9vc0jv4ll5o9i2qg.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.622431147626-t8gqf4j08cr8gk2g9vc0jv4ll5o9i2qg</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCeN66qKD8c9QE2S1PF5G3_9tRjfiLsDDA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>622431147626</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.NextLatam.GoorinBros</string>
+	<key>PROJECT_ID</key>
+	<string>goorin-bros</string>
+	<key>STORAGE_BUCKET</key>
+	<string>goorin-bros.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:622431147626:ios:07d440136e1039aa</string>
+	<key>DATABASE_URL</key>
+	<string>https://goorin-bros.firebaseio.com</string>
+</dict>
+</plist>

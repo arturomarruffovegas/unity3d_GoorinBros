@@ -2,6 +2,14 @@
   <packages>
     <package>com.android.support:appcompat-v7:27.1.1</package>
     <package>com.android.support:customtabs:27.1.1</package>
+    <package>com.google.auto.value:auto-value-annotations:1.6.3</package>
+    <package>com.google.firebase:firebase-analytics:16.5.0</package>
+    <package>com.google.firebase:firebase-app-unity:6.1.1</package>
+    <package>com.google.firebase:firebase-auth:17.0.0</package>
+    <package>com.google.firebase:firebase-auth-unity:6.1.1</package>
+    <package>com.google.firebase:firebase-common:17.1.0</package>
+    <package>com.google.firebase:firebase-storage:17.0.0</package>
+    <package>com.google.firebase:firebase-storage-unity:6.1.1</package>
   </packages>
   <files>
     <file>Assets/Plugins/Android/android.arch.core.common-1.1.0.jar</file>
@@ -18,6 +26,32 @@
     <file>Assets/Plugins/Android/com.android.support.support-core-ui-27.1.1.aar</file>
     <file>Assets/Plugins/Android/com.android.support.support-core-utils-27.1.1.aar</file>
     <file>Assets/Plugins/Android/com.android.support.support-fragment-27.1.1.aar</file>
+    <file>Assets/Plugins/Android/com.android.support.support-media-compat-27.1.1.aar</file>
+    <file>Assets/Plugins/Android/com.android.support.support-v4-27.1.1.aar</file>
     <file>Assets/Plugins/Android/com.android.support.support-vector-drawable-27.1.1.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-ads-identifier-16.0.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-base-16.0.1.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-basement-16.2.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-flags-16.0.1.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-measurement-16.5.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-measurement-api-16.5.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-measurement-base-16.5.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-measurement-impl-16.5.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-measurement-sdk-16.5.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-measurement-sdk-api-16.5.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-stats-16.0.1.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-tasks-16.0.1.aar</file>
+    <file>Assets/Plugins/Android/com.google.auto.value.auto-value-annotations-1.6.3.jar</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-analytics-16.5.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-app-unity-6.1.1.aar</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-auth-17.0.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-auth-interop-17.0.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-auth-unity-6.1.1.aar</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-common-17.1.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-iid-17.1.2.aar</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-iid-interop-16.0.1.aar</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-measurement-connector-17.0.1.aar</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-storage-17.0.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.firebase.firebase-storage-unity-6.1.1.aar</file>
   </files>
 </dependencies>
