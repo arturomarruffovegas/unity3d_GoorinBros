@@ -18,6 +18,7 @@ namespace goorinAR
     {
         public AddProductToCartEvent OnAddProductToCart = new AddProductToCartEvent();
         public UnityEvent OnReturnToProducts;
+        public UnityEvent OnTryProduct;
         public UnityEvent OnViewCart;
 
         [Header("Animations")]
@@ -33,6 +34,8 @@ namespace goorinAR
         private Button backPanelButton;
         [SerializeField]
         private Button addToCartButton;
+        [SerializeField]
+        private Button tryButton;
 
         [Header("Buttons")]
         [SerializeField]
@@ -84,6 +87,8 @@ namespace goorinAR
                 OnAddProductToCart.Invoke(CurrentProduct, CurrentVariant);
                 OnViewCart.Invoke();
             });
+
+            tryButton.onClick.AddListener(()=>OnTryProduct.Invoke());
         }
 
         private void ResetInfoAnimation()

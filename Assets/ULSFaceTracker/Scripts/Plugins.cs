@@ -95,7 +95,7 @@ namespace ULSTrackerForUnity
 		[DllImport (dll)]
 		public static extern void ULS_UnityRegisterCallbacks (RenderCallback rCallback, UpdateCallback uCallback);
 		[DllImport (dll)]
-		public static extern int ULS_UnityCreateVideoCapture(int index, int width, int height, int fps);
+		public static extern int ULS_UnityCreateVideoCapture(int index, int width, int height, int fps, int rotate);//0:CCW, 1:flip, 2:CW
 		[DllImport (dll)]
 		public static extern void ULS_UnityUpdateVideoCapture();
 		[DllImport (dll)]
@@ -118,6 +118,7 @@ namespace ULSTrackerForUnity
 			}
 			int ret = ULS_UnityTrackerInit(path, "ulsee_for_unity", Application.temporaryCachePath);
 			ULS_UnitySetSmoothing (true);
+			Debug.Log(Application.temporaryCachePath);
 			return ret;
 		}
 
@@ -129,7 +130,7 @@ namespace ULSTrackerForUnity
 		///<param name="fps"> frame rate per second </param>
 		///<param name="frontal"> front camera or rear camera </param>
 		public static void ULS_UnitySetupCamera(int width, int height, int fps, bool frontal) {
-			if (0 == Plugins.ULS_UnityCreateVideoCapture (0, width, height, fps)) {
+			if (0 == Plugins.ULS_UnityCreateVideoCapture (0, width, height, fps, -1)) {
 				Dispatch.Clear();
 				_PreviewTexture = null;
 				WaitForFirstFrame = true;
@@ -155,7 +156,7 @@ namespace ULSTrackerForUnity
 		//<summary>
 		///Pause camera feed.
 		///</summary>
-		///<param name="enable"> enable pausing </param>
+		///<param name="paused"> enable pausing </param>
 		public static void ULS_UnityPauseCamera (bool paused) {
 			Dispatch.SetRunnig (!paused);
 		}
@@ -193,8 +194,9 @@ namespace ULSTrackerForUnity
 				Dispatch = new GameObject ("CameraDispatch").AddComponent<CameraDispatch> ();
 			}
 			ULS_UnityRegisterCallbacks(Render, Update);
-			int ret = ULS_UnityTrackerInitWithKey("ulsee_for_unity");
-			return ret;
+			if (0 != ULS_UnityTrackerInitWithKey("ulsee_for_unity"))
+                return 1;
+			return -1;
 		}
 
 		//<summary>
@@ -304,23 +306,20 @@ namespace ULSTrackerForUnity
 		///Change camera setting.
 		///</summary>
 		public static void ULS_UnitySetupCamera(int width, int height, int fps, bool frontal) {
-			Dispatch.Dispatch (() => {
 				if (A.Call<bool> ("SetupCamera", width, height, fps, frontal)) {
 					if (OnPreviewStart!=null)
 						OnPreviewStart(Texture2D.whiteTexture, 0);
-					//Dispatch.Clear();
+					Dispatch.Clear();
 					_PreviewTexture = null;
 					WaitForFirstFrame = true;
 					A.Call ("PlayPreview");
 				}
-			});
 		}
 
 		//<summary>
 		///Terminate face tracker and camera.
 		///</summary>
 		public static void ULS_UnityTrackerTerminate() {
-			Dispatch.Dispatch (() => {
 				A.Call("SuspendProcess");
 				if (OnPreviewStart!=null)
 					OnPreviewStart(Texture2D.whiteTexture, 0);
@@ -328,9 +327,8 @@ namespace ULSTrackerForUnity
 				_PreviewTexture = null;
 				WaitForFirstFrame = true;
 				A.Call("TerminateOperations");
-//				Dispatch = null;
+				//Dispatch = null;
 				NCNA = null;
-			});
 		}
 
 		//<summary>
@@ -393,6 +391,15 @@ namespace ULSTrackerForUnity
 		[DllImport (dll)]
 		public static extern void  ULS_UnityGetTransform([In, Out] float [] transform, [In] float[] intrinsic_camera_matrix, [In] float[] distort_coeffs);
 
+		//<summary>
+		///Get 3d scale vector compare to original 3d model of tracker
+		///</summary>
+		///<param name="x"> X axis of scale vector. </param>
+		///<param name="y"> Y axis of scale vector. </param>
+		///<param name="z"> Z axis of scale vector. </param>
+		[DllImport (dll)]
+		public static extern void ULS_UnityGetScale3D([In, Out] float [] x, [In, Out] float [] y, [In, Out] float [] z);
+		
 		//<summary>
 		///Get Field of View.
 		///</summary>

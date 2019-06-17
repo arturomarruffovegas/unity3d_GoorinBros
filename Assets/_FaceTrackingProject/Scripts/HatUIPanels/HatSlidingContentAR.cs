@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.Events;
 
 public struct HatData
 {
@@ -36,6 +37,7 @@ public class HatSlidingContentAR : MonoBehaviour
     public Sprite hatPhoto2;
     private List<HatData> m_HatData;
 
+    public  static UnityAction LoadContentGG;
     // Start is called before the first frame update
     void Start()
     {
@@ -48,7 +50,7 @@ public class HatSlidingContentAR : MonoBehaviour
         d1.hatName = "hats_benjaminPaul";
         d1.hatBrand = "Fedora";
         d1.hatPhoto = hatPhoto;
-        d1.hatColorList = new string[] { "1", "2", "3" };
+        d1.hatColorList = new string[] { };
         d1.hatSizeList = new string[] { "s", "m", "l" };
         d1.hatColor = "black";
 
@@ -57,23 +59,39 @@ public class HatSlidingContentAR : MonoBehaviour
         d2.hatName = "hats_countryLine";
         d2.hatBrand = "Fedora";
         d2.hatPhoto = hatPhoto2;
-        d2.hatColorList = new string[] { "1", "2" };
+        d2.hatColorList = new string[] { };
         d2.hatSizeList = new string[] { "m", "l" };
         d2.hatColor = "black";
 
         m_HatData.Add(d1);
         m_HatData.Add(d2);
+
+        LoadContentGG += GG;
     }
 
     // Update is called once per frame
-    void Update()
+    void GG()
     {
-        if(Input.GetKeyDown(KeyCode.L))
+
+        //SwipeMovement(-1.0f);
+        //List<GameObject> listContentHatPanel = new List<GameObject>();
+        for (int i = 0; i < m_ListContentHatPanel.Count; i++)
         {
-            //SwipeMovement(-1.0f);
-            //List<GameObject> listContentHatPanel = new List<GameObject>();
-            LoadContent(m_HatData);
+            Destroy(m_ListContentHatPanel[i].gameObject);
         }
+        m_ListContentHatPanel.Clear();
+        LoadContent(m_HatData);
+
+    }
+
+    private void OnDestroy()
+    {
+        LoadContentGG -= GG;
+        for(int i = 0; i < m_ListContentHatPanel.Count; i++)
+        {
+            Destroy(m_ListContentHatPanel[i].gameObject);
+        }
+        m_ListContentHatPanel.Clear();
     }
 
     public void OnDragPoint()

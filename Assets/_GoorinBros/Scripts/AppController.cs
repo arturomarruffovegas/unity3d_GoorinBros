@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 namespace goorinAR
 {
@@ -15,6 +16,9 @@ namespace goorinAR
         private InformationPanel InformationPanel;
         [SerializeField]
         private HatCartPanel HatCartPanel;
+
+        //eliminar este boton
+        public Button backButtonAR;
 
         [Header("Shopify")]
         public string AccessToken;
@@ -46,6 +50,15 @@ namespace goorinAR
                 HatCartPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, 0.2f);
             });
 
+            InformationPanel.OnTryProduct.AddListener(() =>
+            {
+                InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, 0.2f);
+                GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, 0.2f).OnComplete(()=> 
+                {
+                    HatSlidingContentAR.LoadContentGG();
+                 });
+            });
+
             HatCartPanel.OnReturnToProducts.AddListener(() => 
             {
                 HatCartPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(-719, 0.2f);
@@ -53,6 +66,16 @@ namespace goorinAR
 
             InformationPanel.OnAddProductToCart.AddListener(HatCartPanel.AddToCart);
             //  GalleryPanel.OnNetworkError.AddListener(() => RenderError("Could not find products."));
+
+
+
+
+            //eliminar metodo
+            backButtonAR.onClick.AddListener(() => 
+            {
+                InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, 0.2f);
+                GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, 0.2f);
+             });
         }
     }
 }

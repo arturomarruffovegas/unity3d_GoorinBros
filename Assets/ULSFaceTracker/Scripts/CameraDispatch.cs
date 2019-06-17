@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Threading;
 using System.Runtime.InteropServices;
-using Queue = System.Collections.Generic.List<System.Action>;
+using Queue = System.Collections.Generic.Queue<System.Action>;
 
 namespace ULSTrackerForUnity {
 	
@@ -46,7 +46,7 @@ namespace ULSTrackerForUnity {
 			camTexture = PrepareWebCamTexture (ref camDevice, true, 640, 480);
 			camTexture.Play ();
 			#else
-			int ret = Plugins.ULS_UnityCreateVideoCapture (0, 640, 480, 60);
+			int ret = Plugins.ULS_UnityCreateVideoCapture (0, 640, 480, 60, -1);
 			Debug.Log ("Initialize Desktop Camera: "+ret);
 			#endif//USE_UNITY_WEBCAM
 		}
@@ -104,8 +104,7 @@ namespace ULSTrackerForUnity {
 			}
 			//Enqueue
 			else lock (queueLock) {
-				//Debug.Log("Dispatch Enqueue");
-				invocation.Add(action);
+				execution.Enqueue(action);
 			}
 		}
 			
@@ -113,12 +112,11 @@ namespace ULSTrackerForUnity {
 		void Update() {
 			//Lock
 			lock (queueLock) {
-				execution.AddRange(invocation);
-				invocation.Clear();
+				while (execution.Count>0) {
+					var exe = execution.Dequeue();
+					exe ();
+				}
 			}
-			//Execute
-			execution.ForEach(e => e());
-			execution.Clear();
 
 			#if UNITY_STANDALONE || UNITY_EDITOR
 			#if USE_UNITY_WEBCAM

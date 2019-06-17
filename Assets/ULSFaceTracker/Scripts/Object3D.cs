@@ -16,6 +16,9 @@ class Object3D : MonoBehaviour
 #endif
 
 	float[] _trackPoints = new float[Plugins.MAX_TRACKER_POINTS*2];
+	float[] _scaleX = new float[1];
+	float[] _scaleY = new float[1];
+	float[] _scaleZ = new float[1];
 	float[] _fovx = new float[1];
 	float[] _fovy = new float[1];
 	float[] _mtx = new float[16];
@@ -31,6 +34,7 @@ class Object3D : MonoBehaviour
 	public GameObject _anchor3d = null;
 	public Camera ARCamera = null;
 	Transform _helmet = null;
+	Vector3 _original_scale;
 
 	// intrinsic camera matrix of camera
 	float[] intrinsic_camera_matrix = new float[] {
@@ -44,6 +48,7 @@ class Object3D : MonoBehaviour
 	void Start ()
 	{
 		_helmet = _anchor3d.transform.GetChild (0);
+		_original_scale = _helmet.transform.localScale;
 
 #if DRAW_MARKERS
 		for (int i=0; i< Plugins.MAX_TRACKER_POINTS; ++i) {
@@ -103,21 +108,21 @@ class Object3D : MonoBehaviour
 		// get FOV for AR camera by calibration function
 		Plugins.ULS_UnityCalibration (intrinsic_camera_matrix, w, h, _fovx, _fovy);
 
-        //Debug.Log ("fovx:" + _fovx [0] + ",fovy:" + _fovy [0]);
-        //Debug.Log ("screen width:" + Screen.width + ",height:" + Screen.height);
-        //Debug.Log ("camera width:" + w + ",height:" + h);
-        //Debug.Log ("rotate: "+rotate);
+		//Debug.Log ("fovx:" + _fovx [0] + ",fovy:" + _fovy [0]);
+		//Debug.Log ("screen width:" + Screen.width + ",height:" + Screen.height);
+		//Debug.Log ("camera width:" + w + ",height:" + h);
+		//Debug.Log ("rotate: "+rotate);
 
-        // adjust transforom for mapping tracker points
+		// adjust transforom for mapping tracker points
 #if UNITY_STANDALONE || UNITY_EDITOR
-        // adjust scale and position to map tracker points
-        transform.localScale = new Vector3(w, -h, 1);
-        transform.localPosition = new Vector3(w / 2, h / 2, 1);
-        transform.parent.localScale = new Vector3(-1, -1, 1);
-        transform.parent.localPosition = new Vector3(w / 2, h / 2, 0);
-        Camera.main.orthographicSize = h / 2;
-        ARCamera.fieldOfView = _fovy[0];
-        adjustMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(-1, -1, 1));
+		// adjust scale and position to map tracker points
+		transform.localScale = new Vector3 (w, h, 1);
+		transform.localPosition = new Vector3 (w/2, h/2, 1);
+		transform.parent.localScale = new Vector3 (-1, -1, 1);
+		transform.parent.localPosition = new Vector3 (w/2, h/2, 0);
+		Camera.main.orthographicSize = h / 2;
+		ARCamera.fieldOfView = _fovy[0];
+		adjustMatrix = Matrix4x4.TRS (Vector3.zero, Quaternion.identity, new Vector3 (-1, -1, 1));
 
 #elif UNITY_IOS || UNITY_ANDROID
 		transform.localScale = new Vector3 (w, h, 1);
@@ -126,22 +131,18 @@ class Object3D : MonoBehaviour
 		transform.parent.transform.eulerAngles = new Vector3 (0, 0, rotate); //orientation
 		transform.parent.localPosition = transform.parent.transform.TransformPoint(-transform.localPosition); //move to center
 
-		//if (Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight) {
-		//	Camera.main.orthographicSize = h/2;			
-		//	float v =  (float)(w * Screen.height) / (h * Screen.width);
-		//	ARCamera.rect = new Rect ((1-v)*0.5f, 0, v, 1); // AR viewport
-		//	ARCamera.fieldOfView = _fovy[0];
-		//} else {
-			float aspect = ((float)Screen.height) / ((float)Screen.width) * h/w;
+		if (Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight) {
+			Camera.main.orthographicSize = h/2;			
+			float v =  (float)(w * Screen.height) / (h * Screen.width);
+			ARCamera.rect = new Rect ((1-v)*0.5f, 0, v, 1); // AR viewport
+			ARCamera.fieldOfView = _fovy[0];
+		} else {
+			float aspect = ((float)Screen.height)/((float)Screen.width)*h/w;
 			float v = 1f / aspect;
-			//Camera.main.orthographicSize = w/2 * aspect; 
-			Camera.main.orthographicSize = h/2; 
-			//ARCamera.rect = new Rect (0, (1-v)*0.5f, 1, v); // AR viewport
-			ARCamera.rect = new Rect (0, 0, 1, 1); // AR viewport
-			ARCamera.fieldOfView = _fovx[0] / aspect;
-
-			//ARCamera.fieldOfView = _fovx[0]/ 2;
-		//}
+			Camera.main.orthographicSize = w/2 * aspect; 
+			ARCamera.rect = new Rect (0, (1-v)*0.5f, 1, v); // AR viewport
+			ARCamera.fieldOfView = _fovx[0];
+		}
 
 		adjustMatrix = Matrix4x4.TRS (Vector3.zero, Quaternion.Euler(new Vector3(0,0,rotate)), new Vector3 (1, 1, 1));
 #endif
@@ -168,26 +169,43 @@ class Object3D : MonoBehaviour
 
 			// apply alignment matrix to object's transform
 			ARUtils.SetTransformFromMatrix(_anchor3d.transform, ref ARM);
+
+			// apply local scale to fit user's face
+			Plugins.ULS_UnityGetScale3D (_scaleX,_scaleY,_scaleZ);
+			Vector3 s = new Vector3 (_scaleX [0], _scaleY [0], _scaleZ [0]);
+			s.Scale (_original_scale);
+			_helmet.transform.localScale = s;
 		}
-        else
-        {
-            //Debug.Log("No hay nada");
-            _anchor3d.transform.position = new Vector3(0, 0, -180.0f);
-        }
 	}
 
-//	void OnGUI() {
-//#if DRAW_MARKERS
-//		if (GUILayout.Button ("Show Markers", GUILayout.Height (100))) {
-//			drawMarkers ^= true;
-//			_helmet.gameObject.SetActive(!drawMarkers);
-//		}
-//		GUILayout.Space (8);
-//#endif
-//		GUILayout.Space (8);
-//		if (GUILayout.Button ("Change Scene", GUILayout.Height (80))) {
-//			Plugins.ULS_UnityTrackerTerminate ();
-//			SceneManager.LoadScene ("faceMask");
-//		}
-//	}
+	bool frontal = true;
+
+    /*
+	void OnGUI() {
+#if DRAW_MARKERS
+		if (GUILayout.Button ("Show Markers", GUILayout.Height (100))) {
+			drawMarkers ^= true;
+			_helmet.gameObject.SetActive(!drawMarkers);
+		}
+		GUILayout.Space (8);
+#endif
+
+#if UNITY_STANDALONE || UNITY_EDITOR
+#else
+		if (GUILayout.Button ("Switch Camera", GUILayout.Height (80))) {
+			frontal = !frontal;
+			if(frontal)
+				Plugins.ULS_UnitySetupCamera (640, 480, 30, true);
+			else
+				Plugins.ULS_UnitySetupCamera (1280, 720, 60, false);
+		}
+#endif
+
+		GUILayout.Space (8);
+		if (GUILayout.Button ("Change Scene", GUILayout.Height (80))) {
+			Plugins.ULS_UnityTrackerTerminate ();
+			SceneManager.LoadScene ("faceMask");
+		}
+	}
+	*/
 }
