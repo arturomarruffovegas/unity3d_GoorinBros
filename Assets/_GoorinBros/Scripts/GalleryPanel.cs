@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace goorinAR
 {
@@ -18,15 +19,23 @@ namespace goorinAR
         [SerializeField]
         private Transform galleryContent;
 
+        public bool _hitEndCursor;
+
+        public ScrollRect ScrollView;
+        private bool _wasScrolledToBottom;
+        private RectTransform _rectTransform;
+
         private readonly List<HatGallery> _lineItems = new List<HatGallery>();
         private List<string> _addedProductIds = new List<string>();
 
         private string _after;
-        public bool _hitEndCursor;
 
         public void Init()
         {
             FetchProducts();
+
+            _rectTransform = GetComponent<RectTransform>();
+            ScrollView.onValueChanged.AddListener(OnScrollRectPositionChanged);
 
         }
 
@@ -88,6 +97,34 @@ namespace goorinAR
 
 
 
+        }
+
+        private void OnScrollRectPositionChanged(Vector2 scrollOffset)
+        {
+            var visibleProductViews = _lineItems.Where((x) => {
+                if (x.IsLoaded) return false;
+
+                var productViewLocalPosition = _rectTransform.InverseTransformPoint(x.transform.position);
+                return productViewLocalPosition.y > _rectTransform.rect.yMin
+                    && productViewLocalPosition.y < _rectTransform.rect.yMax;
+            });
+
+            foreach (var productView in visibleProductViews)
+            {
+                productView.Load();
+            }
+
+            bool isScrolledToBottom = scrollOffset.y < 0;
+
+            if (!_wasScrolledToBottom && isScrolledToBottom)
+            {
+                if (!_hitEndCursor)
+                {
+                    FetchProducts();
+                }
+            }
+
+            _wasScrolledToBottom = isScrolledToBottom;
         }
 
 

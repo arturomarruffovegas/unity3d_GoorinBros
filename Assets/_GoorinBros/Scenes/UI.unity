@@ -251,8 +251,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: e3d0d813cb86e42da92677970af8bf23, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: a6b04e847dc235540876c5dc59c340d7, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -496,6 +496,7 @@ MonoBehaviour:
   GalleryPanel: {fileID: 284656330}
   InformationPanel: {fileID: 1053236510}
   HatCartPanel: {fileID: 1332039196}
+  backButtonAR: {fileID: 0}
   AccessToken: 60ae4e966b40e6f62284965e56420a19
   ShopDomain: www.goorin.com
 --- !u!4 &34955253
@@ -1812,7 +1813,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: ac01e3bd6c12fb542b2e69900629aeda, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3b86edb140581b949b44074b1aa445ab, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2525,6 +2526,7 @@ MonoBehaviour:
   HatGallery: {fileID: 150584699}
   galleryContent: {fileID: 514933526}
   _hitEndCursor: 0
+  ScrollView: {fileID: 520966067}
 --- !u!1 &301569103
 GameObject:
   m_ObjectHideFlags: 0
@@ -3449,10 +3451,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1860639008}
-  - {fileID: 1796377373}
-  - {fileID: 1433602019}
   - {fileID: 1729773446}
   - {fileID: 783141486}
+  - {fileID: 1796377373}
+  - {fileID: 1433602019}
   - {fileID: 136550179}
   - {fileID: 65532080}
   - {fileID: 876530823}
@@ -6376,7 +6378,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 484923029}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -6583,8 +6585,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: e3d0d813cb86e42da92677970af8bf23, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: a6b04e847dc235540876c5dc59c340d7, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -8923,6 +8925,11 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  OnTryProduct:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   OnViewCart:
     m_PersistentCalls:
       m_Calls: []
@@ -8934,6 +8941,7 @@ MonoBehaviour:
   portada: {fileID: 990382990}
   backPanelButton: {fileID: 1796382245}
   addToCartButton: {fileID: 801451883}
+  tryButton: {fileID: 3707886}
   colorButton: {fileID: 231247249}
   SizeButton: {fileID: 914686465}
   m_ColorsAndSizes: []
@@ -11952,7 +11960,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: ac01e3bd6c12fb542b2e69900629aeda, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3b86edb140581b949b44074b1aa445ab, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -12125,7 +12133,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 484923029}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -14372,7 +14380,7 @@ RectTransform:
   m_Children:
   - {fileID: 2070738083}
   m_Father: {fileID: 484923029}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -14986,7 +14994,7 @@ RectTransform:
   m_Children:
   - {fileID: 655064145}
   m_Father: {fileID: 484923029}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

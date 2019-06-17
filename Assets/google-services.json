@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "622431147626",
+    "firebase_url": "https://goorin-bros.firebaseio.com",
+    "project_id": "goorin-bros",
+    "storage_bucket": "goorin-bros.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622431147626:android:07d440136e1039aa",
+        "android_client_info": {
+          "package_name": "com.NextLatam.GoorinBros"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "622431147626-jd0ns36qbqmcpo8d583portkud3ro8bp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6BkilN9C-ypLYEAzQZEA6qtuFfJIW46c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "622431147626-jd0ns36qbqmcpo8d583portkud3ro8bp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -69,6 +69,8 @@ namespace goorinAR
         [SerializeField]
         private Image icon;
 
+        private string nameLocal;
+
 
         private void Start()
         {
@@ -203,8 +205,11 @@ namespace goorinAR
                 cl.transform.GetChild(0).GetComponent<Text>().text = m_ColorsAndSizes[i].NameColor;
                 cl.GetComponent<Button>().onClick.AddListener(delegate { InstantiateSizes(cl.name);});
                 cl.SetActive(true);
+                nameLocal = m_ColorsAndSizes[0].NameColor;
                 //InstantiateSizes(m_ColorsAndSizes[0].NameColor);
             }
+
+           
 
             CurrentProduct = product;
             CurrentVariant = variants[0];
@@ -252,7 +257,7 @@ namespace goorinAR
         {
             string value = color + " / " + size;
 
-            Debug.Log(value);
+            Debug.Log("Size: " + value);
 
             var variants = (List<Shopify.Unity.ProductVariant>)CurrentProduct.variants();
             foreach (var item in variants)
@@ -276,6 +281,7 @@ namespace goorinAR
                     sizes[i].gameObject.transform.GetChild(1).GetComponent<Image>().enabled = true;
                 }
             }
+
         }
 
         private void DeleteSizes()

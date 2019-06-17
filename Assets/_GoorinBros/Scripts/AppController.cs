@@ -71,11 +71,14 @@ namespace goorinAR
 
 
             //eliminar metodo
-            backButtonAR.onClick.AddListener(() => 
+            if (backButtonAR != null)
             {
-                InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, 0.2f);
-                GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, 0.2f);
-             });
+                backButtonAR.onClick.AddListener(() =>
+                {
+                    InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, 0.2f);
+                    GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, 0.2f);
+                });
+            }
         }
     }
 }
