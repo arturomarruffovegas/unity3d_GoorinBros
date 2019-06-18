@@ -5,10 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/_FaceTrackingProject/Scenes/Object3D.unity
     guid: 709884f4245b181489714c01e262a019
   - enabled: 0
     path: Assets/ULSFaceTracker/Scenes/Object3D.unity
     guid: f7769b924ec7f43d987cb287c56461e8
+  - enabled: 1
+    path: Assets/_GoorinBros/Scenes/TakePhotoAndShare.unity
+    guid: a3acca4ff938bae47b62b347b0a3cfac
   m_configObjects: {}
