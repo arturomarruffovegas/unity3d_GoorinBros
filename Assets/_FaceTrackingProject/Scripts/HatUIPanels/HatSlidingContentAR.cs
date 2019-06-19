@@ -46,7 +46,7 @@ public class HatSlidingContentAR : MonoBehaviour
 
         m_HatData = new List<HatData>();
         HatData d1 = new HatData();
-        d1.hatId = "benjaminPaul";
+        d1.hatId = "welfleet";
         d1.hatName = "hats_benjaminPaul";
         d1.hatBrand = "Fedora";
         d1.hatPhoto = hatPhoto;
@@ -55,7 +55,7 @@ public class HatSlidingContentAR : MonoBehaviour
         d1.hatColor = "black";
 
         HatData d2 = new HatData();
-        d2.hatId = "countryLine";
+        d2.hatId = "county line";
         d2.hatName = "hats_countryLine";
         d2.hatBrand = "Fedora";
         d2.hatPhoto = hatPhoto2;

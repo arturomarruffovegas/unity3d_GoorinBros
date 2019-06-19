@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Networking;
 
 public static class FirebaseController
 {
@@ -14,7 +15,8 @@ public static class FirebaseController
     static StorageReference storage_ref;
     static StorageReference sRef;
 
-    static StorageReference gs_reference;
+    static StorageReference gs_referenceM;
+    static StorageReference gs_referenceC;
 
     public static string ConstantStorageURL = "gs://goorin-bros.appspot.com";
 
@@ -25,80 +27,67 @@ public static class FirebaseController
 
     }
 
-    public static void GetURLDownload(string hatName , UnityAction<string> URL)
+    public static void GetURLDownload(string hatName, UnityAction<UnityEngine.Object, UnityEngine.Object> URLS)
     {
-        string myURL = ""; 
 #if UNITY_ANDROID
         string Platform = "android";
 #elif UNITY_IOS
-        string Platform = "ios";
+      string Platform = "ios";
 #endif
-        string URLD = ConstantStorageURL + "/" + hatName + "/" + Platform +"/" + hatName;
-        gs_reference = storage.GetReferenceFromUrl(URLD);
-        gs_reference.GetDownloadUrlAsync().ContinueWith((Task<Uri> task2) =>
-        {
-            if (!task2.IsFaulted && !task2.IsCanceled)
-            {
-                myURL = task2.Result.OriginalString;
-                Debug.Log("Download URL: " + task2.Result.OriginalString);
-                URL(myURL);
-            }
-        });
+        string modelURL = ConstantStorageURL + "/" + hatName + "/" + Platform + "/" + hatName;
+        string contentURL = ConstantStorageURL + "/" + hatName + "/" + Platform + "/" + hatName + "_content";
+        gs_referenceM = storage.GetReferenceFromUrl(modelURL);
+        gs_referenceC = storage.GetReferenceFromUrl(contentURL);
+        GG(gs_referenceM.GetDownloadUrlAsync(), gs_referenceC.GetDownloadUrlAsync(), hatName, URLS);
+
     }
 
-    //public static IEnumerator UpdateImageToStorageFirebase(byte[] byteImage, string name, Action<string> text)
-    //{
-    //    string URLDownload = null;
-    //    bool check = false;
-    //    if (byteImage != null)
-    //    {
-    //        sRef = storage_ref.Child("Photos/" + name + ".jpg");
-            
-    //        sRef.PutBytesAsync(byteImage).ContinueWith((Task<StorageMetadata> task) =>
-    //        {
-    //            if (task.IsFaulted || task.IsCanceled)
-    //                Debug.Log(task.Exception.ToString());
-    //            else
-    //            {
-    //                StorageMetadata metadata = task.Result;
-    //                string download_url = sRef.ToString();
-    //                Debug.Log("Finished uploading...");
-    //                Debug.Log("download url = " + download_url);
+    private static async void GG(Task<Uri> uriM, Task<Uri> uriC, string name, UnityAction<UnityEngine.Object, UnityEngine.Object> _URLS)
+    {
+        var s = await uriM;
+        var d = await uriC;
 
-    //                //change MIME image
-    //                MetadataChange new_metadata = new MetadataChange();
-    //                new_metadata.CacheControl = "public,max-age=300";
-    //                new_metadata.ContentType = "image/jpeg";
+        string myURLM = "";
+        UnityEngine.Object model;
+        string myURLC = "";
+        UnityEngine.Object content;
 
-    //                sRef.UpdateMetadataAsync(new_metadata).ContinueWith(task3 => {
-    //                    if (!task3.IsFaulted && !task3.IsCanceled)
-    //                    {
-    //                        Firebase.Storage.StorageMetadata meta = task3.Result;
-    //                    }
-    //                });
+        if (!uriM.IsFaulted && !uriM.IsCanceled)
+        {
+            myURLM = uriM.Result.OriginalString;
+            Debug.Log("Download Model: " + uriM.Result.OriginalString);
 
-    //                //get URL from download
-    //                gs_reference = storage.GetReferenceFromUrl(download_url);
-    //                gs_reference.GetDownloadUrlAsync().ContinueWith((Task<Uri> task2) =>
-    //                {
-    //                    if (!task2.IsFaulted && !task2.IsCanceled)
-    //                    {
-    //                        URLDownload = task2.Result.OriginalString;
-    //                        Debug.Log("Download URL: " + task2.Result.OriginalString);
-    //                        check = true;
-    //                    }
-    //                    else
-    //                        check = true;
-    //                });
+            OnDownloadAssetBundles(name, myURLM, (mo) =>
+            {
+                model = mo;
 
-    //            }
-    //        });
-    //    }
-    //    yield return new WaitUntil(() => check);
-    //    text(URLDownload);
+                if (!uriC.IsFaulted && !uriC.IsCanceled)
+                {
+                    myURLC = uriC.Result.OriginalString;
+                    Debug.Log("Download Content: " + uriC.Result.OriginalString);
 
-    //}
+                    OnDownloadAssetBundles(name + "_content", myURLC, (co) =>
+                    {
+                        content = co;
+                        _URLS?.Invoke(model, content);
+                    });
+                }
+            });
+        }
+    }
+
+    private static void OnDownloadAssetBundles(string Name, string UrlModel, UnityAction<UnityEngine.Object> model)
+    {
+        UnityWebRequest www = UnityWebRequestAssetBundle.GetAssetBundle(UrlModel);
+        var a = www.SendWebRequest();
+
+        a.completed += (b) => {
+
+            AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(www);
+            AssetBundleRequest object3D = bundle.LoadAssetAsync<UnityEngine.Object>(Name);
+            model?.Invoke(object3D.asset);
+            bundle.Unload(false);
+        };
+    }
 
 }
-
-  

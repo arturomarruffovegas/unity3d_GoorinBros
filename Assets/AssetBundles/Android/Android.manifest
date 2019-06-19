@@ -1,0 +1,13 @@
+ManifestFileVersion: 0
+CRC: 3319018911
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: welfleet_content
+      Dependencies: {}
+    Info_1:
+      Name: county line
+      Dependencies: {}
+    Info_2:
+      Name: county line_content
+      Dependencies: {}

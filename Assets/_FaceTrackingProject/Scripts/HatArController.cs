@@ -19,7 +19,11 @@ public class HatArController : MonoBehaviour
 {
     private Dictionary<string, GameObject> m_Hat3DList;
     public Transform m_HatPosition;
-    private GameObject m_CurrentHat;
+    public GameObject m_CurrentHat;
+    public HatContent m_CurrentHatContent;
+    private string m_CurrentHatId;
+    private string m_CurrentHatColor;
+
     private string m_CurrentId;
 
     [Header("CapturePhoto")]
@@ -35,6 +39,9 @@ public class HatArController : MonoBehaviour
     public Button m_SavePhotoButton;
     public Button m_PhotoPanelBackButton;
 
+    [Header("FireBase")]
+    public LoadAssetBundlesFromFirebase m_FireBaseLoader;
+
     //Temp List Texture
 
 
@@ -46,6 +53,8 @@ public class HatArController : MonoBehaviour
         m_VideoButton.onClick.AddListener(VideoCaptureButtonPressed);
         m_SavePhotoButton.onClick.AddListener(SaveCapturePhoto);
         m_PhotoPanelBackButton.onClick.AddListener(DeactivePhotoPanel);
+
+        LoadAssetBundlesFromFirebase.FinishProccess += InstantiateHat;
     }
 
     // Update is called once per frame
@@ -62,27 +71,55 @@ public class HatArController : MonoBehaviour
     //Load Texture From Bundle Local/Online
     public void LoadHatBundle(string hatId, string hatColor)
     {
+        m_CurrentHatId = hatId;
+        m_CurrentHatColor = hatColor;
+
         m_RightPanel.SetActive(true);
-        //Download bundle from firebase
-        //---
+        
         if (m_CurrentHat)
         {
             Destroy(m_CurrentHat.gameObject);
         }
         
         m_CurrentHat = null;
-        Debug.Log(hatId + "/hats_" + hatId + "_" + hatColor);
-        //m_CurrentHat = (GameObject)Instantiate(Resources.Load(hatId + "/" + "/hats_" + hatId +"_" + hatColor));
-        m_CurrentHat = (GameObject)Instantiate(Resources.Load(hatId + "/" + hatId));
-        m_CurrentId = hatId;
+        m_FireBaseLoader.QueryFirebase(hatId);
+
+        
+    }
+
+
+    public void InstantiateHat(Object s, Object c)
+    {
+        //m_CurrentHat = (GameObject)Instantiate(Resources.Load(hatId + "/" + hatId));
+        m_CurrentHat = (GameObject)Instantiate((GameObject)s);
+        //HatContent textFile = Resources.Load<HatContent>(hatId + "/" + hatId + "_Scriptable") as HatContent;
+        m_CurrentHatContent = (HatContent)c;
+
+        m_CurrentId = m_CurrentHatId;
         m_CurrentHat.transform.parent = m_HatPosition;
         m_CurrentHat.transform.localPosition = Vector3.zero;
         m_CurrentHat.transform.localRotation = Quaternion.identity;
         m_CurrentHat.transform.localScale = Vector3.one;
-        
-        LoadTextureforBundle(m_CurrentHat, hatId, hatColor);
+
+        LoadMaterialsforBundle(m_CurrentHat, m_CurrentHatContent, m_CurrentId, m_CurrentHatColor);
     }
-    
+
+    //public void InstantiateHat(string hatId, string hatColor)
+    //{
+    //    //m_CurrentHat = (GameObject)Instantiate(Resources.Load(hatId + "/" + hatId));
+    //    m_CurrentHat = (GameObject)m_FireBaseLoader.obj;
+    //    //HatContent textFile = Resources.Load<HatContent>(hatId + "/" + hatId + "_Scriptable") as HatContent;
+    //    HatContent textFile = m_FireBaseLoader.objContent;
+
+    //    m_CurrentId = hatId;
+    //    m_CurrentHat.transform.parent = m_HatPosition;
+    //    m_CurrentHat.transform.localPosition = Vector3.zero;
+    //    m_CurrentHat.transform.localRotation = Quaternion.identity;
+    //    m_CurrentHat.transform.localScale = Vector3.one;
+
+    //    LoadMaterialsforBundle(m_CurrentHat, textFile, hatId, hatColor);
+    //}
+
     public void LoadTextureforBundle(GameObject hatbundle, string hatId, string hatColor)
     {
         Renderer[] rendererChilds = hatbundle.GetComponentsInChildren<Renderer>();
@@ -101,6 +138,21 @@ public class HatArController : MonoBehaviour
                 VerifyLayer(rendererChilds[i].materials[0], hatTextures[j].name, hatTextures[j]);
             }
         }       
+    }
+
+    public void LoadMaterialsforBundle(GameObject hatbundle, HatContent hatContent, string hatId, string hatColor)
+    {
+        Debug.Log(hatColor);
+        Renderer[] rendererChilds = hatbundle.GetComponentsInChildren<Renderer>();
+
+        for (int j = 0; j < rendererChilds.Length; j++)
+        {
+            for (int i = 0; i < hatContent.hatMaterials[0].hatMaterials.Count; i++)
+            {
+                rendererChilds[i].material = hatContent.hatMaterials[0].hatMaterials[i];
+            }
+        }
+
     }
 
     public List<Texture> LoadTextures(string hatId, string hatMaterialName, string hatColor = "black")
@@ -175,21 +227,41 @@ public class HatArController : MonoBehaviour
 
     public void ChangeMaterialBundle(string hatId, string hatColor)
     {
-        Renderer[] rendererChilds = m_CurrentHat.GetComponentsInChildren<Renderer>();
-        for (int i = 0; i < rendererChilds.Length; i++)
-        {
-            //Get Textures using material name, and id
-            //--
-            //material: hats_benjaminPaul_Hats_shading_black
-            //textures: hats_benjaminPaul_Hats_AO_black, hats_benjaminPaul_Hats_difuse_black, etc
-            List<Texture> hatTextures = LoadTextures(hatId, rendererChilds[i].materials[0].name, hatColor);
+        //Renderer[] rendererChilds = m_CurrentHat.GetComponentsInChildren<Renderer>();
+        //for (int i = 0; i < rendererChilds.Length; i++)
+        //{
+        //    //Get Textures using material name, and id
+        //    //--
+        //    //material: hats_benjaminPaul_Hats_shading_black
+        //    //textures: hats_benjaminPaul_Hats_AO_black, hats_benjaminPaul_Hats_difuse_black, etc
+        //    List<Texture> hatTextures = LoadTextures(hatId, rendererChilds[i].materials[0].name, hatColor);
 
-            //Find layer using material name and layername
-            for (int j = 0; j < hatTextures.Count; j++)
+        //    //Find layer using material name and layername
+        //    for (int j = 0; j < hatTextures.Count; j++)
+        //    {
+        //        VerifyLayer(rendererChilds[i].materials[0], hatTextures[j].name, hatTextures[j]);
+        //    }
+        //}
+        Debug.Log("Color: " + hatColor);
+        Renderer[] rendererChilds = m_CurrentHat.GetComponentsInChildren<Renderer>();
+
+        Debug.Log("mat: " + rendererChilds.Length);
+        Debug.Log("content: " + m_CurrentHatContent.hatMaterials.Count);
+
+        for (int i = 0; i < m_CurrentHatContent.hatMaterials.Count; i++)
+        {
+            if (m_CurrentHatContent.hatMaterials[i].materialName == hatColor)
             {
-                VerifyLayer(rendererChilds[i].materials[0], hatTextures[j].name, hatTextures[j]);
+                Debug.Log("currentColor: " + m_CurrentHatContent.hatMaterials[i].materialName);
+
+                for (int j = 0; j < rendererChilds.Length; j++)
+                {
+                    rendererChilds[j].material = m_CurrentHatContent.hatMaterials[i].hatMaterials[j];
+                }
             }
         }
+
+        
     }
 
     //Load from Resources
@@ -231,7 +303,7 @@ public class HatArController : MonoBehaviour
 
                 if (modelMaterialName.Contains(scriptableMaterialName))
                 {                    
-                    mats[i].SetTexture("_MainTex", textFile.hatMaterials[j].hatTextures[index]);
+                   // mats[i].SetTexture("_MainTex", textFile.hatMaterials[j].hatTextures[index]);
                 }
             }
         }

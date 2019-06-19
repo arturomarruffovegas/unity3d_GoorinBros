@@ -3167,6 +3167,7 @@ MonoBehaviour:
   HatGallery: {fileID: 150584699}
   galleryContent: {fileID: 514933526}
   _hitEndCursor: 0
+  ScrollView: {fileID: 520966067}
 --- !u!1 &288315888
 GameObject:
   m_ObjectHideFlags: 0
@@ -16622,6 +16623,49 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1487346054}
   m_CullTransparentMesh: 0
+--- !u!1 &1488253506
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1488253508}
+  - component: {fileID: 1488253507}
+  m_Layer: 0
+  m_Name: Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1488253507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1488253506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c91643ba19c6d56489fd4d3fa8536860, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1488253508
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1488253506}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1075, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1489451829
 GameObject:
   m_ObjectHideFlags: 0
@@ -18015,6 +18059,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_HatPosition: {fileID: 1883318436}
+  m_CurrentHat: {fileID: 0}
+  m_CurrentHatContent: {fileID: 0}
   m_HatCameras:
   - {fileID: 1614785560}
   - {fileID: 1142739752}
@@ -18026,6 +18072,7 @@ MonoBehaviour:
   m_PhotoCapture: {fileID: 453002814}
   m_SavePhotoButton: {fileID: 1363996143}
   m_PhotoPanelBackButton: {fileID: 359339534}
+  m_FireBaseLoader: {fileID: 1488253507}
 --- !u!4 &1603039376
 Transform:
   m_ObjectHideFlags: 0

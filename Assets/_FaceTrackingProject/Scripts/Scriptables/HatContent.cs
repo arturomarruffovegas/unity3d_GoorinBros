@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "HatContent", menuName = "HatElements/HatContent", order = 1)]
 public class HatContent : ScriptableObject
 {
+    public string hatName;
     public List<HatMateials> hatMaterials;
 }
 
@@ -12,5 +13,5 @@ public class HatContent : ScriptableObject
 public class HatMateials
 {
     public string materialName;
-    public List<Texture> hatTextures;
+    public List<Material> hatMaterials;
 }

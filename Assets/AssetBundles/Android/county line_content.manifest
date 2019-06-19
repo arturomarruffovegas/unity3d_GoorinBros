@@ -1,0 +1,24 @@
+ManifestFileVersion: 0
+CRC: 1272991532
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: e3ab209372ec52cd510de99dded6de23
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 591e94d953643b98ea606c7b30d8710c
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 37b4fb913bb36b34d93b60b3a358f80b, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+Assets:
+- Assets/_FaceTrackingProject/Resources/countryLine/county line_content.asset
+Dependencies: []

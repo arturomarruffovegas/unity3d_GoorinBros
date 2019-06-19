@@ -240,7 +240,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c91643ba19c6d56489fd4d3fa8536860, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hatName: welfleet
+  hatName: 
+  obj: {fileID: 0}
+  objContent: {fileID: 0}
+  isModel: 0
+  isContent: 0
 --- !u!4 &927234486
 Transform:
   m_ObjectHideFlags: 0
