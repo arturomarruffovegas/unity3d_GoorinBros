@@ -473,6 +473,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 34955253}
+  - component: {fileID: 34955254}
   - component: {fileID: 34955252}
   m_Layer: 0
   m_Name: AppController
@@ -511,8 +512,20 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &34955254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34955251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4be6c42ea15e97d4b8019ab2be2e1e33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &35575903
 GameObject:
   m_ObjectHideFlags: 0
@@ -1446,7 +1459,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 242304420}
   m_Direction: 0
   m_Value: 1
-  m_Size: 0.99999994
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3253,61 +3266,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 440813492}
   m_CullTransparentMesh: 0
---- !u!1 &445675019
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 445675021}
-  - component: {fileID: 445675020}
-  m_Layer: 0
-  m_Name: UIController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &445675020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 445675019}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40c780549c93d1049bf118db0c03efd5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  galleryContent: {fileID: 514933526}
-  hatPrefab: {fileID: 150584694}
-  Amount: 10
-  galleryPanel: {fileID: 284656327}
-  infoPanel: {fileID: 1053236507}
-  cartPanel: {fileID: 1332039193}
-  basicPanel: {fileID: 484923029}
-  morePanel: {fileID: 1943466443}
-  moreInfoButton: {fileID: 821460669}
-  backButton: {fileID: 1796382245}
-  cartButton: {fileID: 1669262957}
-  backCButton: {fileID: 0}
---- !u!4 &445675021
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 445675019}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 521.0029, y: 1661.2852, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &452935996
 GameObject:
   m_ObjectHideFlags: 0
@@ -3466,9 +3424,9 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.034, y: 0.025}
-  m_AnchorMax: {x: 0.96800005, y: 0.528882}
-  m_AnchoredPosition: {x: -0.5, y: -119.45}
-  m_SizeDelta: {x: -1, y: 238.9}
+  m_AnchorMax: {x: 0.96800005, y: 0.58000004}
+  m_AnchoredPosition: {x: 0, y: -119.45}
+  m_SizeDelta: {x: 0, y: 238.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &484923030
 MonoBehaviour:
@@ -8062,7 +8020,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Try!
+  m_Text: TRY IT ON
 --- !u!222 &984758369
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8935,6 +8893,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  waitIcon: {fileID: 21300000, guid: 3b86edb140581b949b44074b1aa445ab, type: 3}
   hatButton: {fileID: 136550184}
   empty: {fileID: 876530822}
   info: {fileID: 452935997}
@@ -8945,8 +8904,6 @@ MonoBehaviour:
   colorButton: {fileID: 231247249}
   SizeButton: {fileID: 914686465}
   m_ColorsAndSizes: []
-  colors: []
-  sizes: []
   productTitle: {fileID: 1860639010}
   productImage: {fileID: 1419085604}
   Image: {fileID: 2800000, guid: 3922fc3a10040324da1d9a96fba4c986, type: 3}
@@ -11061,7 +11018,7 @@ RectTransform:
   m_Father: {fileID: 1053236507}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.53369904}
+  m_AnchorMin: {x: 0, y: 0.59000003}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -15502,7 +15459,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 440813493}
   m_Direction: 0
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
