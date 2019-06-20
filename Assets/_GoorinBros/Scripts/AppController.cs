@@ -20,6 +20,10 @@ namespace goorinAR
         //eliminar este boton
         public Button backButtonAR;
 
+        [SerializeField]
+        [Range(0,1f)]
+        private float speedMovementPanel;
+
         [Header("Shopify")]
         public string AccessToken;
         public string ShopDomain;
@@ -35,25 +39,25 @@ namespace goorinAR
 
             GalleryPanel.OnShowProduct.AddListener(product =>
             {
-                InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, 0.2f);
+                InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
                 // ShowPanel(ProductPanel.gameObject);
                 InformationPanel.SetCurrentProduct(product);
             });
 
             InformationPanel.OnReturnToProducts.AddListener(() =>
             {
-                InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, 0.2f);
+                InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, speedMovementPanel);
             });
 
             InformationPanel.OnViewCart.AddListener(() => 
             {
-                HatCartPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, 0.2f);
+                HatCartPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
             });
 
             InformationPanel.OnTryProduct.AddListener(() =>
             {
-                InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, 0.2f);
-                GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, 0.2f).OnComplete(()=> 
+                InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, speedMovementPanel);
+                GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, speedMovementPanel).OnComplete(()=> 
                 {
                     HatSlidingContentAR.LoadContentGG();
                  });
@@ -61,7 +65,7 @@ namespace goorinAR
 
             HatCartPanel.OnReturnToProducts.AddListener(() => 
             {
-                HatCartPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(-719, 0.2f);
+                HatCartPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(-719, speedMovementPanel);
             });
 
             InformationPanel.OnAddProductToCart.AddListener(HatCartPanel.AddToCart);
@@ -75,8 +79,8 @@ namespace goorinAR
             {
                 backButtonAR.onClick.AddListener(() =>
                 {
-                    InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, 0.2f);
-                    GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, 0.2f);
+                    InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
+                    GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
                 });
             }
         }

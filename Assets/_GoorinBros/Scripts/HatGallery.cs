@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 namespace goorinAR
@@ -39,9 +40,9 @@ namespace goorinAR
             return imageHat;
         }
 
-        public void SetImageHat(Image value)
+        public void SetImageHat(Sprite value)
         {
-            imageHat = value;
+            imageHat.sprite = value;
         }
 
         public Text GetPriceHat()
@@ -87,13 +88,32 @@ namespace goorinAR
             var variants = (List<Shopify.Unity.ProductVariant>)product.variants();
             priceHat.text = variants.First().price().ToString("C");
 
-            var images = (List<Shopify.Unity.Image>)product.images();
-            if (images.Count > 0)
+            //var images = (List<Shopify.Unity.Image>)product.images();
+            //if (images.Count > 0)
+            //{
+            //    _imageSrc = images.First().transformedSrc("compact");
+            //}
+            if (variants[0].image() != null)
             {
-                _imageSrc = images.First().transformedSrc("compact");
+                string _URLImage = variants[0].image().transformedSrc();
+
+                StartCoroutine(OnDownloadImage(_URLImage, (spri) =>
+                {
+                    SetImageHat(spri);
+                }));
             }
 
             hatButton.onClick.AddListener(() => OnClick.Invoke());
+        }
+
+        private IEnumerator OnDownloadImage(string myURL, UnityAction<Sprite> image)
+        {
+            UnityWebRequest www = UnityWebRequestTexture.GetTexture(myURL);
+            yield return www.SendWebRequest();
+
+            Texture2D tex = DownloadHandlerTexture.GetContent(www);
+            Sprite spri = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
+            image?.Invoke(spri);
         }
     }
 }
