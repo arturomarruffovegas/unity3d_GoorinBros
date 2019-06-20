@@ -50,7 +50,7 @@ namespace goorinAR
 
         [SerializeField]
         private List<ColorsAndSizes> m_ColorsAndSizes = new List<ColorsAndSizes>();
-        private List<GameObject> colors = new List<GameObject>();
+        public List<GameObject> colors = new List<GameObject>();
         private List<GameObject> sizes = new List<GameObject>();
        // public List<Sprite> m_hatImages = new List<Sprite>();
 
@@ -165,7 +165,7 @@ namespace goorinAR
             {
                 string _URLImage = variants[0].image().transformedSrc();
 
-                StartCoroutine(OnDownloadImage(_URLImage, (spri) =>
+                StartCoroutine(OnDownloadImage(_URLImage, (spri,tex) =>
                 {
                     productImage.sprite = spri;
                 }));
@@ -211,10 +211,10 @@ namespace goorinAR
                         d.sizes.Add(NameSize);
                         m_ColorsAndSizes.Add(d);
 
-                        StartCoroutine(OnDownloadImage(URLDownloadImage, (spri) =>
-                        {
-                            m_ColorsAndSizes[0].HatImage = spri;
-                        }));
+                        //StartCoroutine(OnDownloadImage(URLDownloadImage, (spri) =>
+                        //{
+                        //    m_ColorsAndSizes[0].HatImage = spri;
+                        //}));
                     }
 
                     options.Add(variant.title());
@@ -235,10 +235,10 @@ namespace goorinAR
             {
                 var cl = Instantiate(colorButton.gameObject, colorButton.gameObject.transform.parent);
                 cl.name = m_ColorsAndSizes[i].NameColor;
-                int hatIndex = i;
+                int indexHat = i;
                 colors.Add(cl);
-                cl.transform.GetChild(0).GetComponent<Text>().text = m_ColorsAndSizes[i].NameColor;
-                cl.GetComponent<Button>().onClick.AddListener(delegate { InstantiateSizes(cl.name, hatIndex);});
+               // cl.transform.GetChild(0).GetComponent<Text>().text = m_ColorsAndSizes[i].NameColor;
+                cl.GetComponent<Button>().onClick.AddListener(delegate { InstantiateSizes(cl.name, indexHat);});
                 cl.SetActive(true);
                 nameLocal = m_ColorsAndSizes[0].NameColor;
             }
@@ -260,8 +260,9 @@ namespace goorinAR
                 {
                     Sprite im = null;
                     string s = m_ColorsAndSizes[i].URLImage;
-                    StartCoroutine(OnDownloadImage(s, (spri) =>
+                    StartCoroutine(OnDownloadImage(s, (spri,tex) =>
                     {
+                        colors[i].gameObject.transform.GetChild(0).transform.GetComponent<Image>().sprite = Utils.CutTexture(tex);
                         im =spri;
                     }));
 
@@ -274,11 +275,11 @@ namespace goorinAR
 
        
 
-        private void InstantiateSizes(string name , int _URLImage)
+        private void InstantiateSizes(string name , int indexHat)
         {
             DeleteSizes();
 
-            productImage.sprite = m_ColorsAndSizes[_URLImage].HatImage;
+            productImage.sprite = m_ColorsAndSizes[indexHat].HatImage;
 
             foreach (var item in colors)
                 item.transform.GetChild(1).GetComponent<Image>().enabled = false;
@@ -314,14 +315,14 @@ namespace goorinAR
             }
         }
 
-        private IEnumerator OnDownloadImage(string myURL, UnityAction<Sprite> image)
+        private IEnumerator OnDownloadImage(string myURL, UnityAction<Sprite,Texture2D> image)
         {
             UnityWebRequest www = UnityWebRequestTexture.GetTexture(myURL);
             yield return www.SendWebRequest();
 
             Texture2D tex = DownloadHandlerTexture.GetContent(www);
             Sprite spri = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
-            image?.Invoke(spri);
+            image?.Invoke(spri, tex);
         }
 
         private void GetColorAndSize(string color, string size)
