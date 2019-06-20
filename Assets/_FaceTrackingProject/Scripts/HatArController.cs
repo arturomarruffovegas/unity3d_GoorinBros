@@ -42,7 +42,15 @@ public class HatArController : MonoBehaviour
     [Header("FireBase")]
     public LoadAssetBundlesFromFirebase m_FireBaseLoader;
 
-    //Temp List Texture
+    [Header("Hat Loading")]
+    public GameObject m_HatLoadingPanel;
+
+    [Header("Head Movement")]
+    public GameObject m_Anchor3DHead;
+    public GameObject m_Anchor3D;
+    public float m_Anchor3DYRotation;
+    public float m_Anchor3DHeadXScale;
+    public float m_Anchor3DHeadYScale;
 
 
     // Start is called before the first frame update
@@ -60,7 +68,9 @@ public class HatArController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        m_Anchor3DYRotation = m_Anchor3D.transform.eulerAngles.y;
+        m_Anchor3DHeadXScale = m_Anchor3DHead.transform.localScale.x;
+        m_Anchor3DHeadYScale = m_Anchor3DHead.transform.localScale.y;
     }
 
     public void LoadHat(List<string> hatIdList)
@@ -84,7 +94,6 @@ public class HatArController : MonoBehaviour
         m_CurrentHat = null;
         m_FireBaseLoader.QueryFirebase(hatId);
 
-        
     }
 
 
@@ -102,23 +111,10 @@ public class HatArController : MonoBehaviour
         m_CurrentHat.transform.localScale = Vector3.one;
 
         LoadMaterialsforBundle(m_CurrentHat, m_CurrentHatContent, m_CurrentId, m_CurrentHatColor);
+
+        //Loading Panel
+        m_HatLoadingPanel.SetActive(false);
     }
-
-    //public void InstantiateHat(string hatId, string hatColor)
-    //{
-    //    //m_CurrentHat = (GameObject)Instantiate(Resources.Load(hatId + "/" + hatId));
-    //    m_CurrentHat = (GameObject)m_FireBaseLoader.obj;
-    //    //HatContent textFile = Resources.Load<HatContent>(hatId + "/" + hatId + "_Scriptable") as HatContent;
-    //    HatContent textFile = m_FireBaseLoader.objContent;
-
-    //    m_CurrentId = hatId;
-    //    m_CurrentHat.transform.parent = m_HatPosition;
-    //    m_CurrentHat.transform.localPosition = Vector3.zero;
-    //    m_CurrentHat.transform.localRotation = Quaternion.identity;
-    //    m_CurrentHat.transform.localScale = Vector3.one;
-
-    //    LoadMaterialsforBundle(m_CurrentHat, textFile, hatId, hatColor);
-    //}
 
     public void LoadTextureforBundle(GameObject hatbundle, string hatId, string hatColor)
     {

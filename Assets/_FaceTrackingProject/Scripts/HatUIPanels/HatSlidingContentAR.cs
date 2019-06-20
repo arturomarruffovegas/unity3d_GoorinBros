@@ -47,16 +47,16 @@ public class HatSlidingContentAR : MonoBehaviour
         m_HatData = new List<HatData>();
         HatData d1 = new HatData();
         d1.hatId = "welfleet";
-        d1.hatName = "hats_benjaminPaul";
+        d1.hatName = "Benjamin Paul";
         d1.hatBrand = "Fedora";
         d1.hatPhoto = hatPhoto;
-        d1.hatColorList = new string[] { "black", "gray" };
+        d1.hatColorList = new string[] { };
         d1.hatSizeList = new string[] { "s", "m", "l" };
         d1.hatColor = "black";
 
         HatData d2 = new HatData();
         d2.hatId = "county line";
-        d2.hatName = "hats_countryLine";
+        d2.hatName = "County Line";
         d2.hatBrand = "Fedora";
         d2.hatPhoto = hatPhoto2;
         d2.hatColorList = new string[] { "black", "gray"};
@@ -80,6 +80,7 @@ public class HatSlidingContentAR : MonoBehaviour
             Destroy(m_ListContentHatPanel[i].gameObject);
         }
         m_ListContentHatPanel.Clear();
+        m_HatArController.m_HatLoadingPanel.SetActive(true);
         LoadContent(m_HatData);
 
     }
@@ -104,6 +105,7 @@ public class HatSlidingContentAR : MonoBehaviour
     {
         m_IsDragging = false;
         float diference = Input.mousePosition.x - m_FirstPointDrag.x;
+        m_HatArController.m_HatLoadingPanel.SetActive(true);
         SwipeMovement(diference);
     }
 
@@ -119,7 +121,7 @@ public class HatSlidingContentAR : MonoBehaviour
             element.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
             //Load data from list (Image, description, etc)
-            element.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(ChangeHat);
+            //element.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(ChangeHat);
             //element.GetComponent<HatPanelArPrefab>().LoadInformation("hats_benjaminPaul", "hats_benjaminPaul",
             //                                         "Fedora", hatPhoto, new string[] { "1", "2", "3" }, new string[] { "s", "m", "l" });
 

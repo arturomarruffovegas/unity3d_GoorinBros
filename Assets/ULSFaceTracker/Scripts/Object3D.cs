@@ -42,10 +42,12 @@ class Object3D : MonoBehaviour
 		0f, 5120, 240f,
 		0f, 0f, 1f};
 
-	//distortion coefficients of camera
-	//float[] distort_coeffs = new float[] {8.9497368953298462e-02f, -3.8742309493295973e-01f, 0, 0, 4.1841034436731994e-01f};
+    //distortion coefficients of camera
+    //float[] distort_coeffs = new float[] {8.9497368953298462e-02f, -3.8742309493295973e-01f, 0, 0, 4.1841034436731994e-01f};
 
-	void Start ()
+    public float m_Anchor3DYRotation;
+
+    void Start ()
 	{
 		_helmet = _anchor3d.transform.GetChild (0);
 		_original_scale = _helmet.transform.localScale;
@@ -174,8 +176,26 @@ class Object3D : MonoBehaviour
 			// apply alignment matrix to object's transform
 			ARUtils.SetTransformFromMatrix(_anchor3d.transform, ref ARM);
 
-			// apply local scale to fit user's face
-			//Plugins.ULS_UnityGetScale3D (_scaleX,_scaleY,_scaleZ);
+            m_Anchor3DYRotation = _anchor3d.transform.eulerAngles.y;
+
+            if ((m_Anchor3DYRotation >= 0 && m_Anchor3DYRotation < 20) ||
+               (m_Anchor3DYRotation > 340 && m_Anchor3DYRotation < 360))
+            {
+                //m_Anchor3DHead.SetActive(true);
+                // apply local scale to fit user's face
+                Plugins.ULS_UnityGetScale3D(_scaleX, _scaleY, _scaleZ);
+                Vector3 s = new Vector3(_scaleX[0], _scaleY[0], _scaleZ[0]);
+                s.Scale(_original_scale);
+                _helmet.transform.localScale = s;
+            }
+            else
+            {
+                //m_Anchor3DHead.SetActive(false);
+                _helmet.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+            }
+
+            // apply local scale to fit user's face
+            //Plugins.ULS_UnityGetScale3D (_scaleX,_scaleY,_scaleZ);
 			//Vector3 s = new Vector3 (_scaleX [0], _scaleY [0], _scaleZ [0]);
 			//s.Scale (_original_scale);
 			//_helmet.transform.localScale = s;
