@@ -19,6 +19,7 @@ namespace goorinAR
 
         //eliminar este boton
         public Button backButtonAR;
+        public Image fade;
 
         [SerializeField]
         [Range(0,1f)]
@@ -61,6 +62,8 @@ namespace goorinAR
                 InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, speedMovementPanel);
                 GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, speedMovementPanel).OnComplete(()=> 
                 {
+                    Object3D.InitialPlugin();
+                    fade.DOFade(0, 2f);
                     HatSlidingContentAR.LoadContentGG();
                  });
             });
@@ -83,6 +86,8 @@ namespace goorinAR
                 {
                     InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
                     GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
+                    Object3D.StopPlugin();
+                    fade.DOFade(1,0.1f);
                 });
             }
         }

@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using ULSTrackerForUnity;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public enum FacePoint {
     RightFace = 0,
@@ -49,8 +50,11 @@ class Object3D : MonoBehaviour
 	Transform _helmet = null;
 	Vector3 _original_scale;
 
-	// intrinsic camera matrix of camera
-	float[] intrinsic_camera_matrix = new float[] {
+    public static UnityAction InitialPlugin;
+    public static UnityAction StopPlugin;
+
+    // intrinsic camera matrix of camera
+    float[] intrinsic_camera_matrix = new float[] {
 		5120, 0f, 320f,
 		0f, 5120, 240f,
 		0f, 0f, 1f};
@@ -74,13 +78,22 @@ class Object3D : MonoBehaviour
 			_marker2d.Add (g);
 		}
 #endif
-	
-		InitializeTrackerAndCheckKey();
-		Application.targetFrameRate = 60;
+
+        //InitializeTrackerAndCheckKey();
+        //Application.targetFrameRate = 60;
+
+        InitialPlugin += InitializeTrackerAndCheckKey;
+        StopPlugin += StopTrackerAndCheckKey;
 	}
 
-	// Initialize tracker and check activation key
-	void InitializeTrackerAndCheckKey ()
+    private void OnDestroy()
+    {
+        InitialPlugin -= InitializeTrackerAndCheckKey;
+        StopPlugin -= StopTrackerAndCheckKey;
+    }
+
+    // Initialize tracker and check activation key
+    private  void InitializeTrackerAndCheckKey ()
 	{
 		// setup tracker callback functions
 		Plugins.OnPreviewStart = initCameraTexture;
@@ -93,13 +106,19 @@ class Object3D : MonoBehaviour
 			Debug.Log ("Tracker initialization succeeded");
 		}
 	}
+    
 
-	//<summary>
-	/// callback function for tracker update
-	///</summary>
-	///<param name="preview"> Input Texture of camera preview</param>
-	///
-	void previewUpdate(Texture preview) {
+    void StopTrackerAndCheckKey()
+    {
+        Plugins.ULS_UnityTrackerTerminate();
+    }
+
+    //<summary>
+    /// callback function for tracker update
+    ///</summary>
+    ///<param name="preview"> Input Texture of camera preview</param>
+    ///
+    void previewUpdate(Texture preview) {
 		//Debug.Log ("preview update.");
 	}
 
