@@ -37,6 +37,8 @@ namespace goorinAR
 
             GalleryPanel.Init();
 
+            Application.targetFrameRate = 60;
+
             GalleryPanel.OnShowProduct.AddListener(product =>
             {
                 InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);

@@ -30,22 +30,26 @@ namespace goorinAR
 
         private string _after;
 
+        private UnityAction<Product, HatGallery> ActionProduct;
+
+        private HatData hatData;
+
         public void Init()
         {
+            hatData = FindObjectOfType<HatData>();
+
             FetchProducts();
 
             _rectTransform = GetComponent<RectTransform>();
             ScrollView.onValueChanged.AddListener(OnScrollRectPositionChanged);
 
+            ActionProduct += OnProduct;
+
         }
 
-        public void Update()
+        private void OnDestroy()
         {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                FetchProducts();
-            }
-
+            ActionProduct -= OnProduct;
 
         }
 
@@ -91,13 +95,21 @@ namespace goorinAR
             instance.SetCurrentProduct(product, _lineItems.Count);
             instance.Load();
 
-            instance.OnClick.AddListener(() => OnShowProduct.Invoke(product));
+            instance.OnClick.AddListener(delegate { OnProduct(product, instance); });
 
             _lineItems.Add(instance);
 
 
 
         }
+
+        private void OnProduct(Product product, HatGallery hatGallery)
+        {
+            hatData.SethatName(hatGallery.GetNameHat());
+            hatData.SethatImage(hatGallery.GetImageHat().sprite);
+            OnShowProduct.Invoke(product);
+        }
+        
 
         private void OnScrollRectPositionChanged(Vector2 scrollOffset)
         {
