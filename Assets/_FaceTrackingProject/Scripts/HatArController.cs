@@ -81,6 +81,7 @@ public class HatArController : MonoBehaviour
     //Load Texture From Bundle Local/Online
     public void LoadHatBundle(string hatId, string hatColor)
     {
+        Debug.Log(hatId);
         m_CurrentHatId = hatId;
         m_CurrentHatColor = hatColor;
 
@@ -93,15 +94,15 @@ public class HatArController : MonoBehaviour
         
         m_CurrentHat = null;
         m_FireBaseLoader.QueryFirebase(hatId);
-
+        //InstantiateHat(null, null);
     }
 
 
     public void InstantiateHat(Object s, Object c)
     {
-        //m_CurrentHat = (GameObject)Instantiate(Resources.Load(hatId + "/" + hatId));
+        //m_CurrentHat = (GameObject)Instantiate(Resources.Load(m_CurrentHatId + "/" + m_CurrentHatId));
         m_CurrentHat = (GameObject)Instantiate((GameObject)s);
-        //HatContent textFile = Resources.Load<HatContent>(hatId + "/" + hatId + "_Scriptable") as HatContent;
+        //m_CurrentHatContent  = Resources.Load<HatContent>(m_CurrentHatId + "/" + m_CurrentHatId + "_content") as HatContent;
         m_CurrentHatContent = (HatContent)c;
 
         m_CurrentId = m_CurrentHatId;

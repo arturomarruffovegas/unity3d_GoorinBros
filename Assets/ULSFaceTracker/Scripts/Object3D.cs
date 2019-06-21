@@ -6,6 +6,19 @@ using System.Collections.Generic;
 using ULSTrackerForUnity;
 using UnityEngine.SceneManagement;
 
+public enum FacePoint {
+    RightFace = 0,
+    LeftFace = 4,
+    RightEyeBrow = 5,
+    LeftEyeBrow = 8,
+    MiddleEyes = 9,
+    Nose = 10,
+    RightEye = 14,
+    LeftEye = 20,
+    RightIntEye = 6,
+    LeftIntEye = 7
+}
+
 class Object3D : MonoBehaviour
 {
 
@@ -157,42 +170,81 @@ class Object3D : MonoBehaviour
 	}
 
 	void Update () {
-		if (!initDone)	
+
+        if (!initDone)	
 			return;
 
         // Show tracking result
 		if (0 < Plugins.ULS_UnityGetPoints (_trackPoints)) {
+
 #if DRAW_MARKERS
-			for(int j=0;j<Plugins.MAX_TRACKER_POINTS;++j) {
+            for (int j=0;j<Plugins.MAX_TRACKER_POINTS;++j) {
 				_marker2d[j].transform.localPosition = new Vector3 (_trackPoints [j * 2], _trackPoints [j * 2 + 1], 0);
-				_marker2d[j].SetActive(drawMarkers);
-			}		
-#endif
-			// get transform matrix for alignment 3d objects
-			Plugins.ULS_UnityGetTransform (_mtx, intrinsic_camera_matrix, null);
-			for (int i=0;i<16;++i) transformationM[i] = _mtx[i];
-			ARM = adjustMatrix * transformationM;
+				_marker2d[j].SetActive(false);
+			}
+            #endif
 
-			// apply alignment matrix to object's transform
-			ARUtils.SetTransformFromMatrix(_anchor3d.transform, ref ARM);
+            float distanceNoseLeftEyeBrow = (_marker2d[(int)FacePoint.Nose].transform.position.x - _marker2d[(int)FacePoint.LeftEyeBrow].transform.position.x);
+            float distanceNoseRightEyeBrow = (_marker2d[(int)FacePoint.RightEyeBrow].transform.position.x - _marker2d[(int)FacePoint.Nose].transform.position.x);
+            float distanceNoseLeftEye = (_marker2d[(int)FacePoint.Nose].transform.position.x - _marker2d[(int)FacePoint.LeftEye].transform.position.x);
+            float distanceNoseRightEye = (_marker2d[(int)FacePoint.RightEye].transform.position.x - _marker2d[(int)FacePoint.Nose].transform.position.x);
+            float distanceNoseLeftFace = (_marker2d[(int)FacePoint.Nose].transform.position.x - _marker2d[(int)FacePoint.LeftFace].transform.position.x);
+            float distanceNoseRightFace = (_marker2d[(int)FacePoint.RightFace].transform.position.x - _marker2d[(int)FacePoint.Nose].transform.position.x);
 
-            m_Anchor3DYRotation = _anchor3d.transform.eulerAngles.y;
+            //float distanceNoseLeftFace = (_marker2d[(int)FacePoint.Nose].transform.position.x - _marker2d[(int)FacePoint.LeftFace].transform.position.x);
+            //float distanceNoseRightFace = (_marker2d[(int)FacePoint.RightFace].transform.position.x - _marker2d[(int)FacePoint.Nose].transform.position.x);
 
-            if ((m_Anchor3DYRotation >= 0 && m_Anchor3DYRotation < 20) ||
-               (m_Anchor3DYRotation > 340 && m_Anchor3DYRotation < 360))
+            //Debug.Log("Left:   " + distanceNoseLeftFace + "   Right:    " + distanceNoseRightFace);
+
+            if ((distanceNoseLeftEyeBrow > distanceNoseLeftEye && distanceNoseLeftEye > distanceNoseLeftFace && 
+                distanceNoseLeftFace < 20.0f && distanceNoseLeftEyeBrow > 40.0f) ||
+               (distanceNoseRightEyeBrow > distanceNoseRightEye && distanceNoseRightEye > distanceNoseRightFace && 
+               distanceNoseRightFace < 20.0f && distanceNoseRightEyeBrow > 40.0f))
             {
-                //m_Anchor3DHead.SetActive(true);
-                // apply local scale to fit user's face
-                Plugins.ULS_UnityGetScale3D(_scaleX, _scaleY, _scaleZ);
-                Vector3 s = new Vector3(_scaleX[0], _scaleY[0], _scaleZ[0]);
-                s.Scale(_original_scale);
-                _helmet.transform.localScale = s;
+                Debug.Log("Face detect failed");
+                _anchor3d.transform.position = new Vector3(0, 0, -180.0f);
             }
             else
             {
-                //m_Anchor3DHead.SetActive(false);
-                _helmet.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+                // get transform matrix for alignment 3d objects            
+                Plugins.ULS_UnityGetTransform(_mtx, intrinsic_camera_matrix, null);
+
+                for (int i = 0; i < 16; ++i) transformationM[i] = _mtx[i];
+                ARM = adjustMatrix * transformationM;
+
+                // apply alignment matrix to object's transform
+                ARUtils.SetTransformFromMatrix(_anchor3d.transform, ref ARM);
+
+                m_Anchor3DYRotation = _anchor3d.transform.eulerAngles.y;
+
+                if ((m_Anchor3DYRotation >= 0 && m_Anchor3DYRotation < 20) ||
+                   (m_Anchor3DYRotation > 340 && m_Anchor3DYRotation < 360))
+                {
+                    //m_Anchor3DHead.SetActive(true);
+                    // apply local scale to fit user's face
+                    Plugins.ULS_UnityGetScale3D(_scaleX, _scaleY, _scaleZ);
+                    //Vector3 s = new Vector3(_scaleX[0], _scaleY[0], _scaleZ[0]);
+                    Vector3 s = new Vector3(_scaleX[0], _scaleY[0], _scaleZ[0]);
+                    s.Scale(_original_scale);
+                    _helmet.transform.localScale = s;
+                    _helmet.transform.localScale = new Vector3(s.x, 2.5f, s.z);
+                }
+                else
+                {
+                    //m_Anchor3DHead.SetActive(false);
+                    if ((m_Anchor3DYRotation >= 20 && m_Anchor3DYRotation < 30) ||
+                        (m_Anchor3DYRotation > 330 && m_Anchor3DYRotation < 340))
+                    {
+                        _helmet.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+                    }
+                    else
+                    {
+                        _helmet.transform.localScale = new Vector3(2.4f, 2.4f, 2.4f);
+                    }
+                }
             }
+
+            
 
             // apply local scale to fit user's face
             //Plugins.ULS_UnityGetScale3D (_scaleX,_scaleY,_scaleZ);
