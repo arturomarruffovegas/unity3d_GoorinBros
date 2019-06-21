@@ -47,7 +47,12 @@ namespace goorinAR
         private Button colorButton;
         [SerializeField]
         private Button SizeButton;
+        [SerializeField]
+        private Button sizingGuideButton;
 
+        [Header("data")]
+        [SerializeField]
+        private string hatName;
         [SerializeField]
         private List<ColorsAndSizes> m_ColorsAndSizes = new List<ColorsAndSizes>();
         public List<GameObject> colors = new List<GameObject>();
@@ -73,6 +78,8 @@ namespace goorinAR
         [SerializeField]
         private Image icon;
 
+        private HatData hatData;
+
         private string nameLocal;
 
         private bool GetImage;
@@ -83,14 +90,15 @@ namespace goorinAR
         private void Start()
         {
             // Utils.CutImage(Image, (text) => { icon.sprite = text; });
+            hatData = FindObjectOfType<HatData>();
 
             hatButton.onClick.AddListener(EnableInfo);
 
             backPanelButton.onClick.AddListener(() =>
             {
+               // ResetValue();
                 OnReturnToProducts.Invoke();
                 ResetInfoAnimation();
-                ResetValue();
             });
 
             addToCartButton.onClick.AddListener(() => {
@@ -99,6 +107,11 @@ namespace goorinAR
             });
 
             tryButton.onClick.AddListener(()=>OnTryProduct.Invoke());
+
+            sizingGuideButton.onClick.AddListener(() => 
+            {
+                Application.OpenURL("https://firebasestorage.googleapis.com/v0/b/goorin-bros.appspot.com/o/Sizes_pdf.pdf?alt=media&token=30e99e0c-e101-4a3d-a9a7-181740ec84cd");
+            });
         }
 
         private void ResetInfoAnimation()
@@ -133,7 +146,6 @@ namespace goorinAR
         private void ResetValue()
         {
             m_ColorsAndSizes.Clear();
-            productImage.sprite = waitIcon;
             addToCartButton.interactable = true;
 
             //colors
@@ -153,32 +165,31 @@ namespace goorinAR
 
         public void SetCurrentProduct(Shopify.Unity.Product product)
         {
-            productTitle.text = product.title();
 
-            //var images = (List<Shopify.Unity.Image>)product.images();
-            //StartCoroutine(ImageHelper.AssignImage(images[0].transformedSrc(), productImage));
+            if(hatData.GethatName() == hatName)
+            {
+                return;
+            }
+            else
+            {
+                ResetValue();
+                //productImage.sprite = waitIcon;
+            }
+
+            hatName = product.title();
+            productTitle.text = hatName;
+            Debug.Log(hatData.GethatImage()==null);
+            productImage.sprite = hatData.GethatImage();
             
             var options = new List<string>();
             var variants = (List<Shopify.Unity.ProductVariant>)product.variants();
-
-            if (variants[0].image() != null)
-            {
-                string _URLImage = variants[0].image().transformedSrc();
-
-                StartCoroutine(OnDownloadImage(_URLImage, (spri,tex) =>
-                {
-                    productImage.sprite = spri;
-                }));
-            }
-
-
+            
             foreach (var variant in variants)
             {
                 if (variant.availableForSale())
                 {
-                    var URLDownloadImage = variant.image().transformedSrc();
-                    Debug.Log("<color=red>" +URLDownloadImage + "</color>");
 
+                    var URLDownloadImage = variant.image().transformedSrc();
                     string name = variant.title();
                     string[] names = name.Split('/');
 
@@ -238,7 +249,7 @@ namespace goorinAR
                 int indexHat = i;
                 colors.Add(cl);
                // cl.transform.GetChild(0).GetComponent<Text>().text = m_ColorsAndSizes[i].NameColor;
-                cl.GetComponent<Button>().onClick.AddListener(delegate { InstantiateSizes(cl.name, indexHat);});
+                cl.GetComponent<Button>().onClick.AddListener(delegate { InstantiateSizes(true,cl.name, indexHat);});
                 cl.SetActive(true);
                 nameLocal = m_ColorsAndSizes[0].NameColor;
             }
@@ -248,7 +259,7 @@ namespace goorinAR
 
 
             if(m_ColorsAndSizes.Count>0)
-                InstantiateSizes(m_ColorsAndSizes[0].NameColor, 0);
+                InstantiateSizes(false,m_ColorsAndSizes[0].NameColor, 0);
 
         }
 
@@ -275,11 +286,12 @@ namespace goorinAR
 
        
 
-        private void InstantiateSizes(string name , int indexHat)
+        private void InstantiateSizes(bool changeImage,string name , int indexHat)
         {
             DeleteSizes();
 
-            productImage.sprite = m_ColorsAndSizes[indexHat].HatImage;
+            if(changeImage)
+                productImage.sprite = m_ColorsAndSizes[indexHat].HatImage;
 
             foreach (var item in colors)
                 item.transform.GetChild(1).GetComponent<Image>().enabled = false;

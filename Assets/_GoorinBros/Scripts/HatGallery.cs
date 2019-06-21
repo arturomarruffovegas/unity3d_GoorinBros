@@ -25,14 +25,14 @@ namespace goorinAR
         [SerializeField]
         private Button hatButton;
 
-        public Text GetNameHat()
+        public string GetNameHat()
         {
-            return nameHat;
+            return nameHat.text;
         }
 
-        public void SetNameHat(Text value)
+        public void SetNameHat(string value)
         {
-            nameHat = value;
+            nameHat.text = value;
         }
 
         public Image GetImageHat()
@@ -83,7 +83,7 @@ namespace goorinAR
         {
             gameObject.SetActive(true);
 
-            nameHat.text = product.title();
+            SetNameHat(product.title());
 
             var variants = (List<Shopify.Unity.ProductVariant>)product.variants();
             priceHat.text = variants.First().price().ToString("C");
@@ -93,6 +93,8 @@ namespace goorinAR
             //{
             //    _imageSrc = images.First().transformedSrc("compact");
             //}
+
+
             if (variants[0].image() != null)
             {
                 string _URLImage = variants[0].image().transformedSrc();
