@@ -86,7 +86,12 @@ namespace goorinAR
             SetNameHat(product.title());
 
             var variants = (List<Shopify.Unity.ProductVariant>)product.variants();
-            priceHat.text = variants.First().price().ToString("C");
+
+            string price = variants.First().price().ToString();
+        //    price.Replace("s/", "$");
+            Debug.Log(price);
+
+            priceHat.text = "$ " + price;
 
             //var images = (List<Shopify.Unity.Image>)product.images();
             //if (images.Count > 0)

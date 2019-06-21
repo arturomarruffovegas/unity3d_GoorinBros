@@ -49,7 +49,7 @@ namespace goorinAR
            // VariantTitle.gameObject.SetActive(variant.title() != "Default Title");
            // VariantTitle.text = variant.title();
             Quantity.text = quantity.ToString();
-            Price.text = variant.price().ToString("C");
+            Price.text = "$ " +  variant.price().ToString();
 
             try
             {
