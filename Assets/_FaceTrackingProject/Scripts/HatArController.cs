@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using goorinAR;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -52,6 +53,9 @@ public class HatArController : MonoBehaviour
     public float m_Anchor3DHeadXScale;
     public float m_Anchor3DHeadYScale;
 
+    [Header("Cart")]
+    public AddProductToCartEvent OnAddProductToCart = new AddProductToCartEvent();
+
 
     // Start is called before the first frame update
     void Start()
@@ -93,7 +97,9 @@ public class HatArController : MonoBehaviour
         }
         
         m_CurrentHat = null;
-        m_FireBaseLoader.QueryFirebase(hatId);
+
+       // m_FireBaseLoader.QueryFirebase(hatId);
+
         //InstantiateHat(null, null);
     }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 namespace goorinAR
 {
@@ -17,9 +18,8 @@ namespace goorinAR
         [SerializeField]
         private HatCartPanel HatCartPanel;
 
-        //eliminar este boton
-        public Button backButtonAR;
-        public Image fade;
+        public static UnityAction OnShoopingCartPanelAR;
+        public static UnityAction OnBackAR;
 
         [SerializeField]
         [Range(0,1f)]
@@ -33,6 +33,9 @@ namespace goorinAR
         public void Start()
         {
             Tags.useTag = true;
+
+            OnShoopingCartPanelAR += ShoopingCartPanelAR;
+            OnBackAR += BackAR;
 
             ShopifyHelper.Init(AccessToken, ShopDomain);
 
@@ -63,8 +66,8 @@ namespace goorinAR
                 GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, speedMovementPanel).OnComplete(()=> 
                 {
                     Object3D.InitialPlugin();
-                    fade.DOFade(0, 2f);
-                    HatSlidingContentAR.LoadContentGG();
+                   /// fade.DOFade(0, 2f);
+                  //  HatSlidingContentAR.LoadContentGG();
                  });
             });
 
@@ -80,16 +83,33 @@ namespace goorinAR
 
 
             //eliminar metodo
-            if (backButtonAR != null)
-            {
-                backButtonAR.onClick.AddListener(() =>
-                {
-                    InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
-                    GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
-                    Object3D.StopPlugin();
-                    fade.DOFade(1,0.1f);
-                });
-            }
+            //if (backButtonAR != null)
+            //{
+            //    backButtonAR.onClick.AddListener(() =>
+            //    {
+            //        InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
+            //        GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
+            //        Object3D.StopPlugin();
+            //       // fade.DOFade(1,0.1f);
+            //    });
+            //}
+        }
+        private void OnDestroy()
+        {
+            OnShoopingCartPanelAR -= ShoopingCartPanelAR;
+            OnBackAR -= BackAR;
+        }
+
+        private void ShoopingCartPanelAR()
+        {
+            HatCartPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
+        }
+
+        private void BackAR()
+        {
+            InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
+            GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
+            Object3D.StopPlugin();
         }
     }
 }

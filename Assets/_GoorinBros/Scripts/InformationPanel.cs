@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using Shopify.Examples.Helpers;
 using UnityEngine.Events;
 using System.Linq;
 using UnityEngine.Networking;
@@ -55,7 +54,7 @@ namespace goorinAR
         private string hatName;
         [SerializeField]
         private List<ColorsAndSizes> m_ColorsAndSizes = new List<ColorsAndSizes>();
-        public List<GameObject> colors = new List<GameObject>();
+        private List<GameObject> colors = new List<GameObject>();
         private List<GameObject> sizes = new List<GameObject>();
        // public List<Sprite> m_hatImages = new List<Sprite>();
 
@@ -84,8 +83,7 @@ namespace goorinAR
 
         private bool GetImage;
 
-        
-
+        private Shopify.Unity.Product product;
 
         private void Start()
         {
@@ -106,12 +104,21 @@ namespace goorinAR
                 OnViewCart.Invoke();
             });
 
-            tryButton.onClick.AddListener(()=>OnTryProduct.Invoke());
+            tryButton.onClick.AddListener(OnActionTry);
 
             sizingGuideButton.onClick.AddListener(() => 
             {
                 Application.OpenURL("https://firebasestorage.googleapis.com/v0/b/goorin-bros.appspot.com/o/Sizes_pdf.pdf?alt=media&token=30e99e0c-e101-4a3d-a9a7-181740ec84cd");
             });
+        }
+
+        private void OnActionTry()
+        {
+            OnTryProduct.Invoke();
+            if (product != null)
+            {
+                HatSlidingContentAR.OnSearchHat(m_ColorsAndSizes,product, CurrentVariant);
+            }
         }
 
         private void ResetInfoAnimation()
@@ -175,10 +182,10 @@ namespace goorinAR
                 ResetValue();
                 //productImage.sprite = waitIcon;
             }
+            this.product = product;
 
             hatName = product.title();
             productTitle.text = hatName;
-            Debug.Log(hatData.GethatImage()==null);
             productImage.sprite = hatData.GethatImage();
             
             var options = new List<string>();
@@ -189,7 +196,7 @@ namespace goorinAR
                 if (variant.availableForSale())
                 {
 
-                    var URLDownloadImage = variant.image().transformedSrc();
+                    var URLDownloadImage = variant.image().transformedSrc("large");
                     string name = variant.title();
                     string[] names = name.Split('/');
 
@@ -402,13 +409,5 @@ namespace goorinAR
         }
 
     }
-
-    [System.Serializable]
-    public class ColorsAndSizes
-    {
-        public string NameColor;
-        public string URLImage;
-        public Sprite HatImage;
-        public List<string> sizes = new List<string>();
-    }
+    
 }

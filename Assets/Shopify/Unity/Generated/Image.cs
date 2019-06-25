@@ -4,11 +4,14 @@ namespace Shopify.Unity {
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using Shopify.Unity.SDK;
+    using UnityEngine;
 
     /// <summary>
     /// Represents an image resource.
     /// </summary>
     public class Image : AbstractResponse, ICloneable {
+        internal Sprite sprite;
+
         /// <summary>
         /// <see ref="Image" /> Accepts deserialized json data.
         /// <see ref="Image" /> Will further parse passed in data.

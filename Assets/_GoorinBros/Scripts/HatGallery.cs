@@ -88,9 +88,6 @@ namespace goorinAR
             var variants = (List<Shopify.Unity.ProductVariant>)product.variants();
 
             string price = variants.First().price().ToString();
-        //    price.Replace("s/", "$");
-            Debug.Log(price);
-
             priceHat.text = "$ " + price;
 
             //var images = (List<Shopify.Unity.Image>)product.images();
@@ -102,9 +99,9 @@ namespace goorinAR
 
             if (variants[0].image() != null)
             {
-                string _URLImage = variants[0].image().transformedSrc();
+                string _URLImage = variants[0].image().transformedSrc("large");
 
-                StartCoroutine(OnDownloadImage(_URLImage, (spri) =>
+                StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
                 {
                     SetImageHat(spri);
                 }));
@@ -113,14 +110,14 @@ namespace goorinAR
             hatButton.onClick.AddListener(() => OnClick.Invoke());
         }
 
-        private IEnumerator OnDownloadImage(string myURL, UnityAction<Sprite> image)
-        {
-            UnityWebRequest www = UnityWebRequestTexture.GetTexture(myURL);
-            yield return www.SendWebRequest();
+        //private IEnumerator OnDownloadImage(string myURL, UnityAction<Sprite> image)
+        //{
+        //    UnityWebRequest www = UnityWebRequestTexture.GetTexture(myURL);
+        //    yield return www.SendWebRequest();
 
-            Texture2D tex = DownloadHandlerTexture.GetContent(www);
-            Sprite spri = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
-            image?.Invoke(spri);
-        }
+        //    Texture2D tex = DownloadHandlerTexture.GetContent(www);
+        //    Sprite spri = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
+        //    image?.Invoke(spri);
+        //}
     }
 }

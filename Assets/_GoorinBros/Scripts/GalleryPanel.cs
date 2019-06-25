@@ -34,6 +34,8 @@ namespace goorinAR
 
         private HatData hatData;
 
+        public static UnityAction<Product> galleryAR;
+        
         public void Init()
         {
             hatData = FindObjectOfType<HatData>();
@@ -99,8 +101,7 @@ namespace goorinAR
 
             _lineItems.Add(instance);
 
-
-
+            galleryAR(product);
         }
 
         private void OnProduct(Product product, HatGallery hatGallery)
@@ -140,7 +141,31 @@ namespace goorinAR
         }
 
 
+
+        private bool SearchName(List<ColorsAndSizes> list, string name)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].NameColor == name)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private void AddSizes(List<ColorsAndSizes> list, string name, string size)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].NameColor == name)
+                    list[i].sizes.Add(size);
+            }
+        }
+
+
     }
+
+   
 }
 
 public class ShowProductEvent : UnityEvent<Shopify.Unity.Product>

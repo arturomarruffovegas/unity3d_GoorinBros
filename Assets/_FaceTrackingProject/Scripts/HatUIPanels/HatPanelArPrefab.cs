@@ -5,13 +5,16 @@ using UnityEngine.UI;
 
 public class HatPanelArPrefab : MonoBehaviour
 {
-    private string m_HatId;
+    [HideInInspector]
+    public string m_HatId;
+
+    public int index;
     public Text m_HatName;
     public Text m_HatBrand;
     public Image m_HatPhoto;
     public RectTransform m_HatColorList;
     public RectTransform m_HatSizeList;
-
+    public Button cart;
     public GameObject m_ColorOptionPrefab;
     public GameObject m_SizeOptionPrefab;
 
@@ -28,20 +31,15 @@ public class HatPanelArPrefab : MonoBehaviour
         m_HatSizes = new List<GameObject>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void LoadInformation(string hatId, string hatName, string hatBrand, Sprite hatPhoto, string[] hatColorList, string[] hatSizeList, string hatColor)
+    
+    public void LoadInformation(string hatId, string hatName, string hatBrand, Sprite hatPhoto, List<string> hatColorList, List<string> hatSizeList, string hatColor)
     {
         m_HatId = hatId;
         m_HatName.text = hatName;
         m_HatBrand.text = hatBrand;
         m_HatPhoto.sprite = hatPhoto;
 
-        for(int i = 0; i < hatColorList.Length; i++)
+        for(int i = 0; i < hatColorList.Count; i++)
         {
             GameObject col = (GameObject)Instantiate(m_ColorOptionPrefab, m_HatColorList.transform);
             col.SetActive(true);
@@ -53,7 +51,7 @@ public class HatPanelArPrefab : MonoBehaviour
             //m_HatColors.Add(col);
         }
 
-        for (int i = 0; i < hatSizeList.Length; i++)
+        for (int i = 0; i < hatSizeList.Count; i++)
         {
             GameObject siz = (GameObject)Instantiate(m_SizeOptionPrefab, m_HatSizeList.transform);
             siz.SetActive(true);
