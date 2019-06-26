@@ -174,8 +174,6 @@ namespace goorinAR
 
         public void SetCurrentProduct(Shopify.Unity.Product product)
         {
-
-            Debug.Log("si llega aqui");
             if(hatData.GethatName() == hatName)
             {
                 return;
@@ -186,7 +184,6 @@ namespace goorinAR
                 finishDownloadImage = false;
                 //productImage.sprite = waitIcon;
             }
-            Debug.Log("nooo");
             this.product = product;
 
             hatName = product.title();
@@ -364,9 +361,6 @@ namespace goorinAR
         private void GetColorAndSize(string color, string size)
         {
             string value = color + " / " + size;
-
-            Debug.Log("Size: " + value);
-
             var variants = (List<Shopify.Unity.ProductVariant>)CurrentProduct.variants();
             foreach (var item in variants)
             {

@@ -159,7 +159,7 @@ class Object3D : MonoBehaviour
 #if DRAW_MARKERS
 			for(int j=0;j<Plugins.MAX_TRACKER_POINTS;++j) {
 				_marker2d[j].transform.localPosition = new Vector3 (_trackPoints [j * 2], _trackPoints [j * 2 + 1], 0);
-				_marker2d[j].SetActive(drawMarkers);
+				_marker2d[j].SetActive(true);
 			}		
 #endif
 			// get transform matrix for alignment 3d objects
@@ -174,7 +174,7 @@ class Object3D : MonoBehaviour
 			Plugins.ULS_UnityGetScale3D (_scaleX,_scaleY,_scaleZ);
 			Vector3 s = new Vector3 (_scaleX [0], _scaleY [0], _scaleZ [0]);
 			s.Scale (_original_scale);
-			_helmet.transform.localScale = s;
+			//_helmet.transform.localScale = s;
 		}
 	}
 

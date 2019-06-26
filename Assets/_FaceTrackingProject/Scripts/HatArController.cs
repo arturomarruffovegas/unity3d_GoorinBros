@@ -43,7 +43,8 @@ public class HatArController : MonoBehaviour
     [Header("FireBase")]
     public LoadAssetBundlesFromFirebase m_FireBaseLoader;
 
-    [Header("Hat Loading")]
+    [Header("Messages")]
+    public GameObject m_HatErrorPanel;
     public GameObject m_HatLoadingPanel;
 
     [Header("Head Movement")]
@@ -66,15 +67,17 @@ public class HatArController : MonoBehaviour
         m_SavePhotoButton.onClick.AddListener(SaveCapturePhoto);
         m_PhotoPanelBackButton.onClick.AddListener(DeactivePhotoPanel);
 
-        LoadAssetBundlesFromFirebase.FinishProccess += InstantiateHat;
         HatSlidingContentAR.OnSetHatName += LoadHatAssetBundle;
+        FirebaseController.OnErrorAssetBundle += OnErrorAssetBundle;
+        LoadAssetBundlesFromFirebase.FinishProccess += InstantiateHat;
 
     }
 
     private void OnDestroy()
     {
-        LoadAssetBundlesFromFirebase.FinishProccess -= InstantiateHat;
         HatSlidingContentAR.OnSetHatName -= LoadHatAssetBundle;
+        FirebaseController.OnErrorAssetBundle -= OnErrorAssetBundle;
+        LoadAssetBundlesFromFirebase.FinishProccess -= InstantiateHat;
     }
 
     // Update is called once per frame
@@ -122,12 +125,22 @@ public class HatArController : MonoBehaviour
         m_CurrentHat = null;
         m_FireBaseLoader.QueryFirebase(name);
         Debug.Log("<color=blue> descargando " + name + "</color>");
+        m_HatLoadingPanel.SetActive(true);
+        m_HatErrorPanel.SetActive(false);
+    }
+
+    private void OnErrorAssetBundle()
+    {
+        m_HatLoadingPanel.SetActive(false);
+        m_HatErrorPanel.SetActive(true);
     }
 
 
     public void InstantiateHat(Object s, Object c)
     {
         Debug.Log("<color=blue> descargo </color>");
+        m_HatLoadingPanel.SetActive(false);
+        m_HatErrorPanel.SetActive(false);
         //m_CurrentHat = (GameObject)Instantiate(Resources.Load(m_CurrentHatId + "/" + m_CurrentHatId));
         m_CurrentHat = (GameObject)Instantiate((GameObject)s);
         //m_CurrentHatContent  = Resources.Load<HatContent>(m_CurrentHatId + "/" + m_CurrentHatId + "_content") as HatContent;

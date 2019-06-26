@@ -98,7 +98,7 @@ namespace Shopify.Unity.SDK {
         private Dictionary<string, object> GetJSON(string response) {
             Dictionary<string, object> json = (Dictionary<string, object>) Json.Deserialize(response);
 # if  UNITY_EDITOR_WIN
-            Debug.LogError(response);
+            Debug.Log(response);
             File.WriteAllText("D:\\GG.txt", response);
 #endif
             if (json == null) {

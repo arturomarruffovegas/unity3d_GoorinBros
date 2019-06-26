@@ -10,9 +10,9 @@ public class LoadAssetBundlesFromFirebase : MonoBehaviour
     void Start()
     {
         FirebaseController.InitialStorageFirebase(FirebaseController.ConstantStorageURL);
+      
     }
-
-
+    
     public void QueryFirebase(string Name)
     {
         FirebaseController.GetURLDownload(Name, FinishProccess);

@@ -20,6 +20,8 @@ public static class FirebaseController
 
     public static string ConstantStorageURL = "gs://goorin-bros.appspot.com";
 
+    public static UnityAction OnErrorAssetBundle;
+
     public static void InitialStorageFirebase(string storageURL)
     {
         storage = FirebaseStorage.DefaultInstance;
@@ -44,40 +46,48 @@ public static class FirebaseController
 
     private static async void GG(Task<Uri> uriM, Task<Uri> uriC, string name, UnityAction<UnityEngine.Object, UnityEngine.Object> _URLS)
     {
-        var s = await uriM;
-        var d = await uriC;
-
-        string myURLM = "";
-        UnityEngine.Object model;
-        string myURLC = "";
-        UnityEngine.Object content;
-
-        if (!uriM.IsFaulted && !uriM.IsCanceled)
+        try
         {
-            myURLM = uriM.Result.OriginalString;
-            Debug.Log("Download Model: " + uriM.Result.OriginalString);
+            var s = await uriM;
+            var d = await uriC;
 
-            OnDownloadAssetBundles(name, myURLM, (mo) =>
+            string myURLM = "";
+            UnityEngine.Object model;
+            string myURLC = "";
+            UnityEngine.Object content;
+
+            if (!uriM.IsFaulted && !uriM.IsCanceled)
             {
-                model = mo;
+                myURLM = uriM.Result.OriginalString;
+                Debug.Log("Download Model: " + uriM.Result.OriginalString);
 
-                if (!uriC.IsFaulted && !uriC.IsCanceled)
+                OnDownloadAssetBundles(name, myURLM, (mo) =>
                 {
-                    myURLC = uriC.Result.OriginalString;
-                    Debug.Log("Download Content: " + uriC.Result.OriginalString);
+                    model = mo;
 
-                    OnDownloadAssetBundles(name + "_content", myURLC, (co) =>
+                    if (!uriC.IsFaulted && !uriC.IsCanceled)
                     {
-                        content = co;
-                        _URLS?.Invoke(model, content);
-                    });
-                }
-            });
+                        myURLC = uriC.Result.OriginalString;
+                        Debug.Log("Download Content: " + uriC.Result.OriginalString);
+
+                        OnDownloadAssetBundles(name + "_content", myURLC, (co) =>
+                        {
+                            content = co;
+                            _URLS?.Invoke(model, content);
+                        });
+                    }
+                });
+            }
+            else
+            {
+               
+            }
         }
-        else
+        catch (Exception e)
         {
-            Debug.Log("error");
+            OnErrorAssetBundle();
         }
+        
     }
 
     private static void OnDownloadAssetBundles(string Name, string UrlModel, UnityAction<UnityEngine.Object> model)
