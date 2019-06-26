@@ -64,6 +64,8 @@ public class HatSlidingContentAR : MonoBehaviour
     private HatCartPanel HatCartPanel;
     public UnityEvent OnViewCart;
     Button cartButton;
+    public static UnityAction<string> OnSetHatName;
+
    
     public ShowProductEvent OnShowProduct = new ShowProductEvent();
 
@@ -179,9 +181,8 @@ public class HatSlidingContentAR : MonoBehaviour
                 one = true;
 
                 CurrentProduct = product;
+                OnSetHatName(product.title().ToLower());
                 CurrentVariant = productVariant;
-
-                
 
                 if (colorsAndSizes != null)
                 {

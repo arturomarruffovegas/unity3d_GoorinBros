@@ -67,6 +67,14 @@ public class HatArController : MonoBehaviour
         m_PhotoPanelBackButton.onClick.AddListener(DeactivePhotoPanel);
 
         LoadAssetBundlesFromFirebase.FinishProccess += InstantiateHat;
+        HatSlidingContentAR.OnSetHatName += LoadHatAssetBundle;
+
+    }
+
+    private void OnDestroy()
+    {
+        LoadAssetBundlesFromFirebase.FinishProccess -= InstantiateHat;
+        HatSlidingContentAR.OnSetHatName -= LoadHatAssetBundle;
     }
 
     // Update is called once per frame
@@ -98,14 +106,28 @@ public class HatArController : MonoBehaviour
         
         m_CurrentHat = null;
 
-       // m_FireBaseLoader.QueryFirebase(hatId);
+        m_FireBaseLoader.QueryFirebase(hatId);
 
         //InstantiateHat(null, null);
+    }
+
+    private void LoadHatAssetBundle(string name)
+    {
+        m_CurrentHatId = name;
+        if (m_CurrentHat)
+        {
+            Destroy(m_CurrentHat.gameObject);
+        }
+
+        m_CurrentHat = null;
+        m_FireBaseLoader.QueryFirebase(name);
+        Debug.Log("<color=blue> descargando " + name + "</color>");
     }
 
 
     public void InstantiateHat(Object s, Object c)
     {
+        Debug.Log("<color=blue> descargo </color>");
         //m_CurrentHat = (GameObject)Instantiate(Resources.Load(m_CurrentHatId + "/" + m_CurrentHatId));
         m_CurrentHat = (GameObject)Instantiate((GameObject)s);
         //m_CurrentHatContent  = Resources.Load<HatContent>(m_CurrentHatId + "/" + m_CurrentHatId + "_content") as HatContent;
@@ -117,10 +139,10 @@ public class HatArController : MonoBehaviour
         m_CurrentHat.transform.localRotation = Quaternion.identity;
         m_CurrentHat.transform.localScale = Vector3.one;
 
-        LoadMaterialsforBundle(m_CurrentHat, m_CurrentHatContent, m_CurrentId, m_CurrentHatColor);
+       // LoadMaterialsforBundle(m_CurrentHat, m_CurrentHatContent, m_CurrentId, m_CurrentHatColor);
 
         //Loading Panel
-        m_HatLoadingPanel.SetActive(false);
+       // m_HatLoadingPanel.SetActive(false);
     }
 
     public void LoadTextureforBundle(GameObject hatbundle, string hatId, string hatColor)

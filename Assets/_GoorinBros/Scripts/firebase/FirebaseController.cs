@@ -74,6 +74,10 @@ public static class FirebaseController
                 }
             });
         }
+        else
+        {
+            Debug.Log("error");
+        }
     }
 
     private static void OnDownloadAssetBundles(string Name, string UrlModel, UnityAction<UnityEngine.Object> model)

@@ -120,7 +120,6 @@ namespace goorinAR
             if (product != null)
             {
                 HatSlidingContentAR.OnSearchHat(m_ColorsAndSizes, product, CurrentVariant);
-                Debug.Log("si funciona");
             }
         }
 

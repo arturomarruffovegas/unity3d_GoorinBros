@@ -5,20 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using ULSTrackerForUnity;
 using UnityEngine.SceneManagement;
-using UnityEngine.Events;
-
-public enum FacePoint {
-    RightFace = 0,
-    LeftFace = 4,
-    RightEyeBrow = 5,
-    LeftEyeBrow = 8,
-    MiddleEyes = 9,
-    Nose = 10,
-    RightEye = 14,
-    LeftEye = 20,
-    RightIntEye = 6,
-    LeftIntEye = 7
-}
 
 class Object3D : MonoBehaviour
 {
@@ -50,21 +36,16 @@ class Object3D : MonoBehaviour
 	Transform _helmet = null;
 	Vector3 _original_scale;
 
-    public static UnityAction InitialPlugin;
-    public static UnityAction StopPlugin;
-
-    // intrinsic camera matrix of camera
-    float[] intrinsic_camera_matrix = new float[] {
+	// intrinsic camera matrix of camera
+	float[] intrinsic_camera_matrix = new float[] {
 		5120, 0f, 320f,
 		0f, 5120, 240f,
 		0f, 0f, 1f};
 
-    //distortion coefficients of camera
-    //float[] distort_coeffs = new float[] {8.9497368953298462e-02f, -3.8742309493295973e-01f, 0, 0, 4.1841034436731994e-01f};
+	//distortion coefficients of camera
+	//float[] distort_coeffs = new float[] {8.9497368953298462e-02f, -3.8742309493295973e-01f, 0, 0, 4.1841034436731994e-01f};
 
-    public float m_Anchor3DYRotation;
-
-    void Start ()
+	void Start ()
 	{
 		_helmet = _anchor3d.transform.GetChild (0);
 		_original_scale = _helmet.transform.localScale;
@@ -78,22 +59,13 @@ class Object3D : MonoBehaviour
 			_marker2d.Add (g);
 		}
 #endif
-
-        //InitializeTrackerAndCheckKey();
-        //Application.targetFrameRate = 60;
-
-        InitialPlugin += InitializeTrackerAndCheckKey;
-        StopPlugin += StopTrackerAndCheckKey;
+	
+		InitializeTrackerAndCheckKey();
+		Application.targetFrameRate = 60;
 	}
 
-    private void OnDestroy()
-    {
-        InitialPlugin -= InitializeTrackerAndCheckKey;
-        StopPlugin -= StopTrackerAndCheckKey;
-    }
-
-    // Initialize tracker and check activation key
-    private  void InitializeTrackerAndCheckKey ()
+	// Initialize tracker and check activation key
+	void InitializeTrackerAndCheckKey ()
 	{
 		// setup tracker callback functions
 		Plugins.OnPreviewStart = initCameraTexture;
@@ -106,19 +78,13 @@ class Object3D : MonoBehaviour
 			Debug.Log ("Tracker initialization succeeded");
 		}
 	}
-    
 
-    void StopTrackerAndCheckKey()
-    {
-        Plugins.ULS_UnityTrackerTerminate();
-    }
-
-    //<summary>
-    /// callback function for tracker update
-    ///</summary>
-    ///<param name="preview"> Input Texture of camera preview</param>
-    ///
-    void previewUpdate(Texture preview) {
+	//<summary>
+	/// callback function for tracker update
+	///</summary>
+	///<param name="preview"> Input Texture of camera preview</param>
+	///
+	void previewUpdate(Texture preview) {
 		//Debug.Log ("preview update.");
 	}
 
@@ -142,144 +108,78 @@ class Object3D : MonoBehaviour
 		// get FOV for AR camera by calibration function
 		Plugins.ULS_UnityCalibration (intrinsic_camera_matrix, w, h, _fovx, _fovy);
 
-        //Debug.Log ("fovx:" + _fovx [0] + ",fovy:" + _fovy [0]);
-        //Debug.Log ("screen width:" + Screen.width + ",height:" + Screen.height);
-        //Debug.Log ("camera width:" + w + ",height:" + h);
-        //Debug.Log ("rotate: "+rotate);
+		//Debug.Log ("fovx:" + _fovx [0] + ",fovy:" + _fovy [0]);
+		//Debug.Log ("screen width:" + Screen.width + ",height:" + Screen.height);
+		//Debug.Log ("camera width:" + w + ",height:" + h);
+		//Debug.Log ("rotate: "+rotate);
 
-        // adjust transforom for mapping tracker points
+		// adjust transforom for mapping tracker points
 #if UNITY_STANDALONE || UNITY_EDITOR
-        // adjust scale and position to map tracker points
-        transform.localScale = new Vector3(w, h, 1);
-        transform.localPosition = new Vector3(w / 2, h / 2, 1);
-        transform.parent.localScale = new Vector3(-1, -1, 1);
-        transform.parent.localPosition = new Vector3(w / 2, h / 2, 0);
-        Camera.main.orthographicSize = h / 2;
-        ARCamera.fieldOfView = _fovy[0];
-        adjustMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(-1, -1, 1));
+		// adjust scale and position to map tracker points
+		transform.localScale = new Vector3 (w, h, 1);
+		transform.localPosition = new Vector3 (w/2, h/2, 1);
+		transform.parent.localScale = new Vector3 (-1, -1, 1);
+		transform.parent.localPosition = new Vector3 (w/2, h/2, 0);
+		Camera.main.orthographicSize = h / 2;
+		ARCamera.fieldOfView = _fovy[0];
+		adjustMatrix = Matrix4x4.TRS (Vector3.zero, Quaternion.identity, new Vector3 (-1, -1, 1));
 
 #elif UNITY_IOS || UNITY_ANDROID
-        transform.localScale = new Vector3(w, h, 1);
-        transform.localPosition = new Vector3(w / 2, h / 2, 1); //anchor: left-bottom
-        transform.parent.localPosition = Vector3.zero; //reset position for rotation
-        transform.parent.transform.eulerAngles = new Vector3(0, 0, rotate); //orientation
-        transform.parent.localPosition = transform.parent.transform.TransformPoint(-transform.localPosition); //move to center
+		transform.localScale = new Vector3 (w, h, 1);
+		transform.localPosition = new Vector3 (w/2, h/2, 1); //anchor: left-bottom
+		transform.parent.localPosition = Vector3.zero; //reset position for rotation
+		transform.parent.transform.eulerAngles = new Vector3 (0, 0, rotate); //orientation
+		transform.parent.localPosition = transform.parent.transform.TransformPoint(-transform.localPosition); //move to center
 
-        //if (Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight) {
-        //	Camera.main.orthographicSize = h/2;			
-        //	float v =  (float)(w * Screen.height) / (h * Screen.width);
-        //	ARCamera.rect = new Rect ((1-v)*0.5f, 0, v, 1); // AR viewport
-        //	ARCamera.fieldOfView = _fovy[0];
-        //} else {
-            float aspect = ((float)Screen.height) / ((float)Screen.width) * h / w;
-            float v = 1f / aspect;
-            //Camera.main.orthographicSize = w/2 * aspect; 
-            Camera.main.orthographicSize = h / 2;
-            //ARCamera.rect = new Rect (0, (1-v)*0.5f, 1, v); // AR viewport
-            ARCamera.rect = new Rect(0, 0, 1, 1); // AR viewport
-            ARCamera.fieldOfView = _fovx[0] / aspect;
+		if (Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight) {
+			Camera.main.orthographicSize = h/2;			
+			float v =  (float)(w * Screen.height) / (h * Screen.width);
+			ARCamera.rect = new Rect ((1-v)*0.5f, 0, v, 1); // AR viewport
+			ARCamera.fieldOfView = _fovy[0];
+		} else {
+			float aspect = ((float)Screen.height)/((float)Screen.width)*h/w;
+			float v = 1f / aspect;
+			Camera.main.orthographicSize = w/2 * aspect; 
+			ARCamera.rect = new Rect (0, (1-v)*0.5f, 1, v); // AR viewport
+			ARCamera.fieldOfView = _fovx[0];
+		}
 
-            //ARCamera.fieldOfView = _fovx[0]/ 2;
-        //}
-
-        adjustMatrix = Matrix4x4.TRS (Vector3.zero, Quaternion.Euler(new Vector3(0,0,rotate)), new Vector3 (1, 1, 1));
+		adjustMatrix = Matrix4x4.TRS (Vector3.zero, Quaternion.Euler(new Vector3(0,0,rotate)), new Vector3 (1, 1, 1));
 #endif
 
 		initDone = true;
 	}
 
 	void Update () {
-
-        if (!initDone)	
+		if (!initDone)	
 			return;
 
         // Show tracking result
 		if (0 < Plugins.ULS_UnityGetPoints (_trackPoints)) {
-
 #if DRAW_MARKERS
-            for (int j=0;j<Plugins.MAX_TRACKER_POINTS;++j) {
+			for(int j=0;j<Plugins.MAX_TRACKER_POINTS;++j) {
 				_marker2d[j].transform.localPosition = new Vector3 (_trackPoints [j * 2], _trackPoints [j * 2 + 1], 0);
-				_marker2d[j].SetActive(false);
-			}
-            #endif
+				_marker2d[j].SetActive(drawMarkers);
+			}		
+#endif
+			// get transform matrix for alignment 3d objects
+			Plugins.ULS_UnityGetTransform (_mtx, intrinsic_camera_matrix, null);
+			for (int i=0;i<16;++i) transformationM[i] = _mtx[i];
+			ARM = adjustMatrix * transformationM;
 
-            float distanceNoseLeftEyeBrow = (_marker2d[(int)FacePoint.Nose].transform.position.x - _marker2d[(int)FacePoint.LeftEyeBrow].transform.position.x);
-            float distanceNoseRightEyeBrow = (_marker2d[(int)FacePoint.RightEyeBrow].transform.position.x - _marker2d[(int)FacePoint.Nose].transform.position.x);
-            float distanceNoseLeftEye = (_marker2d[(int)FacePoint.Nose].transform.position.x - _marker2d[(int)FacePoint.LeftEye].transform.position.x);
-            float distanceNoseRightEye = (_marker2d[(int)FacePoint.RightEye].transform.position.x - _marker2d[(int)FacePoint.Nose].transform.position.x);
-            float distanceNoseLeftFace = (_marker2d[(int)FacePoint.Nose].transform.position.x - _marker2d[(int)FacePoint.LeftFace].transform.position.x);
-            float distanceNoseRightFace = (_marker2d[(int)FacePoint.RightFace].transform.position.x - _marker2d[(int)FacePoint.Nose].transform.position.x);
+			// apply alignment matrix to object's transform
+			ARUtils.SetTransformFromMatrix(_anchor3d.transform, ref ARM);
 
-            //float distanceNoseLeftFace = (_marker2d[(int)FacePoint.Nose].transform.position.x - _marker2d[(int)FacePoint.LeftFace].transform.position.x);
-            //float distanceNoseRightFace = (_marker2d[(int)FacePoint.RightFace].transform.position.x - _marker2d[(int)FacePoint.Nose].transform.position.x);
-
-            //Debug.Log("Left:   " + distanceNoseLeftFace + "   Right:    " + distanceNoseRightFace);
-
-            if ((distanceNoseLeftEyeBrow > distanceNoseLeftEye && distanceNoseLeftEye > distanceNoseLeftFace && 
-                distanceNoseLeftFace < 20.0f && distanceNoseLeftEyeBrow > 40.0f) ||
-               (distanceNoseRightEyeBrow > distanceNoseRightEye && distanceNoseRightEye > distanceNoseRightFace && 
-               distanceNoseRightFace < 20.0f && distanceNoseRightEyeBrow > 40.0f))
-            {
-                Debug.Log("Face detect failed");
-                _anchor3d.transform.position = new Vector3(0, 0, -180.0f);
-            }
-            else
-            {
-                // get transform matrix for alignment 3d objects            
-                Plugins.ULS_UnityGetTransform(_mtx, intrinsic_camera_matrix, null);
-
-                for (int i = 0; i < 16; ++i) transformationM[i] = _mtx[i];
-                ARM = adjustMatrix * transformationM;
-
-                // apply alignment matrix to object's transform
-                ARUtils.SetTransformFromMatrix(_anchor3d.transform, ref ARM);
-
-                m_Anchor3DYRotation = _anchor3d.transform.eulerAngles.y;
-
-                if ((m_Anchor3DYRotation >= 0 && m_Anchor3DYRotation < 20) ||
-                   (m_Anchor3DYRotation > 340 && m_Anchor3DYRotation < 360))
-                {
-                    //m_Anchor3DHead.SetActive(true);
-                    // apply local scale to fit user's face
-                    Plugins.ULS_UnityGetScale3D(_scaleX, _scaleY, _scaleZ);
-                    //Vector3 s = new Vector3(_scaleX[0], _scaleY[0], _scaleZ[0]);
-                    Vector3 s = new Vector3(_scaleX[0], _scaleY[0], _scaleZ[0]);
-                    s.Scale(_original_scale);
-                    _helmet.transform.localScale = s;
-                    _helmet.transform.localScale = new Vector3(s.x, 2.5f, s.z);
-                }
-                else
-                {
-                    //m_Anchor3DHead.SetActive(false);
-                    if ((m_Anchor3DYRotation >= 20 && m_Anchor3DYRotation < 30) ||
-                        (m_Anchor3DYRotation > 330 && m_Anchor3DYRotation < 340))
-                    {
-                        _helmet.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
-                    }
-                    else
-                    {
-                        _helmet.transform.localScale = new Vector3(2.4f, 2.4f, 2.4f);
-                    }
-                }
-            }
-
-            
-
-            // apply local scale to fit user's face
-            //Plugins.ULS_UnityGetScale3D (_scaleX,_scaleY,_scaleZ);
-			//Vector3 s = new Vector3 (_scaleX [0], _scaleY [0], _scaleZ [0]);
-			//s.Scale (_original_scale);
-			//_helmet.transform.localScale = s;
+			// apply local scale to fit user's face
+			Plugins.ULS_UnityGetScale3D (_scaleX,_scaleY,_scaleZ);
+			Vector3 s = new Vector3 (_scaleX [0], _scaleY [0], _scaleZ [0]);
+			s.Scale (_original_scale);
+			_helmet.transform.localScale = s;
 		}
-        else
-        {
-            _anchor3d.transform.position = new Vector3(0, 0, -180.0f);
-        }
 	}
 
 	bool frontal = true;
 
-    /*
 	void OnGUI() {
 #if DRAW_MARKERS
 		if (GUILayout.Button ("Show Markers", GUILayout.Height (100))) {
@@ -306,5 +206,4 @@ class Object3D : MonoBehaviour
 			SceneManager.LoadScene ("faceMask");
 		}
 	}
-	*/
 }
