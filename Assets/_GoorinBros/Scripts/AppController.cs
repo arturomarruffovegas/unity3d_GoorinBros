@@ -18,12 +18,15 @@ namespace goorinAR
         [SerializeField]
         private HatCartPanel HatCartPanel;
 
+        public HatSlidingContentAR HatSlidingContentAR;
+
         public static UnityAction OnShoopingCartPanelAR;
         public static UnityAction OnBackAR;
 
         [SerializeField]
         [Range(0,1f)]
         private float speedMovementPanel;
+        private bool pluginActivated;
 
         [Header("Shopify")]
         public string AccessToken;
@@ -50,6 +53,11 @@ namespace goorinAR
                 InformationPanel.SetCurrentProduct(product);
             });
 
+            HatSlidingContentAR.OnShowProduct.AddListener(p => 
+            {
+                InformationPanel.SetCurrentProduct(p);
+            });
+
             InformationPanel.OnReturnToProducts.AddListener(() =>
             {
                 InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, speedMovementPanel);
@@ -65,7 +73,11 @@ namespace goorinAR
                 InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, speedMovementPanel);
                 GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, speedMovementPanel).OnComplete(()=> 
                 {
-                    Object3D.InitialPlugin();
+                    if (pluginActivated == false)
+                    {
+                        FaceTrackerController.InitialPlugin();
+                        pluginActivated = true;
+                    }
                    /// fade.DOFade(0, 2f);
                   //  HatSlidingContentAR.LoadContentGG();
                  });
@@ -109,7 +121,8 @@ namespace goorinAR
         {
             InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
             GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
-            Object3D.StopPlugin();
+            FaceTrackerController.StopPlugin();
+            pluginActivated = false;
         }
     }
 }

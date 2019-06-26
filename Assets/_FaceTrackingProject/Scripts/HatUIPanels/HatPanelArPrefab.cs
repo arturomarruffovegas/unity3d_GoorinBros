@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class HatPanelArPrefab : MonoBehaviour
@@ -31,7 +32,6 @@ public class HatPanelArPrefab : MonoBehaviour
         m_HatSizes = new List<GameObject>();
     }
 
-    
     public void LoadInformation(string hatId, string hatName, string hatBrand, Sprite hatPhoto, List<string> hatColorList, List<string> hatSizeList, string hatColor)
     {
         m_HatId = hatId;

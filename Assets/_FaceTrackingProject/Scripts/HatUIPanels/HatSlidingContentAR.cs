@@ -9,7 +9,7 @@ using Shopify.Unity;
 using goorinAR;
 using System.Linq;
 
-public class HatData
+public class HatDataD
 {
     public string hatId;
     public string hatName;
@@ -38,7 +38,7 @@ public class HatSlidingContentAR : MonoBehaviour
     //Test Data
     public Sprite hatPhoto;
     public Sprite hatPhoto2;
-    private List<HatData> m_HatData;
+    private List<HatDataD> m_HatData;
 
     public static UnityAction LoadContentGG;
     // Start is called before the first frame update
@@ -64,6 +64,8 @@ public class HatSlidingContentAR : MonoBehaviour
     private HatCartPanel HatCartPanel;
     public UnityEvent OnViewCart;
     Button cartButton;
+   
+    public ShowProductEvent OnShowProduct = new ShowProductEvent();
 
     public Shopify.Unity.Product CurrentProduct;
     public Shopify.Unity.ProductVariant CurrentVariant;
@@ -72,17 +74,23 @@ public class HatSlidingContentAR : MonoBehaviour
     private List<GameObject> colors = new List<GameObject>();
     [SerializeField]
     private List<GameObject> sizes = new List<GameObject>();
+    private List<Product> Hatproducts = new List<Product>();
+    [SerializeField]
+    private int currentIndexHat;
 
     [SerializeField]
     private Button backButton;
+    private HatData hatData;
 
     void Start()
     {
         Content.cellSize = new Vector2( UIManager.sizeDelta.x,Content.cellSize.y);
         GalleryPanel.galleryAR += Instan;
         OnSearchHat += SearchHat;
+
         m_informationPanel = FindObjectOfType<InformationPanel>();
-        ////eventTrigger 
+        hatData = FindObjectOfType<HatData>();
+        
         EventTrigger trigger = m_ScrollRect.gameObject.GetComponent<EventTrigger>();
         EventTrigger.Entry entry = new EventTrigger.Entry();
 
@@ -97,12 +105,12 @@ public class HatSlidingContentAR : MonoBehaviour
         backButton.onClick.AddListener(() => 
         {
             AppController.OnBackAR();
-            StartCoroutine(ResetLists());
+            StartCoroutine(ResetValues());
            
         });
 
-        m_HatData = new List<HatData>();
-        HatData d1 = new HatData();
+        m_HatData = new List<HatDataD>();
+        HatDataD d1 = new HatDataD();
         d1.hatId = "welfleet";
         d1.hatName = "Benjamin Paul";
         d1.hatBrand = "Fedora";
@@ -111,7 +119,7 @@ public class HatSlidingContentAR : MonoBehaviour
         d1.hatSizeList = new List<string> { "s", "m", "l" };
         d1.hatColor = "black";
 
-        HatData d2 = new HatData();
+        HatDataD d2 = new HatDataD();
         d2.hatId = "county line";
         d2.hatName = "County Line";
         d2.hatBrand = "Fedora";
@@ -126,9 +134,13 @@ public class HatSlidingContentAR : MonoBehaviour
        // LoadContentGG += GG;
     }
 
-    private IEnumerator ResetLists()
+    private IEnumerator ResetValues()
     {
         yield return new WaitForSeconds(1f);
+        ResetList();
+    }
+    private void ResetList()
+    {
         for (int i = 0; i < colors.Count; i++)
         {
             Destroy(colors[i].gameObject);
@@ -141,14 +153,14 @@ public class HatSlidingContentAR : MonoBehaviour
         sizes.Clear();
     }
 
-    public void OnDestroy()
+    private void OnDestroy()
     {
         OnSearchHat -= SearchHat;
         GalleryPanel.galleryAR -= Instan;
     }
 
 
-    public void SearchHat(List<ColorsAndSizes> colorsAndSizes,Product product,ProductVariant productVariant)
+    private void SearchHat(List<ColorsAndSizes> colorsAndSizes,Product product,ProductVariant productVariant)
     {
         for (int i = 0; i < m_ListContentHatPanel.Count; i++)
         {
@@ -163,6 +175,7 @@ public class HatSlidingContentAR : MonoBehaviour
                 ValueContent = (S);
                 Content.GetComponent<RectTransform>().DOLocalMoveX(-ValueContent, 0.01f);
                 indexInstruction = i;
+                currentIndexHat = i;
                 one = true;
 
                 CurrentProduct = product;
@@ -195,7 +208,9 @@ public class HatSlidingContentAR : MonoBehaviour
                         InstantiateSizes(sizePrefabButton, hatPhoto, colorsAndSizes, colorsAndSizes[0].NameColor, 0);
 
                     }
-                    m_ListContentHatPanel[i].GetComponent<HatPanelArPrefab>().m_HatPhoto.sprite = colorsAndSizes[0].HatImage;
+
+                    if(colorsAndSizes.Count>0)
+                        m_ListContentHatPanel[i].GetComponent<HatPanelArPrefab>().m_HatPhoto.sprite = colorsAndSizes[0].HatImage;
                 }
 
 
@@ -255,37 +270,23 @@ public class HatSlidingContentAR : MonoBehaviour
     private void GetColorAndSize(string color, string size)
     {
         string value = color + " / " + size;
-
-        Debug.Log("Size: " + value);
-
         var variants = (List<Shopify.Unity.ProductVariant>)CurrentProduct.variants();
         foreach (var item in variants)
         {
             if (item.title() == value)
-            {
                 CurrentVariant = item;
-            }
         }
         
         cartButton.interactable = true;
-
         foreach (var item in sizes)
             item.transform.GetChild(1).GetComponent<UnityEngine.UI.Image>().enabled = false;
 
         for (int i = 0; i < sizes.Count; i++)
         {
             if (size == sizes[i].name)
-            {
                 sizes[i].gameObject.transform.GetChild(1).GetComponent<UnityEngine.UI.Image>().enabled = true;
-            }
         }
-
     }
-
-
-
-
-
 
     private void DeleteSizes(GameObject Sizeparent)
     {
@@ -302,22 +303,12 @@ public class HatSlidingContentAR : MonoBehaviour
 
     public void Instan(Product p)
     {
-        HatData _hatData = new HatData();
+        HatDataD _hatData = new HatDataD();
         _hatData.hatId = p.title();
         _hatData.hatName = p.title();
         var variants = (List<Shopify.Unity.ProductVariant>)p.variants();
-        if (variants[0].image() != null)
-        {
-            string _URLImage = variants[0].image().transformedSrc();
-
-            StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
-            {
-                _hatData.hatPhoto = spri;
-            }));
-        }
-
-
-        GameObject element = (GameObject)Instantiate(m_ContentHatPanelPrefb, transform);
+        
+        GameObject element = Instantiate(m_ContentHatPanelPrefb, transform);
         element.SetActive(true);
         element.GetComponent<HatPanelArPrefab>().LoadInformation(_hatData.hatId,
                                                                      _hatData.hatName,
@@ -326,7 +317,35 @@ public class HatSlidingContentAR : MonoBehaviour
                                                                      _hatData.hatColorList,
                                                                      _hatData.hatSizeList,
                                                                      _hatData.hatColor);
+
+        if (variants[0].image() != null)
+        {
+            string _URLImage = variants[0].image().transformedSrc("large");
+            StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
+            {
+                element.GetComponent<HatPanelArPrefab>().m_HatPhoto.sprite = spri;
+            }));
+        }
         m_ListContentHatPanel.Add(element);
+        Hatproducts.Add(p);
+    }
+
+    private void OnEvent(Product product, GameObject element)
+    {
+        ResetList();
+
+        sizes.Clear();
+        hatData.SethatName(product.title());
+        hatData.SethatImage(element.GetComponent<HatPanelArPrefab>().m_HatPhoto.sprite);
+        OnShowProduct.Invoke(product);
+        StartCoroutine(WaitUntilDownloadImage());
+
+    }
+
+    private IEnumerator WaitUntilDownloadImage()
+    {
+        yield return new WaitUntil(()=>m_informationPanel.finishDownloadImage ==true);
+        m_informationPanel.OnActionTry();
     }
 
     private void OnDragDelegate(PointerEventData data)
@@ -341,7 +360,7 @@ public class HatSlidingContentAR : MonoBehaviour
         float Dis = PositionI.x - PositionF.x;
         if (Dis > 100)
         {
-            // Debug.LogError("Izquierda");
+             Debug.LogError("<color=blue> Izquierda </color>");
             if (indexInstruction < m_ListContentHatPanel.Count - 1)
             {
                 Vector2 size = Content.GetComponent<RectTransform>().sizeDelta;
@@ -359,11 +378,15 @@ public class HatSlidingContentAR : MonoBehaviour
                 }
                 Content.GetComponent<RectTransform>().DOLocalMoveX(-ValueContent, 0.2f);
                 indexInstruction++;
+                currentIndexHat = indexInstruction;
+
+                StopAllCoroutines();
+                OnEvent(Hatproducts[currentIndexHat], m_ListContentHatPanel[currentIndexHat]);
             }
         }
         else if (Dis < -100)
         {
-            //Debug.LogError("Derecha");
+            Debug.LogError("<color=blue> Derecha </color>");
             if (indexInstruction > 0)
             {
                 Vector2 size = Content.GetComponent<RectTransform>().sizeDelta;
@@ -373,6 +396,10 @@ public class HatSlidingContentAR : MonoBehaviour
                 ValueContent -= Value;
                 Content.GetComponent<RectTransform>().DOLocalMoveX(-ValueContent, 0.2f);
                 indexInstruction--;
+                currentIndexHat = indexInstruction;
+
+                StopAllCoroutines();
+                OnEvent(Hatproducts[currentIndexHat], m_ListContentHatPanel[currentIndexHat]);
             }
         }
 

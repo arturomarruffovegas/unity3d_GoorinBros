@@ -54,6 +54,7 @@ namespace goorinAR
         private string hatName;
         [SerializeField]
         private List<ColorsAndSizes> m_ColorsAndSizes = new List<ColorsAndSizes>();
+        public bool finishDownloadImage;
         private List<GameObject> colors = new List<GameObject>();
         private List<GameObject> sizes = new List<GameObject>();
        // public List<Sprite> m_hatImages = new List<Sprite>();
@@ -112,12 +113,14 @@ namespace goorinAR
             });
         }
 
-        private void OnActionTry()
+        public void OnActionTry()
         {
             OnTryProduct.Invoke();
+
             if (product != null)
             {
-                HatSlidingContentAR.OnSearchHat(m_ColorsAndSizes,product, CurrentVariant);
+                HatSlidingContentAR.OnSearchHat(m_ColorsAndSizes, product, CurrentVariant);
+                Debug.Log("si funciona");
             }
         }
 
@@ -173,6 +176,7 @@ namespace goorinAR
         public void SetCurrentProduct(Shopify.Unity.Product product)
         {
 
+            Debug.Log("si llega aqui");
             if(hatData.GethatName() == hatName)
             {
                 return;
@@ -180,8 +184,10 @@ namespace goorinAR
             else
             {
                 ResetValue();
+                finishDownloadImage = false;
                 //productImage.sprite = waitIcon;
             }
+            Debug.Log("nooo");
             this.product = product;
 
             hatName = product.title();
@@ -241,7 +247,7 @@ namespace goorinAR
             }
 
             //GetImages
-           StartCoroutine( OnGetHatColors());
+           StartCoroutine( OnGetHatImageColors());
 
 
             //instantiate colors
@@ -270,7 +276,7 @@ namespace goorinAR
 
         }
 
-        private IEnumerator OnGetHatColors()
+        private IEnumerator OnGetHatImageColors()
         {
             if (m_ColorsAndSizes.Count > 0)
             {
@@ -289,6 +295,18 @@ namespace goorinAR
 
                 }
             }
+
+            StartCoroutine(OnCheckFinishImage(m_ColorsAndSizes));
+        }
+
+        private IEnumerator OnCheckFinishImage(List<ColorsAndSizes> list)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].HatImage == null)
+                    yield return new WaitUntil(() => list[i].HatImage != null);
+            }
+            finishDownloadImage = true;
         }
 
        
