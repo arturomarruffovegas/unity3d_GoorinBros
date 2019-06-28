@@ -115,6 +115,7 @@ namespace ULSTrackerForUnity
 			ULS_UnityRegisterCallbacks(Render, Update);
 			if (Dispatch == null) {
 				Dispatch = new GameObject ("CameraDispatch").AddComponent<CameraDispatch> ();
+                Debug.Log(Dispatch == null);
 			}
 			int ret = ULS_UnityTrackerInit(path, "ulsee_for_unity", Application.temporaryCachePath);
 			ULS_UnitySetSmoothing (true);
@@ -167,6 +168,7 @@ namespace ULSTrackerForUnity
 		public static void ULS_UnityTrackerTerminate() {
 			ULS_UnityTrackerRelease();
 			Dispatch.Clear();
+            Dispatch.Delete();
 			Dispatch = null;
 			_PreviewTexture = null;
 			WaitForFirstFrame = true;

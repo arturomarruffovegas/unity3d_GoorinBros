@@ -37,6 +37,8 @@ public class HatArController : MonoBehaviour
     public Button m_SavePhotoButton;
     public Button m_SharePhotoButton;
     public Button m_PhotoPanelBackButton;
+    public Button m_PhotoPanelButton;
+    public Button m_cicleButton;
 
     [Header("panels")]
     public GameObject m_PhotoPanel; //si
@@ -73,6 +75,8 @@ public class HatArController : MonoBehaviour
         m_SavePhotoButton.onClick.AddListener(SaveCapturePhoto);
         m_SharePhotoButton.onClick.AddListener(ShareCapturePhoto);
         m_PhotoPanelBackButton.onClick.AddListener(DeactivePhotoPanel);
+        m_PhotoPanelButton.onClick.AddListener(DeactivePhotoPanel);
+        m_cicleButton.onClick.AddListener(DeactivePhotoPanel);
 
         HatSlidingContentAR.OnSetHatName += LoadHatAssetBundle;
         FirebaseController.OnErrorAssetBundle += OnErrorAssetBundle;

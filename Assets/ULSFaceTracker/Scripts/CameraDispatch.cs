@@ -96,6 +96,11 @@ namespace ULSTrackerForUnity {
 			execution.Clear();
 		}
 
+        public void Delete()
+        {
+            Destroy(gameObject);
+        }
+
 		public void Dispatch (Action action) {
 			//Check that we aren't already on the target thread
 			if (Thread.CurrentThread.ManagedThreadId == mainThread.ManagedThreadId) {
