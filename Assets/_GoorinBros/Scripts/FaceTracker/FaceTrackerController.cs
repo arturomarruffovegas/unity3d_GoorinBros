@@ -298,7 +298,7 @@ namespace goorinAR
                 for (int j = 0; j < Plugins.MAX_TRACKER_POINTS; ++j)
                 {
                     _marker2d[j].transform.localPosition = new Vector3(_trackPoints[j * 2], _trackPoints[j * 2 + 1], 0);
-                    _marker2d[j].SetActive(true);
+                  //  _marker2d[j].SetActive(true);
                 }
 #endif
                 // get transform matrix for alignment 3d objects

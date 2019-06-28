@@ -121,8 +121,8 @@ namespace goorinAR
         {
             InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
             GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
-            FaceTrackerController.StopPlugin();
-            pluginActivated = false;
+         //   FaceTrackerController.StopPlugin();
+          //  pluginActivated = false;
         }
     }
 }
