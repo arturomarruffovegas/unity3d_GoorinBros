@@ -84,6 +84,9 @@ public class HatSlidingContentAR : MonoBehaviour
     private Button backButton;
     private HatData hatData;
 
+    [Header("Panel capturePhoto")]
+    public Text hatNameCapturePhoto;
+
     void Start()
     {
         Content.cellSize = new Vector2( UIManager.sizeDelta.x,Content.cellSize.y);
@@ -183,6 +186,8 @@ public class HatSlidingContentAR : MonoBehaviour
                 CurrentProduct = product;
                 OnSetHatName(product.title().ToLower());
                 CurrentVariant = productVariant;
+
+                hatNameCapturePhoto.text = product.title();
 
                 if (colorsAndSizes != null)
                 {

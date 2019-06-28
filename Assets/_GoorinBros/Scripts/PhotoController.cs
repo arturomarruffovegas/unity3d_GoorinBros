@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using goorinAR;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class PhotoController : MonoBehaviour
     {
         if(GUI.Button(new Rect(0,0,100,100),"Take photo"))
         {
-            StartCoroutine(TakePhoto((img) =>
+            StartCoroutine(Utils.TakePhoto((img) =>
             {
                 tex = img;
             }));
@@ -49,14 +50,7 @@ public class PhotoController : MonoBehaviour
         }
     }
 
-    private IEnumerator TakePhoto(UnityAction<Texture2D> img)
-    {
-        Texture2D s = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
-        yield return new WaitForEndOfFrame();
-        s.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
-        s.Apply();
-        img(s);
-    }
+   
 
 
 }

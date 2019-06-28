@@ -24,7 +24,20 @@ namespace goorinAR
             Sprite spri = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
             image?.Invoke(spri);
         }
+
+        public static IEnumerator TakePhoto(UnityAction<Texture2D> img)
+        {
+            Texture2D s = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+            yield return new WaitForEndOfFrame();
+            s.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+            s.Apply();
+            img(s);
+        }
+
+
     }
+
+
 
     [System.Serializable]
     public class DataProducts

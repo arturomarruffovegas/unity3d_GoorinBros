@@ -29,16 +29,22 @@ public class HatArController : MonoBehaviour
 
     [Header("CapturePhoto")]
     public List<Camera> m_HatCameras;
-    public GameObject m_PhotoPanel;
-    public Button m_PhotoButton;
-    public Button m_VideoButton;
-    public GameObject m_ProductPanel;
-    public GameObject m_RightPanel;
     public Image m_PhotoCapture;
-    public static string FILE_SCREENSHOT_NAME = System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
-    private Texture2D m_PhotoCaptureTexture;
+
+    [Header("Buttons")]
+    public Button m_PhotoButton; // si
+    public Button m_VideoButton;
     public Button m_SavePhotoButton;
+    public Button m_SharePhotoButton;
     public Button m_PhotoPanelBackButton;
+
+    [Header("panels")]
+    public GameObject m_PhotoPanel; //si
+    public GameObject m_panels; //si
+    public GameObject m_PanelInfoCapturePhoto;
+
+    public static string FILE_SCREENSHOT_NAME = System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".png";
+    private Texture2D m_PhotoCaptureTexture;
 
     [Header("FireBase")]
     public LoadAssetBundlesFromFirebase m_FireBaseLoader;
@@ -65,6 +71,7 @@ public class HatArController : MonoBehaviour
         m_PhotoButton.onClick.AddListener(ScreenshotButtonPressed);
         m_VideoButton.onClick.AddListener(VideoCaptureButtonPressed);
         m_SavePhotoButton.onClick.AddListener(SaveCapturePhoto);
+        m_SharePhotoButton.onClick.AddListener(ShareCapturePhoto);
         m_PhotoPanelBackButton.onClick.AddListener(DeactivePhotoPanel);
 
         HatSlidingContentAR.OnSetHatName += LoadHatAssetBundle;
@@ -99,8 +106,6 @@ public class HatArController : MonoBehaviour
         Debug.Log(hatId);
         m_CurrentHatId = hatId;
         m_CurrentHatColor = hatColor;
-
-        m_RightPanel.SetActive(true);
         
         if (m_CurrentHat)
         {
@@ -346,34 +351,30 @@ public class HatArController : MonoBehaviour
             }
         }
     }
-
-    public void ActivePhotoPanel()
-    {
-        m_PhotoPanel.SetActive(true);
-        m_ProductPanel.SetActive(false);
-        m_RightPanel.SetActive(false);
-    }
-
+    
     public void DeactivePhotoPanel()
     {
         m_PhotoPanel.SetActive(false);
-        m_ProductPanel.SetActive(true);
-        m_RightPanel.SetActive(true);
+        m_panels.SetActive(true);
+       
     }
 
     public void ScreenshotButtonPressed()
     {
-        ActivePhotoPanel();
-        m_PhotoCaptureTexture = ScreenshotCapturer.Capture();
-        m_PhotoCapture.sprite = ConvertToSprite(m_PhotoCaptureTexture);
-    }
 
-    public void SaveCapturePhoto()
-    {
-        Debug.Log(Application.persistentDataPath);
-        string filename = FILE_SCREENSHOT_NAME;
-        string PhotoPath = System.IO.Path.Combine(Application.persistentDataPath, filename);
-        System.IO.File.WriteAllBytes(PhotoPath, m_PhotoCaptureTexture.EncodeToJPG(100));
+        m_panels.SetActive(false);
+        m_PanelInfoCapturePhoto.SetActive (true);
+
+        StartCoroutine(Utils.TakePhoto((img) =>
+        {
+            m_PhotoCaptureTexture = img;
+            m_PhotoCapture.sprite = ConvertToSprite(m_PhotoCaptureTexture);
+
+            m_PhotoPanel.SetActive(true);
+            m_PanelInfoCapturePhoto.SetActive(false);
+
+        }));
+       
     }
 
     public void VideoCaptureButtonPressed()
@@ -381,8 +382,30 @@ public class HatArController : MonoBehaviour
         
     }
 
+    public void SaveCapturePhoto()
+    {
+        if (m_PhotoCaptureTexture != null)
+        {
+            NativeGallery.SaveImageToGallery(m_PhotoCaptureTexture, "Goorin Bros", FILE_SCREENSHOT_NAME);
+            DeactivePhotoPanel();
+        }
+    }
+    public void ShareCapturePhoto()
+    {
+        if (m_PhotoCaptureTexture != null)
+        {
+            string filePath = Path.Combine(Application.temporaryCachePath, "shared img.png");
+            File.WriteAllBytes(filePath, m_PhotoCaptureTexture.EncodeToPNG());
+
+            new NativeShare().AddFile(filePath).Share();
+        }
+    }
+
+
     public static Sprite ConvertToSprite(Texture2D texture)
     {
         return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
     }
+
+    
 }
