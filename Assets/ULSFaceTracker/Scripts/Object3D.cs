@@ -60,7 +60,7 @@ class Object3D : MonoBehaviour
 		}
 #endif
 	
-		InitializeTrackerAndCheckKey();
+		//InitializeTrackerAndCheckKey();
 		Application.targetFrameRate = 60;
 	}
 
@@ -199,11 +199,17 @@ class Object3D : MonoBehaviour
 				Plugins.ULS_UnitySetupCamera (1280, 720, 60, false);
 		}
 #endif
+        GUILayout.Space(8);
+        if (GUILayout.Button("play", GUILayout.Height(80)))
+        {
+            InitializeTrackerAndCheckKey();
+            //SceneManager.LoadScene ("faceMask");
+        }
 
-		GUILayout.Space (8);
-		if (GUILayout.Button ("Change Scene", GUILayout.Height (80))) {
+        GUILayout.Space (8);
+		if (GUILayout.Button ("Stop", GUILayout.Height (80))) {
 			Plugins.ULS_UnityTrackerTerminate ();
-			SceneManager.LoadScene ("faceMask");
+			//SceneManager.LoadScene ("faceMask");
 		}
 	}
 }
