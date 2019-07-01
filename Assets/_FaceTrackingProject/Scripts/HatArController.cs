@@ -55,12 +55,12 @@ public class HatArController : MonoBehaviour
     public GameObject m_HatErrorPanel;
     public GameObject m_HatLoadingPanel;
 
-    [Header("Head Movement")]
-    public GameObject m_Anchor3DHead;
-    public GameObject m_Anchor3D;
-    public float m_Anchor3DYRotation;
-    public float m_Anchor3DHeadXScale;
-    public float m_Anchor3DHeadYScale;
+    //[Header("Head Movement")]
+    //public GameObject m_Anchor3DHead;
+    //public GameObject m_Anchor3D;
+    //public float m_Anchor3DYRotation;
+    //public float m_Anchor3DHeadXScale;
+    //public float m_Anchor3DHeadYScale;
 
     [Header("Cart")]
     public AddProductToCartEvent OnAddProductToCart = new AddProductToCartEvent();
@@ -94,9 +94,9 @@ public class HatArController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_Anchor3DYRotation = m_Anchor3D.transform.eulerAngles.y;
-        m_Anchor3DHeadXScale = m_Anchor3DHead.transform.localScale.x;
-        m_Anchor3DHeadYScale = m_Anchor3DHead.transform.localScale.y;
+        //m_Anchor3DYRotation = m_Anchor3D.transform.eulerAngles.y;
+        //m_Anchor3DHeadXScale = m_Anchor3DHead.transform.localScale.x;
+        //m_Anchor3DHeadYScale = m_Anchor3DHead.transform.localScale.y;
     }
 
     public void LoadHat(List<string> hatIdList)
@@ -156,6 +156,7 @@ public class HatArController : MonoBehaviour
         m_CurrentHatContent = (HatContent)c;
 
         m_CurrentId = m_CurrentHatId;
+        m_HatPosition = FindObjectOfType<FaceTrackerController>().m_hatPosition;
         m_CurrentHat.transform.parent = m_HatPosition;
         m_CurrentHat.transform.localPosition = Vector3.zero;
         m_CurrentHat.transform.localRotation = Quaternion.identity;

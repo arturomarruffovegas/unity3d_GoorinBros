@@ -26,7 +26,6 @@ namespace goorinAR
         [SerializeField]
         [Range(0,1f)]
         private float speedMovementPanel;
-        private bool pluginActivated;
 
         [Header("Shopify")]
         public string AccessToken;
@@ -73,11 +72,7 @@ namespace goorinAR
                 InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, speedMovementPanel);
                 GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, speedMovementPanel).OnComplete(()=> 
                 {
-                    if (pluginActivated == false)
-                    {
-                        FaceTrackerController.InitialPlugin();
-                        pluginActivated = true;
-                    }
+                    UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(1);
                    /// fade.DOFade(0, 2f);
                   //  HatSlidingContentAR.LoadContentGG();
                  });
@@ -91,20 +86,7 @@ namespace goorinAR
             InformationPanel.OnAddProductToCart.AddListener(HatCartPanel.AddToCart);
             //  GalleryPanel.OnNetworkError.AddListener(() => RenderError("Could not find products."));
 
-
-
-
-            //eliminar metodo
-            //if (backButtonAR != null)
-            //{
-            //    backButtonAR.onClick.AddListener(() =>
-            //    {
-            //        InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
-            //        GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
-            //        Object3D.StopPlugin();
-            //       // fade.DOFade(1,0.1f);
-            //    });
-            //}
+            
         }
         private void OnDestroy()
         {
@@ -121,8 +103,7 @@ namespace goorinAR
         {
             InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
             GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
-         //   FaceTrackerController.StopPlugin();
-          //  pluginActivated = false;
+            FindObjectOfType<FaceTrackerController>().OnChangeScene();
         }
     }
 }

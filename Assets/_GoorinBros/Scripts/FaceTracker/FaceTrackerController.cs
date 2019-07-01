@@ -28,6 +28,7 @@ namespace goorinAR
     {
 
 #if DRAW_MARKERS
+        public Transform m_hatPosition;
         public GameObject marker = null;
         List<GameObject> _marker2d = new List<GameObject>();
         bool drawMarkers = false;
@@ -53,9 +54,6 @@ namespace goorinAR
         public Camera ARCamera = null;
         Transform _helmet = null;
         Vector3 _original_scale;
-
-        public static UnityAction InitialPlugin;
-        public static UnityAction StopPlugin;
 
         // intrinsic camera matrix of camera
         float[] intrinsic_camera_matrix = new float[] {
@@ -84,17 +82,9 @@ namespace goorinAR
             }
 #endif
 
-            //InitializeTrackerAndCheckKey();
-            //Application.targetFrameRate = 60;
+            InitializeTrackerAndCheckKey();
+            Application.targetFrameRate = 60;
 
-            InitialPlugin += InitializeTrackerAndCheckKey;
-            StopPlugin += StopTrackerAndCheckKey;
-        }
-
-        private void OnDestroy()
-        {
-            InitialPlugin -= InitializeTrackerAndCheckKey;
-            StopPlugin -= StopTrackerAndCheckKey;
         }
 
         // Initialize tracker and check activation key
@@ -342,10 +332,15 @@ namespace goorinAR
 
             GUILayout.Space (8);
             if (GUILayout.Button ("Change Scene", GUILayout.Height (80))) {
-                Plugins.ULS_UnityTrackerTerminate ();
-                SceneManager.LoadScene ("faceMask");
+                 ("faceMask");
             }
         }
         */
+
+        public void OnChangeScene()
+        {
+            Plugins.ULS_UnityTrackerTerminate();
+            SceneManager.LoadSceneAsync(0);
+        }
     }
 }

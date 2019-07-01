@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/_FaceTrackingProject/Scenes/SceneGoorin.unity
+  - enabled: 1
+    path: Assets/_FaceTrackingProject/Scenes/SceneUIGoorin.unity
     guid: 709884f4245b181489714c01e262a019
   - enabled: 1
-    path: Assets/_GoorinBros/Scenes/TestPlugin.unity
-    guid: 9ea70a4044ff9f24cb9e65135463a1f6
+    path: Assets/_FaceTrackingProject/Scenes/SceneFaceTrackerGoorin.unity
+    guid: add259a0a0abc8e468e12d860e99f713
   m_configObjects: {}

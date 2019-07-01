@@ -168,7 +168,6 @@ namespace ULSTrackerForUnity
 		public static void ULS_UnityTrackerTerminate() {
 			ULS_UnityTrackerRelease();
 			Dispatch.Clear();
-            Dispatch.Delete();
 			Dispatch = null;
 			_PreviewTexture = null;
 			WaitForFirstFrame = true;
