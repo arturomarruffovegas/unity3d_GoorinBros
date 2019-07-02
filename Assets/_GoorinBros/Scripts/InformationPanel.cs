@@ -221,21 +221,35 @@ namespace goorinAR
                             d.color_code_map = Utils.GetColorCodeMap(List_color_code_map, tagColor);
 
                             string _URLImage = "";
+                            string _URLExperienceImage = "";
                             foreach (Shopify.Unity.ImageEdge item in img.edges())
                             {
-                                string  URLglobal = item.node().transformedSrc("large");
+                                string URLglobal = item.node().transformedSrc("large");
+                                string URLExperienceglobal = item.node().transformedSrc("grande");
                                 if (d.sku != "" && d.color_code_map != "")
                                 {
                                     string text = d.sku + "-" + d.color_code_map + "-F01";
                                     if (URLglobal.Contains(text))
                                     {
-                                         _URLImage = URLglobal;
+                                        _URLImage = URLglobal;
                                         Debug.Log("URL: " + _URLImage);
                                     }
+
+                                    string v = d.sku + "-" + d.color_code_map;
+                                    if (URLExperienceglobal.Contains(v + "-HF01"))
+                                        _URLExperienceImage = URLExperienceglobal;
+                                    else if(URLExperienceglobal.Contains(v + "-HM01"))
+                                        _URLExperienceImage = URLExperienceglobal;
+                                    else if(URLExperienceglobal.Contains(v + "-MF01"))
+                                        _URLExperienceImage = URLExperienceglobal;
                                 }
+
+
+
                             }
 
                             d.URLImage = _URLImage;
+                            d.URLExperience = _URLExperienceImage;
                             d.sizes.Add(NameSize);
                             m_ColorsAndSizes.Add(d);
                             
@@ -254,9 +268,12 @@ namespace goorinAR
                         d.color_code_map = Utils.GetColorCodeMap(List_color_code_map, tagColor);
 
                         string _URLImage = "";
+                        string _URLExperienceImage = "";
                         foreach (Shopify.Unity.ImageEdge item in img.edges())
                         {
                             string URLglobal = item.node().transformedSrc("large");
+                            string URLExperienceglobal = item.node().transformedSrc("grande");
+
                             if (d.sku != "" && d.color_code_map != "")
                             {
                                 string text = d.sku + "-" + d.color_code_map + "-F01";
@@ -265,11 +282,22 @@ namespace goorinAR
                                     _URLImage = URLglobal;
                                     Debug.Log("URL: " + _URLImage);
                                 }
+
+                                string v = d.sku + "-" + d.color_code_map;
+                                if (URLExperienceglobal.Contains(v + "-HF01"))
+                                    _URLExperienceImage = URLExperienceglobal;
+                                else if (URLExperienceglobal.Contains(v + "-HM01"))
+                                    _URLExperienceImage = URLExperienceglobal;
+                                else if(URLExperienceglobal.Contains(v + "-MF01"))
+                                    _URLExperienceImage = URLExperienceglobal;
                             }
+
+                            
+
                         }
 
                         d.URLImage = _URLImage;
-
+                        d.URLExperience = _URLExperienceImage;
                         d.sizes.Add(NameSize);
                         m_ColorsAndSizes.Add(d);
 
@@ -284,9 +312,9 @@ namespace goorinAR
                 
             }
 
-            //GetImages
-           StartCoroutine( OnGetHatImageColors());
-
+             //GetImages
+            OnGetHatImageColors();
+            OnGetHatExperience();
 
             //instantiate colors
             if (m_ColorsAndSizes.Count <= 0)
@@ -313,27 +341,41 @@ namespace goorinAR
 
         }
 
-        private IEnumerator OnGetHatImageColors()
+        private void OnGetHatImageColors()
         {
             if (m_ColorsAndSizes.Count > 0)
             {
                 for (int i = 0; i < m_ColorsAndSizes.Count; i++)
                 {
-                    Sprite im = null;
                     string s = m_ColorsAndSizes[i].URLImage;
-                    StartCoroutine(OnDownloadImage(s, (spri,tex) =>
+                    StartCoroutine(OnDownloadImage(s,i,(spri,tex, index) =>
                     {
-                        colors[i].gameObject.transform.GetChild(0).transform.GetComponent<Image>().sprite = Utils.CutTexture(tex);
-                        im =spri;
+                        colors[index].gameObject.transform.GetChild(0).transform.GetComponent<Image>().sprite = Utils.CutTexture(tex);
+                        m_ColorsAndSizes[index].HatImage = spri;
                     }));
-
-                    yield return new WaitUntil(() => im!= null);
-                    m_ColorsAndSizes[i].HatImage = im;
-
                 }
             }
 
             StartCoroutine(OnCheckFinishImage(m_ColorsAndSizes));
+        }
+
+        private void OnGetHatExperience()
+        {
+            if (m_ColorsAndSizes.Count > 0)
+            {
+                for (int i = 0; i < m_ColorsAndSizes.Count; i++)
+                {
+                    string s = m_ColorsAndSizes[i].URLExperience;
+                    if (!string.IsNullOrEmpty(s))
+                    {
+                        StartCoroutine(OnDownloadImage(s, i, (spri, tex, index) =>
+                        {
+                            m_ColorsAndSizes[index].HatExperience = spri;
+                        }));
+                    }
+
+                }
+            }
         }
 
         private IEnumerator OnCheckFinishImage(List<ColorsAndSizes> list)
@@ -352,7 +394,7 @@ namespace goorinAR
         {
 
             Debug.Log("aqui tengo que hacer la verificacion");
-            OnChangeImagePortada(name);
+            StartCoroutine( OnChangeImagePortada(name));
 
             DeleteSizes();
 
@@ -393,69 +435,36 @@ namespace goorinAR
             }
         }
 
-        public void OnChangeImagePortada(string color)
+        public IEnumerator OnChangeImagePortada(string color)
         {
-            string sku = "";
-            string code = "";
-            string _URLImage = "";
             for (int i = 0; i < m_ColorsAndSizes.Count; i++)
             {
                 if( m_ColorsAndSizes[i].NameColor == color)
                 {
-                    //100-0229-BLK
-                    sku = m_ColorsAndSizes[i].sku;
-                    code = m_ColorsAndSizes[i].color_code_map;
-
+                    if (!string.IsNullOrEmpty(m_ColorsAndSizes[i].URLExperience))
+                    {
+                        yield return new WaitUntil(() => m_ColorsAndSizes[i].HatExperience != null);
+                        icon.sprite = m_ColorsAndSizes[i].HatExperience;
+                    }
+                    else
+                    {
+                        icon.sprite = m_ColorsAndSizes[i].HatImage;
+                    }
                 }
             }
 
-            var img = product.images();
-
-            foreach (Shopify.Unity.ImageEdge item in img.edges())
-            {
-                string URLglobal = item.node().transformedSrc("large");
-
-                if (sku != "" && code != "")
-                {
-                    if (URLglobal.Contains(sku + "-" + code + "-HF01") && _URLImage == "") //
-                    {
-                        _URLImage = URLglobal;
-                        StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
-                        {
-                            icon.sprite = spri;
-                        }));
-
-                    }
-                    if (URLglobal.Contains(sku + "-" + code + "-HM01") && _URLImage == "") //
-                    {
-                        _URLImage = URLglobal;
-                        StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
-                        {
-                            icon.sprite = spri;
-                        }));
-                    }
-                    if (URLglobal.Contains(sku + "-" + code + "-MF01") && _URLImage == "") //
-                    {
-                        _URLImage = URLglobal;
-                        StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
-                        {
-                            icon.sprite = spri;
-                        }));
-                    }
-
-                }
-            }
+           
 
         }
 
-        private IEnumerator OnDownloadImage(string myURL, UnityAction<Sprite,Texture2D> image)
+        private IEnumerator OnDownloadImage(string myURL,int index, UnityAction<Sprite,Texture2D, int> image)
         {
             UnityWebRequest www = UnityWebRequestTexture.GetTexture(myURL);
             yield return www.SendWebRequest();
 
             Texture2D tex = DownloadHandlerTexture.GetContent(www);
             Sprite spri = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
-            image?.Invoke(spri, tex);
+            image?.Invoke(spri, tex, index);
         }
 
         private void GetColorAndSize(string color, string size)

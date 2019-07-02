@@ -123,6 +123,8 @@ namespace goorinAR
         public string color_code_map;
         public string URLImage;
         public Sprite HatImage;
+        public string URLExperience;
+        public Sprite HatExperience;
         public List<string> sizes = new List<string>();
     }
 }
