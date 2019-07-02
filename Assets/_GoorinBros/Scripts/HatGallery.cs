@@ -87,26 +87,39 @@ namespace goorinAR
 
             var variants = (List<Shopify.Unity.ProductVariant>)product.variants();
 
-            string price = variants.First().price().ToString();
-            priceHat.text = "$ " + price;
-
-            //var images = (List<Shopify.Unity.Image>)product.images();
-            //if (images.Count > 0)
-            //{
-            //    _imageSrc = images.First().transformedSrc("compact");
-            //}
+            var List_color_code_map = product.tags();
 
 
-            if (variants[0].image() != null)
+            string colorDefault = "";
+            string sku = "";
+
+            colorDefault = Utils.GetColorDefault(List_color_code_map);
+            sku = Utils.GetSKU(List_color_code_map);
+
+            var img = product.images();
+
+            foreach (Shopify.Unity.ImageEdge item in img.edges())
             {
-                string _URLImage = variants[0].image().transformedSrc("large");
+                string URLglobal = item.node().transformedSrc("large");
 
-                StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
+                if (colorDefault != "" && sku != "")
                 {
-                    SetImageHat(spri);
-                }));
+                    if (URLglobal.Contains(sku + "-" + colorDefault + "-F01"))
+                    {
+                        string _URLImage = URLglobal;
+                        Debug.Log(_URLImage);
+                        StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
+                        {
+                            SetImageHat(spri);
+                        }));
+                    }
+
+                }
             }
 
+            string price = variants.First().price().ToString();
+            priceHat.text = "$ " + price;
+            
             hatButton.onClick.AddListener(() => OnClick.Invoke());
         }
 

@@ -192,13 +192,17 @@ namespace goorinAR
             
             var options = new List<string>();
             var variants = (List<Shopify.Unity.ProductVariant>)product.variants();
-            
+
+            var List_color_code_map = product.tags();
+
+            var img = product.images();
+
             foreach (var variant in variants)
             {
                 if (variant.availableForSale())
                 {
 
-                    var URLDownloadImage = variant.image().transformedSrc("large");
+                //    var URLDownloadImage = variant.image().transformedSrc("large");
                     string name = variant.title();
                     string[] names = name.Split('/');
 
@@ -212,7 +216,26 @@ namespace goorinAR
                         {
                             ColorsAndSizes d = new ColorsAndSizes();
                             d.NameColor = NameColor;
-                            d.URLImage = URLDownloadImage;
+                            d.sku = Utils.GetSKU(List_color_code_map);
+                            string tagColor = "color_code_map:" + NameColor;
+                            d.color_code_map = Utils.GetColorCodeMap(List_color_code_map, tagColor);
+
+                            string _URLImage = "";
+                            foreach (Shopify.Unity.ImageEdge item in img.edges())
+                            {
+                                string  URLglobal = item.node().transformedSrc("large");
+                                if (d.sku != "" && d.color_code_map != "")
+                                {
+                                    string text = d.sku + "-" + d.color_code_map + "-F01";
+                                    if (URLglobal.Contains(text))
+                                    {
+                                         _URLImage = URLglobal;
+                                        Debug.Log("URL: " + _URLImage);
+                                    }
+                                }
+                            }
+
+                            d.URLImage = _URLImage;
                             d.sizes.Add(NameSize);
                             m_ColorsAndSizes.Add(d);
                             
@@ -226,7 +249,26 @@ namespace goorinAR
                     {
                         ColorsAndSizes d = new ColorsAndSizes();
                         d.NameColor = NameColor;
-                        d.URLImage = URLDownloadImage;
+                        d.sku = Utils.GetSKU(List_color_code_map);
+                        string tagColor = "color_code_map:" + NameColor;
+                        d.color_code_map = Utils.GetColorCodeMap(List_color_code_map, tagColor);
+
+                        string _URLImage = "";
+                        foreach (Shopify.Unity.ImageEdge item in img.edges())
+                        {
+                            string URLglobal = item.node().transformedSrc("large");
+                            if (d.sku != "" && d.color_code_map != "")
+                            {
+                                string text = d.sku + "-" + d.color_code_map + "-F01";
+                                if (URLglobal.Contains(text))
+                                {
+                                    _URLImage = URLglobal;
+                                    Debug.Log("URL: " + _URLImage);
+                                }
+                            }
+                        }
+
+                        d.URLImage = _URLImage;
 
                         d.sizes.Add(NameSize);
                         m_ColorsAndSizes.Add(d);
@@ -257,7 +299,6 @@ namespace goorinAR
                 cl.name = m_ColorsAndSizes[i].NameColor;
                 int indexHat = i;
                 colors.Add(cl);
-               // cl.transform.GetChild(0).GetComponent<Text>().text = m_ColorsAndSizes[i].NameColor;
                 cl.GetComponent<Button>().onClick.AddListener(delegate { InstantiateSizes(true,cl.name, indexHat);});
                 cl.SetActive(true);
                 nameLocal = m_ColorsAndSizes[0].NameColor;
@@ -309,6 +350,10 @@ namespace goorinAR
 
         private void InstantiateSizes(bool changeImage,string name , int indexHat)
         {
+
+            Debug.Log("aqui tengo que hacer la verificacion");
+            OnChangeImagePortada(name);
+
             DeleteSizes();
 
             if(changeImage)
@@ -346,6 +391,61 @@ namespace goorinAR
                 }
                
             }
+        }
+
+        public void OnChangeImagePortada(string color)
+        {
+            string sku = "";
+            string code = "";
+            string _URLImage = "";
+            for (int i = 0; i < m_ColorsAndSizes.Count; i++)
+            {
+                if( m_ColorsAndSizes[i].NameColor == color)
+                {
+                    //100-0229-BLK
+                    sku = m_ColorsAndSizes[i].sku;
+                    code = m_ColorsAndSizes[i].color_code_map;
+
+                }
+            }
+
+            var img = product.images();
+
+            foreach (Shopify.Unity.ImageEdge item in img.edges())
+            {
+                string URLglobal = item.node().transformedSrc("large");
+
+                if (sku != "" && code != "")
+                {
+                    if (URLglobal.Contains(sku + "-" + code + "-HF01") && _URLImage == "") //
+                    {
+                        _URLImage = URLglobal;
+                        StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
+                        {
+                            icon.sprite = spri;
+                        }));
+
+                    }
+                    if (URLglobal.Contains(sku + "-" + code + "-HM01") && _URLImage == "") //
+                    {
+                        _URLImage = URLglobal;
+                        StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
+                        {
+                            icon.sprite = spri;
+                        }));
+                    }
+                    if (URLglobal.Contains(sku + "-" + code + "-MF01") && _URLImage == "") //
+                    {
+                        _URLImage = URLglobal;
+                        StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
+                        {
+                            icon.sprite = spri;
+                        }));
+                    }
+
+                }
+            }
+
         }
 
         private IEnumerator OnDownloadImage(string myURL, UnityAction<Sprite,Texture2D> image)

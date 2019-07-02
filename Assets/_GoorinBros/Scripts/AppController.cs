@@ -31,6 +31,8 @@ namespace goorinAR
         public string AccessToken;
         public string ShopDomain;
 
+        private bool loadSceneAR;
+
 
         public void Start()
         {
@@ -72,9 +74,11 @@ namespace goorinAR
                 InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, speedMovementPanel);
                 GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(719, speedMovementPanel).OnComplete(()=> 
                 {
-                    UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(1);
-                   /// fade.DOFade(0, 2f);
-                  //  HatSlidingContentAR.LoadContentGG();
+                    if (loadSceneAR == false)
+                    {
+                        UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(1);
+                        loadSceneAR = true;
+                    }
                  });
             });
 
@@ -104,6 +108,7 @@ namespace goorinAR
             InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
             GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
             FindObjectOfType<FaceTrackerController>().OnChangeScene();
+            loadSceneAR = false;
         }
     }
 }

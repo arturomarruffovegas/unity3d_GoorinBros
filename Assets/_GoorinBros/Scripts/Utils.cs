@@ -34,6 +34,73 @@ namespace goorinAR
             img(s);
         }
 
+        public static string GetSKU(List<string> List_color_code_map)
+        {
+            string SKU = "";
+            foreach (var item in List_color_code_map)
+            {
+                var def = item.Split(new char[] { ':', ';' });
+                if (def[0] == "product_sku")
+                {
+                    if (def.Length > 1)
+                    {
+                        char[] charArr = def[1].ToCharArray();
+
+                        if (charArr.Length == 9)
+                        {
+                            string temp = def[1].Remove(8);
+                            SKU = temp;
+                        }
+                        else
+                            SKU = def[1];
+                    }
+                }
+            }
+            return SKU;
+        }
+        
+        public static string GetColorDefault(List<string> List_color_code_map)
+        {
+            string colorDefault = "";
+            foreach (var item in List_color_code_map)
+            {
+                var def = item.Split(new char[] { ':', ';' });
+
+                if (def.Length > 0)
+                {
+                    if (def[0] == "default_color_code")
+                    {
+                        if (def.Length > 1)
+                        {
+                            colorDefault = def[1];
+                        }
+                    }
+                }
+            }
+            return colorDefault;
+        }
+
+        public static string GetColorCodeMap(List<string> List_color_code_map, string tagColor)
+        {
+            string Code = "";
+            foreach (var item in List_color_code_map)
+            {
+                var def = item.Split(new char[] { ':', ';' });
+
+                if (def.Length > 1)
+                {
+                    if (def[0] +  ":" + def[1] == tagColor)
+                    {
+                        if (def.Length > 1)
+                        {
+                            Code = def[2];
+                        }
+                    }
+                }
+            }
+            return Code;
+        }
+
 
     }
 
@@ -52,6 +119,8 @@ namespace goorinAR
     public class ColorsAndSizes
     {
         public string NameColor;
+        public string sku;
+        public string color_code_map;
         public string URLImage;
         public Sprite HatImage;
         public List<string> sizes = new List<string>();

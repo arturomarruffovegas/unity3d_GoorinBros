@@ -219,14 +219,17 @@ public class HatSlidingContentAR : MonoBehaviour
                         m_ListContentHatPanel[i].GetComponent<HatPanelArPrefab>().m_HatPhoto.sprite = colorsAndSizes[0].HatImage;
                 }
 
+                if (cartButton != null)
+                {
+                    cartButton.onClick.RemoveAllListeners();
+                    cartButton.onClick.AddListener(() =>
+                    {
+                        m_informationPanel.OnAddProductToCart.Invoke(CurrentProduct, CurrentVariant);
+                        OnViewCart.Invoke();
+                        AppController.OnShoopingCartPanelAR();
 
-                cartButton.onClick.RemoveAllListeners();
-                cartButton.onClick.AddListener(() => {
-                    m_informationPanel.OnAddProductToCart.Invoke(CurrentProduct, CurrentVariant);
-                    OnViewCart.Invoke();
-                    AppController.OnShoopingCartPanelAR();
-
-                });
+                    });
+                }
 
             }
         }
@@ -366,7 +369,7 @@ public class HatSlidingContentAR : MonoBehaviour
         float Dis = PositionI.x - PositionF.x;
         if (Dis > 100)
         {
-             Debug.LogError("<color=blue> Izquierda </color>");
+             Debug.Log("<color=blue> Izquierda </color>");
             if (indexInstruction < m_ListContentHatPanel.Count - 1)
             {
                 Vector2 size = Content.GetComponent<RectTransform>().sizeDelta;
@@ -392,7 +395,7 @@ public class HatSlidingContentAR : MonoBehaviour
         }
         else if (Dis < -100)
         {
-            Debug.LogError("<color=blue> Derecha </color>");
+            Debug.Log("<color=blue> Derecha </color>");
             if (indexInstruction > 0)
             {
                 Vector2 size = Content.GetComponent<RectTransform>().sizeDelta;

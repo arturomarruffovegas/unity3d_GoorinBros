@@ -1704,7 +1704,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 242304420}
   m_Direction: 0
   m_Value: 1
-  m_Size: 0.9999999
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -17066,7 +17066,7 @@ GameObject:
   - component: {fileID: 1535921818}
   - component: {fileID: 1535921819}
   m_Layer: 0
-  m_Name: singleton
+  m_Name: Singleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
