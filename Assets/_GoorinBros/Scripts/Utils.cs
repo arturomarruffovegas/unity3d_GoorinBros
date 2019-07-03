@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Shopify.Unity;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -79,6 +80,31 @@ namespace goorinAR
             }
             return colorDefault;
         }
+
+        public static string GetHatShape(Product product)
+        {
+            string colorDefault = "";
+            var tagShape = product.tags();
+
+            foreach (var item in tagShape)
+            {
+                var def = item.Split(new char[] { ':', ';' });
+
+                if (def.Length > 0)
+                {
+                    if (def[0] == "shape")
+                    {
+                        if (def.Length > 1)
+                        {
+                            colorDefault = def[1];
+                        }
+                    }
+                }
+            }
+            return colorDefault;
+
+        }
+
 
         public static string GetColorCodeMap(List<string> List_color_code_map, string tagColor)
         {

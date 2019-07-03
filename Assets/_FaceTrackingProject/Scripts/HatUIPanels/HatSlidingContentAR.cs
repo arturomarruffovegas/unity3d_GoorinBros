@@ -349,7 +349,6 @@ public class HatSlidingContentAR : MonoBehaviour
                 if (URLglobal.Contains(sku + "-" + colorDefault + "-F01"))
                 {
                     string _URLImage = URLglobal;
-                    Debug.Log(_URLImage);
                     StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
                     {
                         element.GetComponent<HatPanelArPrefab>().m_HatPhoto.sprite = spri;

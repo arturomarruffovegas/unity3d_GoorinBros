@@ -413,7 +413,6 @@ namespace goorinAR
         private void InstantiateSizes(bool changeImage,string name , int indexHat)
         {
 
-            Debug.Log("aqui tengo que hacer la verificacion");
             StartCoroutine( OnChangeImagePortada(name));
 
             DeleteSizes();

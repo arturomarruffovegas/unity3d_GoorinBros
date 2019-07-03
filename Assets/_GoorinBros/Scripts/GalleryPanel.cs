@@ -88,6 +88,10 @@ namespace goorinAR
                 return;
             }
 
+
+
+            Debug.Log(Utils.GetHatShape(product));
+
             _addedProductIds.Add(product.id());
 
             var instance = Instantiate(HatGallery);
