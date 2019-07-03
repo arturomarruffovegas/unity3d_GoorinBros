@@ -32,13 +32,6 @@ namespace goorinAR
         {
             IncreaseQuantity.onClick.AddListener(() => OnVariantLineItemQuantityAdjustment.Invoke(_currentVariant, 1));
             DecreaseQuantity.onClick.AddListener(() => OnVariantLineItemQuantityAdjustment.Invoke(_currentVariant, -1));
-
-            StartCoroutine(
-                ImageHelper.AssignImage(
-                    _imageSrc,
-                    ProductImage
-                )
-            );
         }
 
         public void SetCurrentProduct(Product product, ProductVariant variant, int quantity)
@@ -53,7 +46,32 @@ namespace goorinAR
 
             try
             {
-                _imageSrc = variant.image().transformedSrc();
+                var List_color_code_map = product.tags();
+                string colorDefault = "";
+                string sku = "";
+                colorDefault = Utils.GetColorDefault(List_color_code_map);
+                sku = Utils.GetSKU(List_color_code_map);
+
+                var img = product.images();
+
+                foreach (Shopify.Unity.ImageEdge item in img.edges())
+                {
+                    string URLglobal = item.node().transformedSrc("large");
+
+                    if (colorDefault != "" && sku != "")
+                    {
+                        if (URLglobal.Contains(sku + "-" + colorDefault + "-F01"))
+                        {
+                            string _URLImage = URLglobal;
+                            Debug.Log(_URLImage);
+                            StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
+                            {
+                                ProductImage.sprite = spri;
+                            }));
+                        }
+
+                    }
+                }
             }
             catch (NullReferenceException)
             {

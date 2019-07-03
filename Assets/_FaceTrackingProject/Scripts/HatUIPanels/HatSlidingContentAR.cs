@@ -201,7 +201,7 @@ public class HatSlidingContentAR : MonoBehaviour
                         UnityEngine.UI.Image hatPhoto = m_ListContentHatPanel[i].GetComponent<HatPanelArPrefab>().m_HatPhoto;
                         var objC = Instantiate(colorButton, parent);
 
-                        objC.transform.GetChild(0).transform.GetComponent<UnityEngine.UI.Image>().sprite = Utils.CutTexture(IconColor.texture);
+                        objC.transform.GetChild(0).GetChild(0).transform.GetComponent<UnityEngine.UI.Image>().sprite = Utils.CutTexture(IconColor.texture);
 
                         objC.name = colorsAndSizes[j].NameColor;
                         int indexHat = j;
@@ -221,6 +221,7 @@ public class HatSlidingContentAR : MonoBehaviour
 
                 if (cartButton != null)
                 {
+                    cartButton.interactable = true;
                     cartButton.onClick.RemoveAllListeners();
                     cartButton.onClick.AddListener(() =>
                     {
@@ -229,6 +230,10 @@ public class HatSlidingContentAR : MonoBehaviour
                         AppController.OnShoopingCartPanelAR();
 
                     });
+                }
+                else
+                {
+                    cartButton.interactable = false;
                 }
 
             }
@@ -327,14 +332,33 @@ public class HatSlidingContentAR : MonoBehaviour
                                                                      _hatData.hatSizeList,
                                                                      _hatData.hatColor);
 
-        if (variants[0].image() != null)
+        var List_color_code_map = p.tags();
+        string colorDefault = "";
+        string sku = "";
+        colorDefault = Utils.GetColorDefault(List_color_code_map);
+        sku = Utils.GetSKU(List_color_code_map);
+
+        var img = p.images();
+
+        foreach (Shopify.Unity.ImageEdge item in img.edges())
         {
-            string _URLImage = variants[0].image().transformedSrc("large");
-            StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
+            string URLglobal = item.node().transformedSrc("large");
+
+            if (colorDefault != "" && sku != "")
             {
-                element.GetComponent<HatPanelArPrefab>().m_HatPhoto.sprite = spri;
-            }));
+                if (URLglobal.Contains(sku + "-" + colorDefault + "-F01"))
+                {
+                    string _URLImage = URLglobal;
+                    Debug.Log(_URLImage);
+                    StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
+                    {
+                        element.GetComponent<HatPanelArPrefab>().m_HatPhoto.sprite = spri;
+                    }));
+                }
+
+            }
         }
+
         m_ListContentHatPanel.Add(element);
         Hatproducts.Add(p);
     }

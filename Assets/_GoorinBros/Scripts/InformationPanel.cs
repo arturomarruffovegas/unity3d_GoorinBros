@@ -74,9 +74,11 @@ namespace goorinAR
 
         [Header("Data")]
         [SerializeField]
-        private Texture2D Image;
-        [SerializeField]
         private Image icon;
+        [SerializeField]
+        private GameObject iconMask;
+        [SerializeField]
+        private Image onlyHat;
 
         private HatData hatData;
 
@@ -98,6 +100,9 @@ namespace goorinAR
                // ResetValue();
                 OnReturnToProducts.Invoke();
                 ResetInfoAnimation();
+                iconMask.SetActive(false);
+                onlyHat.gameObject.SetActive(false);
+                productImage.sprite = waitIcon;
             });
 
             addToCartButton.onClick.AddListener(() => {
@@ -176,6 +181,10 @@ namespace goorinAR
         {
             if(hatData.GethatName() == hatName)
             {
+                onlyHat.sprite = hatData.GethatImage();
+                onlyHat.gameObject.SetActive(true);
+                iconMask.SetActive(false);
+
                 return;
             }
             else
@@ -188,7 +197,8 @@ namespace goorinAR
 
             hatName = product.title();
             productTitle.text = hatName;
-            productImage.sprite = hatData.GethatImage();
+
+           // productImage.sprite = hatData.GethatImage();
             
             var options = new List<string>();
             var variants = (List<Shopify.Unity.ProductVariant>)product.variants();
@@ -336,8 +346,18 @@ namespace goorinAR
             CurrentVariant = variants[0];
 
 
-            if(m_ColorsAndSizes.Count>0)
-                InstantiateSizes(false,m_ColorsAndSizes[0].NameColor, 0);
+            if (m_ColorsAndSizes.Count > 0)
+            {
+                InstantiateSizes(true, m_ColorsAndSizes[0].NameColor, 0);
+            }
+            else
+            {
+                onlyHat.sprite = hatData.GethatImage();
+                productImage.sprite = hatData.GethatImage();
+                onlyHat.gameObject.SetActive(true);
+                iconMask.SetActive(false);
+            }
+
 
         }
 
@@ -350,7 +370,7 @@ namespace goorinAR
                     string s = m_ColorsAndSizes[i].URLImage;
                     StartCoroutine(OnDownloadImage(s,i,(spri,tex, index) =>
                     {
-                        colors[index].gameObject.transform.GetChild(0).transform.GetComponent<Image>().sprite = Utils.CutTexture(tex);
+                        colors[index].gameObject.transform.GetChild(0).GetChild(0).transform.GetComponent<Image>().sprite = Utils.CutTexture(tex);
                         m_ColorsAndSizes[index].HatImage = spri;
                     }));
                 }
@@ -397,9 +417,7 @@ namespace goorinAR
             StartCoroutine( OnChangeImagePortada(name));
 
             DeleteSizes();
-
-            if(changeImage)
-                productImage.sprite = m_ColorsAndSizes[indexHat].HatImage;
+            StartCoroutine(OnChangeHat(indexHat));
 
             foreach (var item in colors)
                 item.transform.GetChild(1).GetComponent<Image>().enabled = false;
@@ -434,27 +452,34 @@ namespace goorinAR
                
             }
         }
+        private IEnumerator OnChangeHat(int index)
+        {
+            yield return new WaitUntil(()=> m_ColorsAndSizes[index].HatImage != null);
+            productImage.sprite = m_ColorsAndSizes[index].HatImage;
+        }
 
-        public IEnumerator OnChangeImagePortada(string color)
+        private IEnumerator OnChangeImagePortada(string color)
         {
             for (int i = 0; i < m_ColorsAndSizes.Count; i++)
             {
-                if( m_ColorsAndSizes[i].NameColor == color)
+                if (m_ColorsAndSizes[i].NameColor == color)
                 {
                     if (!string.IsNullOrEmpty(m_ColorsAndSizes[i].URLExperience))
                     {
                         yield return new WaitUntil(() => m_ColorsAndSizes[i].HatExperience != null);
                         icon.sprite = m_ColorsAndSizes[i].HatExperience;
+                        iconMask.SetActive(true);
+                        onlyHat.gameObject.SetActive(false);
                     }
                     else
                     {
-                        icon.sprite = m_ColorsAndSizes[i].HatImage;
+                        yield return new WaitUntil(() => m_ColorsAndSizes[i].HatImage != null);
+                        onlyHat.sprite = m_ColorsAndSizes[i].HatImage;
+                        iconMask.SetActive(false);
+                        onlyHat.gameObject.SetActive(true);
                     }
                 }
             }
-
-           
-
         }
 
         private IEnumerator OnDownloadImage(string myURL,int index, UnityAction<Sprite,Texture2D, int> image)
