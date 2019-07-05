@@ -107,7 +107,7 @@ namespace goorinAR
         {
             InformationPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
             GalleryPanel.gameObject.GetComponent<RectTransform>().DOLocalMoveX(0, speedMovementPanel);
-            FindObjectOfType<FaceTrackerController>().OnChangeScene();
+            FindObjectOfType<FaceTrackerController2>().OnChangeScene();
             loadSceneAR = false;
         }
     }
