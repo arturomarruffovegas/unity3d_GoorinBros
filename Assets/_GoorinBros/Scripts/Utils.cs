@@ -16,6 +16,12 @@ namespace goorinAR
             return text;
         }
 
+        public static Sprite CutTextureIcon(Texture2D tex)
+        {
+            Sprite text = Sprite.Create(tex, new Rect(0, 0, tex.width * 0.8f, tex.height), Vector2.zero);
+            return text;
+        }
+
         public static IEnumerator OnDownloadImage(string myURL, UnityAction<Sprite> image)
         {
             UnityWebRequest www = UnityWebRequestTexture.GetTexture(myURL);

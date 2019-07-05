@@ -464,7 +464,8 @@ namespace goorinAR
                     if (!string.IsNullOrEmpty(m_ColorsAndSizes[i].URLExperience))
                     {
                         yield return new WaitUntil(() => m_ColorsAndSizes[i].HatExperience != null);
-                        icon.sprite = m_ColorsAndSizes[i].HatExperience;
+                        //icon.sprite = m_ColorsAndSizes[i].HatExperience;
+                        icon.sprite = Utils.CutTextureIcon(m_ColorsAndSizes[i].HatExperience.texture);
                         iconMask.SetActive(true);
                         onlyHat.gameObject.SetActive(false);
                     }

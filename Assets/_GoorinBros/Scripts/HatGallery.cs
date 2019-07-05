@@ -16,6 +16,15 @@ namespace goorinAR
         public bool IsLoaded { get; private set; }
         public UnityEvent OnClick;
 
+        [Header("info")]
+        [SerializeField]
+        private string sku;
+        [SerializeField]
+        private string colorDefault;
+        [SerializeField]
+        private string URLImage;
+
+
         [SerializeField]
         private Text nameHat;
         [SerializeField]
@@ -88,11 +97,7 @@ namespace goorinAR
             var variants = (List<Shopify.Unity.ProductVariant>)product.variants();
 
             var List_color_code_map = product.tags();
-
-
-            string colorDefault = "";
-            string sku = "";
-
+            
             colorDefault = Utils.GetColorDefault(List_color_code_map);
             sku = Utils.GetSKU(List_color_code_map);
 
@@ -107,6 +112,8 @@ namespace goorinAR
                     if (URLglobal.Contains(sku + "-" + colorDefault + "-F01"))
                     {
                         string _URLImage = URLglobal;
+                        URLImage = URLglobal;
+                        Debug.Log("<color=blue> " + "hat: "+ product.title() + " URL" +   _URLImage + "</color>");
                         StartCoroutine(Utils.OnDownloadImage(_URLImage, (spri) =>
                         {
                             SetImageHat(spri);
