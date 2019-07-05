@@ -38,6 +38,8 @@ public class PhotoController : MonoBehaviour
         }
     }
 
+  
+
     private void SharePhoto(Texture2D img)
     {
         if (img != null)

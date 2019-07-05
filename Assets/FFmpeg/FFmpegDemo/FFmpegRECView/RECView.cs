@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Video;
 
 namespace FFmpeg.Demo.REC
 {
@@ -10,8 +10,6 @@ namespace FFmpeg.Demo.REC
         public Button startBtn, stopBtn;
         public Text output;
         const int charsLimit = 2000;
-
-        public VideoPlayer video;
 
         //------------------------------
 
@@ -29,7 +27,6 @@ namespace FFmpeg.Demo.REC
             startBtn.interactable = false;
             stopBtn.interactable = true;
             recLogic.StartREC();
-            Debug.Log("ssss");
         }
 
         //------------------------------
@@ -55,13 +52,6 @@ namespace FFmpeg.Demo.REC
             startBtn.interactable = true;
             Debug.Log("Video saved to: " + outputVideo);
             string localURL = "file://" + outputVideo;
-
-            //video.source = VideoSource.Url;
-            //video.url = localURL;
-
-            //video.Play();
-
-
 #if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
             Handheld.PlayFullScreenMovie(
                 localURL,
@@ -69,7 +59,8 @@ namespace FFmpeg.Demo.REC
                 FullScreenMovieControlMode.Full,
                 FullScreenMovieScalingMode.AspectFit);
 #else
-            //  Application.OpenURL(localURL);
+           
+            Application.OpenURL("file://" + outputVideo);
 #endif
         }
 

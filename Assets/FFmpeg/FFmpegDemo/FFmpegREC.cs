@@ -2,6 +2,8 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Collections;
+using UnityEngine.Events;
 
 namespace FFmpeg.Demo.REC
 {
@@ -115,12 +117,17 @@ namespace FFmpeg.Demo.REC
                 frameInterval = 1.0f / FPS;
                 frameTimer = frameInterval;
 
+                Screen.SetResolution(256, 256, false);
+
                 isREC = true;
 
                 if (recAudioSource != RecAudioSource.None)
                 {
                     soundRecorder.StartRecording();
                 }
+
+               
+              //  GG();
             }
         }
 
@@ -128,7 +135,7 @@ namespace FFmpeg.Demo.REC
         {
             isREC = false;
             isProducing = true;
-
+         
             totalTime = Time.time - startTime;
             actualFPS = framesCount / totalTime;
 
@@ -151,16 +158,50 @@ namespace FFmpeg.Demo.REC
         //INTERNAL IMPLEMENTATION
         //------------------------------
 
-        void OnPostRender()
+        //void OnPostRender()
+        //{
+        //    if (isREC && (frameTimer += Time.deltaTime) > frameInterval)
+        //    {
+        //        frameTimer -= frameInterval;
+
+        //        frameBuffer.ReadPixels(camRect, 0, 0);
+
+        //        File.WriteAllBytes(NextImgFilePath(), frameBuffer.EncodeToJPG());
+        //    }
+        //}
+
+        
+        private void LateUpdate()
         {
-            if (isREC && (frameTimer += Time.deltaTime) > frameInterval)
+            // yield return new WaitForEndOfFrame();
+
+            if (isREC)
             {
-                frameTimer -= frameInterval;
 
-                frameBuffer.ReadPixels(camRect, 0, 0);
+                StartCoroutine(waitFrame(() => {
 
-                File.WriteAllBytes(NextImgFilePath(), frameBuffer.EncodeToJPG());
+                    if ((frameTimer += Time.deltaTime) > frameInterval)
+                    {
+                        frameTimer -= frameInterval;
+
+                        frameBuffer.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+
+                        File.WriteAllBytes(NextImgFilePath(), frameBuffer.EncodeToJPG());
+                        Debug.Log("si funciona");
+                        //  yield return new WaitForEndOfFrame();
+                    }
+                }
+                ));
+                
+
             }
+
+        }
+
+        public IEnumerator waitFrame(Action action )
+        {
+            yield return new WaitForEndOfFrame();
+            action?.Invoke();
         }
 
         string NextImgFilePath()

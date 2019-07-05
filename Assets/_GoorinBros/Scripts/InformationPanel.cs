@@ -242,7 +242,6 @@ namespace goorinAR
                                     if (URLglobal.Contains(text))
                                     {
                                         _URLImage = URLglobal;
-                                        Debug.Log("URL: " + _URLImage);
                                     }
 
                                     string v = d.sku + "-" + d.color_code_map;
@@ -290,7 +289,6 @@ namespace goorinAR
                                 if (URLglobal.Contains(text))
                                 {
                                     _URLImage = URLglobal;
-                                    Debug.Log("URL: " + _URLImage);
                                 }
 
                                 string v = d.sku + "-" + d.color_code_map;
