@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_FaceTrackingProject/Scenes/SceneFaceTrackerGoorin.unity
     guid: add259a0a0abc8e468e12d860e99f713
+  - enabled: 0
+    path: Assets/CrystalFramework/Utility/Demos/SafeAreaDemo.unity
+    guid: a6e5e67a77ff0402b907d9f025feb0f8
   m_configObjects: {}
