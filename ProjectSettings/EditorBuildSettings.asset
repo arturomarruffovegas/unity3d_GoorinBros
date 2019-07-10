@@ -5,16 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/_FaceTrackingProject/Scenes/SceneUIGoorin.unity
     guid: 709884f4245b181489714c01e262a019
-  - enabled: 0
+  - enabled: 1
     path: Assets/_FaceTrackingProject/Scenes/SceneFaceTrackerGoorin.unity
     guid: add259a0a0abc8e468e12d860e99f713
-  - enabled: 0
-    path: Assets/FFmpeg/FFmpegDemo/FFmpegREC.unity
-    guid: 0be586934272646008da2c2ca2bf77a6
-  - enabled: 1
-    path: Assets/ULSFaceTracker/Scenes/Object3D.unity
-    guid: f7769b924ec7f43d987cb287c56461e8
   m_configObjects: {}

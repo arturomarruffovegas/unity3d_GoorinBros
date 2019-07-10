@@ -156,7 +156,7 @@ public class HatArController : MonoBehaviour
         m_CurrentHatContent = (HatContent)c;
 
         m_CurrentId = m_CurrentHatId;
-        m_HatPosition = FindObjectOfType<FaceTrackerController2>().m_hatPosition;
+        m_HatPosition = FindObjectOfType<Object3D_Complete>().m_hatPosition;
         m_CurrentHat.transform.parent = m_HatPosition;
         m_CurrentHat.transform.localPosition = Vector3.zero;
         m_CurrentHat.transform.localRotation = Quaternion.identity;

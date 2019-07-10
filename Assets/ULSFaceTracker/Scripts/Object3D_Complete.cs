@@ -11,6 +11,7 @@ class Object3D_Complete : MonoBehaviour
 {
 
 #if DRAW_MARKERS
+    public Transform m_hatPosition;
     public GameObject marker = null;
     private List<GameObject> _marker2d = new List<GameObject>();
     bool drawMarkers = false;
@@ -207,6 +208,8 @@ class Object3D_Complete : MonoBehaviour
 
             //distancia constante para calcular la escala
             float d = disAn / disAl;
+           // _helmet.transform.localScale = new Vector3(d, d, d);
+
             Debug.Log(d);
 
 
@@ -217,6 +220,8 @@ class Object3D_Complete : MonoBehaviour
                 float newPosZ = parcentaje * 500;
                 _anchor3d.transform.position = new Vector3(_anchor3d.transform.position.x, _anchor3d.transform.position.y, _anchor3d.transform.position.z + newPosZ); 
             }
+
+
             
 
         
