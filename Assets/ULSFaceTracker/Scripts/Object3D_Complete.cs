@@ -12,7 +12,7 @@ class Object3D_Complete : MonoBehaviour
 
 #if DRAW_MARKERS
     public GameObject marker = null;
-    public List<GameObject> _marker2d = new List<GameObject>();
+    private List<GameObject> _marker2d = new List<GameObject>();
     bool drawMarkers = false;
 #endif
 
@@ -196,6 +196,31 @@ class Object3D_Complete : MonoBehaviour
             //Vector3 s = new Vector3(_scaleX[0], _scaleY[0], _scaleZ[0]);
             //s.Scale(_original_scale);
             //_helmet.transform.localScale = s;
+
+            //distancia de los cachetes
+            float disAn = Vector3.Distance(_marker2d[0].transform.position, _marker2d[4].transform.position);
+            //Distancia de la nariz al punto medio de los ojos
+            float disAl = Vector3.Distance(_marker2d[9].transform.position, _marker2d[10].transform.position);
+
+            //distancia de la boca
+            float DisMouth = Vector3.Distance(_marker2d[28].transform.position, _marker2d[29].transform.position);
+
+            //distancia constante para calcular la escala
+            float d = disAn / disAl;
+            Debug.Log(d);
+
+
+            float parcentaje = DisMouth / disAn;
+
+            if (parcentaje > 0.05f)
+            {
+                float newPosZ = parcentaje * 500;
+                _anchor3d.transform.position = new Vector3(_anchor3d.transform.position.x, _anchor3d.transform.position.y, _anchor3d.transform.position.z + newPosZ); 
+            }
+            
+
+        
+
         }
         else
         {
