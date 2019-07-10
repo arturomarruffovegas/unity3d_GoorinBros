@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 namespace goorinAR
 {
@@ -111,6 +112,80 @@ namespace goorinAR
 
         }
 
+        public static void GetBrimGruop(Product product,Text brimGruop, Text brimGruopTitle)
+        {
+            var tagShape = product.tags();
+            foreach (var item in tagShape)
+            {
+                var def = item.Split(new char[] { ':', ';' });
+                if (def.Length > 0)
+                {
+                    if(def[0]== "brim_category")
+                    {
+                        if (def.Length > 1)
+                        {
+                            Debug.Log("Brim Gruop");
+                            brimGruop.text = def[1];
+                            brimGruopTitle.text = "Brim Gruop";
+                            return;
+                        }
+                    }
+                    else if (def[0] == "subshape")
+                    {
+                        if (def.Length > 1)
+                        {
+                            Debug.Log("Style");
+                            brimGruop.text = def[1];
+                            brimGruopTitle.text = "Style";
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        brimGruop.text = "";
+                    }
+                }
+            }
+            return;
+        }
+
+        public static void GetCrownShape(Product product, Text crown, Text crownTitle)
+        {
+            var tagShape = product.tags();
+            foreach (var item in tagShape)
+            {
+                var def = item.Split(new char[] { ':', ';' });
+                if (def.Length > 0)
+                {
+                    if (def[0] == "crown_type")
+                    {
+                        if (def.Length > 1)
+                        {
+                            Debug.Log("Crown Shape");
+                            crown.text = def[1];
+                            crownTitle.text = "Crown Shape";
+                            return;
+                        }
+                    }
+                    else if (def[0] == "made_in")
+                    {
+                        if (def.Length > 1)
+                        {
+                            Debug.Log("Fabrication");
+                            crown.text = "Made in The " + def[1];
+                            crownTitle.text = "Fabrication";
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        crown.text = "";
+                    }
+                }
+            }
+            return;
+        }
+
 
         public static string GetColorCodeMap(List<string> List_color_code_map, string tagColor)
         {
@@ -155,8 +230,16 @@ namespace goorinAR
         public string color_code_map;
         public string URLImage;
         public Sprite HatImage;
+        public List<ReferienceHats> ReferenceHats = new List<ReferienceHats>();
         public string URLExperience;
         public Sprite HatExperience;
         public List<string> sizes = new List<string>();
+    }
+    [System.Serializable]
+    public class ReferienceHats
+    {
+        public string name;
+        public string URL;
+        public Sprite Image;
     }
 }

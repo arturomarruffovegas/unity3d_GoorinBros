@@ -47,6 +47,8 @@ namespace goorinAR
         [SerializeField]
         private Button SizeButton;
         [SerializeField]
+        private Button referienceButton;
+        [SerializeField]
         private Button sizingGuideButton;
 
         [Header("data")]
@@ -57,6 +59,7 @@ namespace goorinAR
         public bool finishDownloadImage;
         private List<GameObject> colors = new List<GameObject>();
         private List<GameObject> sizes = new List<GameObject>();
+        private List<GameObject> referiences = new List<GameObject>();
        // public List<Sprite> m_hatImages = new List<Sprite>();
 
         private bool isEnabled;
@@ -70,6 +73,15 @@ namespace goorinAR
         private Text productTitle;
         [SerializeField]
         private Image productImage;
+        [SerializeField]
+        private Text brimGruop;
+        [SerializeField]
+        private Text brimGruopTitle;
+        [SerializeField]
+        private Text crown;
+        [SerializeField]
+        private Text crownTitle;
+
 
 
         [Header("Data")]
@@ -100,9 +112,8 @@ namespace goorinAR
                // ResetValue();
                 OnReturnToProducts.Invoke();
                 ResetInfoAnimation();
-                iconMask.SetActive(false);
-                onlyHat.gameObject.SetActive(false);
-                productImage.sprite = waitIcon;
+
+                
             });
 
             addToCartButton.onClick.AddListener(() => {
@@ -174,6 +185,11 @@ namespace goorinAR
             colors.Clear();
             //sizes
             DeleteSizes();
+            DeleteReferience();
+
+            iconMask.SetActive(false);
+            onlyHat.gameObject.SetActive(false);
+            productImage.sprite = waitIcon;
 
         }
 
@@ -181,10 +197,6 @@ namespace goorinAR
         {
             if(hatData.GethatName() == hatName)
             {
-                onlyHat.sprite = hatData.GethatImage();
-                onlyHat.gameObject.SetActive(true);
-                iconMask.SetActive(false);
-
                 return;
             }
             else
@@ -197,9 +209,12 @@ namespace goorinAR
 
             hatName = product.title();
             productTitle.text = hatName;
+           // brimGruop.text = 
+           Utils.GetBrimGruop(product, brimGruop , brimGruopTitle);
+           Utils.GetCrownShape(product, crown, crownTitle);
 
-           // productImage.sprite = hatData.GethatImage();
-            
+            // productImage.sprite = hatData.GethatImage();
+
             var options = new List<string>();
             var variants = (List<Shopify.Unity.ProductVariant>)product.variants();
 
@@ -212,7 +227,6 @@ namespace goorinAR
                 if (variant.availableForSale())
                 {
 
-                //    var URLDownloadImage = variant.image().transformedSrc("large");
                     string name = variant.title();
                     string[] names = name.Split('/');
 
@@ -222,13 +236,15 @@ namespace goorinAR
                     if(m_ColorsAndSizes.Count > 0)
                     {
                         
-                        if (SearchName(m_ColorsAndSizes, NameColor) == false)
+                        if (SearchColorName(m_ColorsAndSizes, NameColor) == false)
                         {
                             ColorsAndSizes d = new ColorsAndSizes();
                             d.NameColor = NameColor;
                             d.sku = Utils.GetSKU(List_color_code_map);
                             string tagColor = "color_code_map:" + NameColor;
                             d.color_code_map = Utils.GetColorCodeMap(List_color_code_map, tagColor);
+
+                            List<ReferienceHats> rh = new List<ReferienceHats>();
 
                             string _URLImage = "";
                             string _URLExperienceImage = "";
@@ -238,28 +254,37 @@ namespace goorinAR
                                 string URLExperienceglobal = item.node().transformedSrc("grande");
                                 if (d.sku != "" && d.color_code_map != "")
                                 {
-                                    string text = d.sku + "-" + d.color_code_map + "-F01";
-                                    if (URLglobal.Contains(text))
+                                    string text = d.sku + "-" + d.color_code_map;
+                                    if (URLglobal.Contains(text + "-F01"))
                                     {
                                         _URLImage = URLglobal;
                                     }
 
+                                    //if(SearchReferienceceName(rh, URLglobal) == false)
+                                    //{
+                                        
+                                    //}
+                                    SearchTypeViewHat(rh, URLglobal, text);
+
                                     string v = d.sku + "-" + d.color_code_map;
+
                                     if (URLExperienceglobal.Contains(v + "-HF01"))
                                         _URLExperienceImage = URLExperienceglobal;
-                                    else if(URLExperienceglobal.Contains(v + "-HM01"))
+                                    else if (URLExperienceglobal.Contains(v + "-HM01"))
                                         _URLExperienceImage = URLExperienceglobal;
-                                    else if(URLExperienceglobal.Contains(v + "-MF01"))
+                                    else if (URLExperienceglobal.Contains(v + "-MF01"))
                                         _URLExperienceImage = URLExperienceglobal;
+
                                 }
-
-
-
+                                
                             }
 
                             d.URLImage = _URLImage;
                             d.URLExperience = _URLExperienceImage;
                             d.sizes.Add(NameSize);
+
+                            d.ReferenceHats = rh;
+
                             m_ColorsAndSizes.Add(d);
                             
                         }
@@ -276,6 +301,8 @@ namespace goorinAR
                         string tagColor = "color_code_map:" + NameColor;
                         d.color_code_map = Utils.GetColorCodeMap(List_color_code_map, tagColor);
 
+                        List<ReferienceHats> rh = new List<ReferienceHats>();
+
                         string _URLImage = "";
                         string _URLExperienceImage = "";
                         foreach (Shopify.Unity.ImageEdge item in img.edges())
@@ -285,18 +312,25 @@ namespace goorinAR
 
                             if (d.sku != "" && d.color_code_map != "")
                             {
-                                string text = d.sku + "-" + d.color_code_map + "-F01";
-                                if (URLglobal.Contains(text))
+                                string text = d.sku + "-" + d.color_code_map;
+                                if (URLglobal.Contains(text + "-F01"))
                                 {
                                     _URLImage = URLglobal;
                                 }
 
+                                //if (SearchReferienceceName(rh, URLglobal) == false)
+                                //{
+                                    
+                                //}
+                                SearchTypeViewHat(rh, URLglobal, text);
+
                                 string v = d.sku + "-" + d.color_code_map;
+
                                 if (URLExperienceglobal.Contains(v + "-HF01"))
                                     _URLExperienceImage = URLExperienceglobal;
                                 else if (URLExperienceglobal.Contains(v + "-HM01"))
                                     _URLExperienceImage = URLExperienceglobal;
-                                else if(URLExperienceglobal.Contains(v + "-MF01"))
+                                else if (URLExperienceglobal.Contains(v + "-MF01"))
                                     _URLExperienceImage = URLExperienceglobal;
                             }
 
@@ -307,12 +341,11 @@ namespace goorinAR
                         d.URLImage = _URLImage;
                         d.URLExperience = _URLExperienceImage;
                         d.sizes.Add(NameSize);
-                        m_ColorsAndSizes.Add(d);
 
-                        //StartCoroutine(OnDownloadImage(URLDownloadImage, (spri) =>
-                        //{
-                        //    m_ColorsAndSizes[0].HatImage = spri;
-                        //}));
+                        d.ReferenceHats = rh;
+
+                        m_ColorsAndSizes.Add(d);
+                        
                     }
 
                     options.Add(variant.title());
@@ -322,6 +355,7 @@ namespace goorinAR
 
              //GetImages
             OnGetHatImageColors();
+            OnGetHatReferience();
             OnGetHatExperience();
 
             //instantiate colors
@@ -366,7 +400,7 @@ namespace goorinAR
                 for (int i = 0; i < m_ColorsAndSizes.Count; i++)
                 {
                     string s = m_ColorsAndSizes[i].URLImage;
-                    StartCoroutine(OnDownloadImage(s,i,(spri,tex, index) =>
+                    StartCoroutine(OnDownloadImage(s,i,0,(spri,tex, index, indexchild) =>
                     {
                         colors[index].gameObject.transform.GetChild(0).GetChild(0).transform.GetComponent<Image>().sprite = Utils.CutTexture(tex);
                         m_ColorsAndSizes[index].HatImage = spri;
@@ -375,6 +409,28 @@ namespace goorinAR
             }
 
             StartCoroutine(OnCheckFinishImage(m_ColorsAndSizes));
+        }
+
+        private void OnGetHatReferience()
+        {
+            if (m_ColorsAndSizes.Count > 0)
+            {
+                for (int i = 0; i < m_ColorsAndSizes.Count; i++)
+                {
+                    for (int j = 0; j < m_ColorsAndSizes[i].ReferenceHats.Count; j++)
+                    {
+                        string s = m_ColorsAndSizes[i].ReferenceHats[j].URL;
+
+                        if (!string.IsNullOrEmpty(s))
+                        {
+                            StartCoroutine(OnDownloadImage(s, i, j, (spri, tex, index, indexChild) =>
+                            {
+                                m_ColorsAndSizes[index].ReferenceHats[indexChild].Image = spri;
+                            }));
+                        }
+                    }
+                }
+            }
         }
 
         private void OnGetHatExperience()
@@ -386,7 +442,7 @@ namespace goorinAR
                     string s = m_ColorsAndSizes[i].URLExperience;
                     if (!string.IsNullOrEmpty(s))
                     {
-                        StartCoroutine(OnDownloadImage(s, i, (spri, tex, index) =>
+                        StartCoroutine(OnDownloadImage(s, i,0, (spri, tex, index, indexChild) =>
                         {
                             m_ColorsAndSizes[index].HatExperience = spri;
                         }));
@@ -414,6 +470,7 @@ namespace goorinAR
             StartCoroutine( OnChangeImagePortada(name));
 
             DeleteSizes();
+            DeleteReferience();
             StartCoroutine(OnChangeHat(indexHat));
 
             foreach (var item in colors)
@@ -425,6 +482,8 @@ namespace goorinAR
                 {
                     colors[i].gameObject.transform.GetChild(1).GetComponent<Image>().enabled = true;
 
+
+                    //Instanciar botones de medidas
                     for (int j  = 0; j < m_ColorsAndSizes[i].sizes.Count; j++)
                     {
                         var size = Instantiate(SizeButton.gameObject, SizeButton.gameObject.transform.parent);
@@ -445,10 +504,40 @@ namespace goorinAR
                         size.SetActive(true);
                         GetColorAndSize(name, m_ColorsAndSizes[i].sizes[0]);
                     }
+
+                    //instanciar botones de cambio de sombrero
+                    for (int r = 0; r < m_ColorsAndSizes[i].ReferenceHats.Count; r++)
+                    {
+                        var referience = Instantiate(referienceButton.gameObject, referienceButton.gameObject.transform.parent);
+                        referience.GetComponent<Button>().onClick.RemoveAllListeners();
+                        referience.GetComponent<Button>().onClick.AddListener(delegate { OnChangeImagehatWithView(referience); });
+                        referiences.Add(referience);
+                        referience.SetActive(true);
+                    }
+
+                    StartCoroutine(OnChangeViewHats(i));
+                    
                 }
                
             }
         }
+
+        private void OnChangeImagehatWithView(GameObject obj)
+        {
+            productImage.sprite = obj.transform.GetChild(0).GetComponent<Image>().sprite;
+        }
+
+        private IEnumerator OnChangeViewHats(int index)
+        {
+            for (int i = 0; i < m_ColorsAndSizes[index].ReferenceHats.Count; i++)
+            {
+                yield return new WaitUntil(() => m_ColorsAndSizes[index].ReferenceHats[i].Image != null);
+                referiences[i].transform.GetChild(0).transform.GetComponent<Image>().sprite = m_ColorsAndSizes[index].ReferenceHats[i].Image;
+            }
+            
+            
+        }
+
         private IEnumerator OnChangeHat(int index)
         {
             yield return new WaitUntil(()=> m_ColorsAndSizes[index].HatImage != null);
@@ -480,14 +569,14 @@ namespace goorinAR
             }
         }
 
-        private IEnumerator OnDownloadImage(string myURL,int index, UnityAction<Sprite,Texture2D, int> image)
+        private IEnumerator OnDownloadImage(string myURL,int index, int IndexChild, UnityAction<Sprite,Texture2D, int, int> image)
         {
             UnityWebRequest www = UnityWebRequestTexture.GetTexture(myURL);
             yield return www.SendWebRequest();
 
             Texture2D tex = DownloadHandlerTexture.GetContent(www);
             Sprite spri = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
-            image?.Invoke(spri, tex, index);
+            image?.Invoke(spri, tex, index, IndexChild);
         }
 
         private void GetColorAndSize(string color, string size)
@@ -531,7 +620,20 @@ namespace goorinAR
             sizes.Clear();
         }
 
-        private bool SearchName(List<ColorsAndSizes> list, string name)
+        private void DeleteReferience()
+        {
+            int amount = referienceButton.gameObject.transform.parent.childCount;
+            if (amount > 1)
+            {
+                for (int j = amount - 1; j > 0; j--)
+                {
+                    Destroy(referienceButton.gameObject.transform.parent.GetChild(j).gameObject);
+                }
+            }
+            referiences.Clear();
+        }
+
+        private bool SearchColorName(List<ColorsAndSizes> list, string name)
         {
             for (int i = 0; i < list.Count; i++)
             {
@@ -540,6 +642,72 @@ namespace goorinAR
             }
 
             return false;
+        }
+
+        private bool SearchReferienceceName(List<ReferienceHats> list, string name)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].URL.Contains(name))
+                    return true;
+            }
+            return false;
+        }
+
+        private void SearchTypeViewHat(List<ReferienceHats> rh, string URLglobal, string text)
+        {
+
+            if (URLglobal.Contains(text + "-F01"))
+            {
+                ReferienceHats s = new ReferienceHats
+                {
+                    name = "Front",
+                    URL = URLglobal
+                };
+
+                if(SearchReferienceceName(rh,text + "-F01")==false)
+                    rh.Add(s);
+            }
+            else if (URLglobal.Contains(text + "-S01"))
+            {
+                ReferienceHats s = new ReferienceHats
+                {
+                    name = "Left",
+                    URL = URLglobal
+                };
+                if (SearchReferienceceName(rh, text + "-S01") == false)
+                    rh.Add(s);
+            }
+            else if (URLglobal.Contains(text + "-B01"))
+            {
+                ReferienceHats s = new ReferienceHats
+                {
+                    name = "Back",
+                    URL = URLglobal
+                };
+                if (SearchReferienceceName(rh, text + "-B01") == false)
+                    rh.Add(s);
+            }
+            else if (URLglobal.Contains(text + "-U01"))
+            {
+                ReferienceHats s = new ReferienceHats
+                {
+                    name = "Under",
+                    URL = URLglobal
+                };
+                if (SearchReferienceceName(rh, text + "-U01") == false)
+                    rh.Add(s);
+            }
+            else if (URLglobal.Contains(text + "-T01"))
+            {
+                ReferienceHats s = new ReferienceHats
+                {
+                    name = "Top",
+                    URL = URLglobal
+                };
+                if (SearchReferienceceName(rh, text + "-T01") == false)
+                    rh.Add(s);
+            }
         }
 
         private void AddSizes(List<ColorsAndSizes> list, string name, string size)

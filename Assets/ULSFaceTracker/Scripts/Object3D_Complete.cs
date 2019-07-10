@@ -1,4 +1,4 @@
-﻿#define DRAW_MARKERS
+#define DRAW_MARKERS
 #define FULL_SCREEN
 
 using UnityEngine;
@@ -7,11 +7,10 @@ using System.Collections.Generic;
 using ULSTrackerForUnity;
 using UnityEngine.SceneManagement;
 
-class FaceTrackerController2 : MonoBehaviour
+class Object3D_Complete : MonoBehaviour
 {
 
 #if DRAW_MARKERS
-    public Transform m_hatPosition;
     public GameObject marker = null;
     public List<GameObject> _marker2d = new List<GameObject>();
     bool drawMarkers = false;
@@ -178,10 +177,11 @@ class FaceTrackerController2 : MonoBehaviour
         if (0 < Plugins.ULS_UnityGetPoints(_trackPoints))
         {
 #if DRAW_MARKERS
-			for(int j=0;j<Plugins.MAX_TRACKER_POINTS;++j) {
-				_marker2d[j].transform.localPosition = new Vector3 (_trackPoints [j * 2], _trackPoints [j * 2 + 1], 0);
-				_marker2d[j].SetActive(true);
-			}		
+            for (int j = 0; j < Plugins.MAX_TRACKER_POINTS; ++j)
+            {
+                _marker2d[j].transform.localPosition = new Vector3(_trackPoints[j * 2], _trackPoints[j * 2 + 1], 0);
+                _marker2d[j].SetActive(true);
+            }
 #endif
             // get transform matrix for alignment 3d objects
             Plugins.ULS_UnityGetTransform(_mtx, intrinsic_camera_matrix, null);
@@ -209,11 +209,11 @@ class FaceTrackerController2 : MonoBehaviour
     {
 
 #if DRAW_MARKERS
-		//if (GUILayout.Button ("Show Markers", GUILayout.Height (100))) {
-		//	drawMarkers ^= true;
-		//	_helmet.gameObject.SetActive(!drawMarkers);
-		//}
-		//GUILayout.Space (8);
+        //if (GUILayout.Button ("Show Markers", GUILayout.Height (100))) {
+        //	drawMarkers ^= true;
+        //	_helmet.gameObject.SetActive(!drawMarkers);
+        //}
+        //GUILayout.Space (8);
 #endif
 
 #if UNITY_STANDALONE || UNITY_EDITOR

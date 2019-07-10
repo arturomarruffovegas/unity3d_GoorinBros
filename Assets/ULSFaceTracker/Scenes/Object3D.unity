@@ -162,11 +162,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 57616723}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1611d0711386f4a94944ced5488daa4b, type: 3}
+  m_Script: {fileID: 11500000, guid: a770168666677984488b6398aa063e26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  marker: {fileID: 181296, guid: ffd9b0b6834d44bf0be6f468381485bd, type: 3}
-  _focal_length: 989
+  marker: {fileID: 9005874272417609306, guid: b661a1523b6ad1445880bd227120bea5, type: 3}
+  _marker2d: []
+  _focal_length: 5120
   _anchor2d: {fileID: 963091581}
   _anchor3d: {fileID: 1507990475}
   ARCamera: {fileID: 1142739752}
