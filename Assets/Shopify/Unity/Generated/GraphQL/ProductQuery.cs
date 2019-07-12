@@ -151,7 +151,8 @@ namespace Shopify.Unity.GraphQL {
         /// <summary>
         /// Globally unique identifier.
         /// </summary>
-        public ProductQuery id() {
+        public ProductQuery id()
+        {
             Query.Append("id ");
 
             return this;

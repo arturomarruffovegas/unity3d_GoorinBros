@@ -181,7 +181,7 @@ class Object3D_Complete : MonoBehaviour
             for (int j = 0; j < Plugins.MAX_TRACKER_POINTS; ++j)
             {
                 _marker2d[j].transform.localPosition = new Vector3(_trackPoints[j * 2], _trackPoints[j * 2 + 1], 0);
-                _marker2d[j].SetActive(true);
+                _marker2d[j].SetActive(false);
             }
 #endif
             // get transform matrix for alignment 3d objects
@@ -269,6 +269,6 @@ class Object3D_Complete : MonoBehaviour
     public void OnChangeScene()
     {
         Plugins.ULS_UnityTrackerTerminate();
-        SceneManager.LoadSceneAsync(0);
+        SceneManager.LoadScene(1);
     }
 }

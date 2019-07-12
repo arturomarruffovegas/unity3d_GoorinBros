@@ -36,12 +36,12 @@ namespace goorinAR
 
         public void Start()
         {
-            Tags.useTag = true;
+            Tags.SetTag(true, "Fedora");
 
             OnShoopingCartPanelAR += ShoopingCartPanelAR;
             OnBackAR += BackAR;
 
-            ShopifyHelper.Init(AccessToken, ShopDomain);
+           //ShopifyHelper.Init(AccessToken, ShopDomain);
 
             GalleryPanel.Init();
 
@@ -76,7 +76,7 @@ namespace goorinAR
                 {
                     if (loadSceneAR == false)
                     {
-                        UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(1);
+                        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
                         loadSceneAR = true;
                     }
                  });

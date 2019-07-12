@@ -30,7 +30,6 @@ namespace Shopify.Examples.Helpers {
             // For more information on querying products visit
             // https://help.shopify.com/api/sdks/custom-storefront/unity-buy-sdk/getting-started#query-all-products
 
-
             ShopifyBuy.Client().products((products, error, after) =>
             {
 
@@ -43,6 +42,8 @@ namespace Shopify.Examples.Helpers {
                 successCallback(products, after);
 
             }, null,cursor);
+
+        
 
         public static Cart CreateCart() {
             return ShopifyBuy.Client().Cart();

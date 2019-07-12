@@ -1,5 +1,6 @@
 ﻿using Shopify.Examples.Helpers;
 using Shopify.Unity;
+using Shopify.Unity.SDK;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +15,31 @@ namespace goorinAR
         public ShowProductEvent OnShowProduct = new ShowProductEvent();
         public UnityEvent OnNetworkError;
 
+        [Header("Categories")]
+        public Transform contentCategoryButtons;
+        public GameObject categoryButton;
+        public List<GameObject> listCategoryButtons;
+
+
+        [Header("Content")]
         [SerializeField]
         private HatGallery HatGallery;
         [SerializeField]
+        private Transform galleryContentFeminine;
+        [SerializeField]
+        private Transform galleryContentFedora;
+        [SerializeField]
+        private Transform galleryContentFlatcap;
+
         private Transform galleryContent;
 
         public bool _hitEndCursor;
 
-        public ScrollRect ScrollView;
+        public ScrollRect ScrollViewFeminine;
+        public ScrollRect ScrollViewFedora;
+        public ScrollRect ScrollViewFlatcap;
+
+        public GameObject laodingPanel;
         private bool _wasScrolledToBottom;
         private RectTransform _rectTransform;
 
@@ -35,15 +53,92 @@ namespace goorinAR
         private HatData hatData;
 
         public static UnityAction<Product> galleryAR;
-        
+
+        [Header("colors")]
+        public Color textColor;
+        public Color baseColor;
+
+        [Header("Buttons")]
+        [SerializeField]
+        private Button feminine;
+        [SerializeField]
+        private Button fedora;
+        [SerializeField]
+        private Button flatcap;
+
+
+        public void OnCreateCategoryButtons()
+        {
+            var categories = FindObjectOfType<InitialApp>().shapes;
+            for (int i = 0; i < categories.Count; i++)
+            {
+                var cat = Instantiate(categoryButton, contentCategoryButtons);
+                cat.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = categories[i];
+                cat.SetActive(true);
+                listCategoryButtons.Add(cat);
+            }
+        }
+
+        public void Start()
+        {
+
+            // OnCreateCategoryButtons();
+           // DefaultQueries.MaxProductPageSize = 10;
+
+            feminine.onClick.AddListener(() => 
+            {
+                Tags.SetTag(true, "Feminine");
+                OnChangeScroll(ScrollViewFeminine.name);
+                galleryContent = galleryContentFeminine;
+                feminine.GetComponent<UnityEngine.UI.Image>().color = Color.black;
+                fedora.GetComponent<UnityEngine.UI.Image>().color = Color.white;
+                flatcap.GetComponent<UnityEngine.UI.Image>().color = Color.white;
+                FetchProducts();
+            });
+
+            fedora.onClick.AddListener(() =>
+            {
+                Tags.SetTag(true, "Fedora");
+                OnChangeScroll(ScrollViewFedora.name);
+                galleryContent = galleryContentFedora;
+                feminine.GetComponent<UnityEngine.UI.Image>().color = Color.white;
+                fedora.GetComponent<UnityEngine.UI.Image>().color = Color.black;
+                flatcap.GetComponent<UnityEngine.UI.Image>().color = Color.white;
+                FetchProducts();
+            });
+
+            flatcap.onClick.AddListener(() =>
+            {
+                Tags.SetTag(true, "Flatcap");
+                OnChangeScroll(ScrollViewFlatcap.name);
+                galleryContent = galleryContentFlatcap;
+                feminine.GetComponent<UnityEngine.UI.Image>().color = Color.white;
+                fedora.GetComponent<UnityEngine.UI.Image>().color = Color.white;
+                flatcap.GetComponent<UnityEngine.UI.Image>().color = Color.black;
+                FetchProducts();
+            });
+        }
+
+        public void OnChangeScroll(string name)
+        {
+            ScrollViewFeminine.gameObject.SetActive(ScrollViewFeminine.name.Equals(name));
+            ScrollViewFedora.gameObject.SetActive(ScrollViewFedora.name.Equals(name));
+            ScrollViewFlatcap.gameObject.SetActive(ScrollViewFlatcap.name.Equals(name));
+        }
+
+
         public void Init()
         {
+            galleryContent = galleryContentFedora;
+
             hatData = FindObjectOfType<HatData>();
 
             FetchProducts();
 
             _rectTransform = GetComponent<RectTransform>();
-            ScrollView.onValueChanged.AddListener(OnScrollRectPositionChanged);
+            ScrollViewFeminine.onValueChanged.AddListener(OnScrollRectPositionChanged);
+            ScrollViewFedora.onValueChanged.AddListener(OnScrollRectPositionChanged);
+            ScrollViewFlatcap.onValueChanged.AddListener(OnScrollRectPositionChanged);
 
             ActionProduct += OnProduct;
 
@@ -88,7 +183,7 @@ namespace goorinAR
                 return;
             }
 
-
+            laodingPanel.SetActive(false);
 
             Debug.Log(Utils.GetHatShape(product));
 
