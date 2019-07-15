@@ -14,7 +14,9 @@ public class InitialApp : MonoBehaviour
     public string AccessToken;
     public string ShopDomain;
 
-    public List<string> shapes;
+    public List<string> shapes = new List<string>();
+
+    public static List<Product> m_product = new List<Product>();
 
     public void Start()
     {
@@ -45,6 +47,8 @@ public class InitialApp : MonoBehaviour
                         }
                     }
                 }
+
+                m_product.Add(product);
 
                 DefaultQueries.MaxProductPageSize = 10;
                 SceneManager.LoadScene(1);
