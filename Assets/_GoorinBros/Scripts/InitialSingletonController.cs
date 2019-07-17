@@ -13,5 +13,10 @@ public class InitialSingletonController : MonoBehaviour
         else if (instance != this)
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
+
+        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        }
     }
 }

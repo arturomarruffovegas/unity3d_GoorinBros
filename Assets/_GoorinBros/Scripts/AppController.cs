@@ -5,6 +5,7 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.Android;
 
 namespace goorinAR
 {
@@ -37,6 +38,12 @@ namespace goorinAR
         public void Start()
         {
             Tags.SetTag(true, "Fedora");
+
+            if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
+            {
+                Permission.RequestUserPermission(Permission.Camera);
+            }
+
 
             OnShoopingCartPanelAR += ShoopingCartPanelAR;
             OnBackAR += BackAR;

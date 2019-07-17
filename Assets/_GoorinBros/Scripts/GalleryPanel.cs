@@ -46,10 +46,6 @@ namespace goorinAR
 
         public static UnityAction<Product> galleryAR;
 
-        [Header("colors")]
-        public Color textColor;
-        public Color baseColor;
-
         //[Header("Buttons")]
         //[SerializeField]
         //private Button feminine;
@@ -62,7 +58,6 @@ namespace goorinAR
         public IEnumerator OnCreateCategoryButtons()
         {
             var categories = FindObjectOfType<InitialApp>().shapes;
-            var PP = InitialApp.m_product;
 
             for (int i = 0; i < categories.Count; i++)
             {
@@ -77,22 +72,28 @@ namespace goorinAR
                 var scroll = Instantiate(ScrollView, contentHatPanel);
                 scroll.name = scroll.name + " " + categories[i];
                 scroll.SetActive(true);
+
+                scroll.GetComponent<ScrollRect>().onValueChanged.AddListener(OnScrollRectPositionChanged);
+
                 scrollViews.Add(scroll);
             }
 
             yield return new WaitForEndOfFrame();
 
-            StartCoroutine( OnInstantiateHats());
+            StartCoroutine(OnInstantiateHats());
         }
 
         private IEnumerator OnInstantiateHats()
         {
-            var PP = InitialApp.m_product;
+            var products = InitialApp.m_product;
             var categories = FindObjectOfType<InitialApp>().shapes;
 
-            for (int i = 0; i < PP.Count; i++)
+            listCategoryButtons[listCategoryButtons.Count-1].GetComponent<UnityEngine.UI.Image>().color = Color.black;
+
+            for (int i = 0; i < products.Count; i++)
             {
-                var tags = PP[i].tags();
+                yield return new WaitForEndOfFrame();
+                var tags = products[i].tags();
 
                 foreach (var item in tags)
                 {
@@ -101,18 +102,20 @@ namespace goorinAR
                    
                         if (item == "shape:" + categories[j])
                         {
-                            StartCoroutine(AddProduct(PP[i], scrollViews[j]));
+                            yield return new WaitForEndOfFrame();
+                            StartCoroutine(AddProduct(products[i], scrollViews[j]));
                         }
                     }
                 }
             }
 
-            yield return new WaitForSeconds(1f);
-            OnDisableScrolls(categories[0]);
         }
 
         private void OnDisableScrolls(string name)
         {
+            Tags.SetTag(true, name);
+
+
             for (int i = 0; i < scrollViews.Count; i++)
             {
                 if (scrollViews[i].name.Contains(name))
