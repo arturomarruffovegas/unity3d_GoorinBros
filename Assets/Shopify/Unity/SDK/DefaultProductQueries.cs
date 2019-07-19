@@ -34,6 +34,7 @@ namespace Shopify.Unity.SDK {
                 .variants(
                     pvc => ProductVariantConnection(pvc, imageResolutions),
                     first : DefaultQueries.MaxPageSize
+                    
                 )
                 .collections(
                     pcc => CollectionConnection(pcc),
@@ -43,6 +44,34 @@ namespace Shopify.Unity.SDK {
                     ic => ImageConnection(ic, imageResolutions),
                     first : DefaultQueries.MaxPageSize
                 );
+        }
+
+        private void MetafieldConnectionDelegate(MetafieldConnectionQuery ff, Dictionary<string, int> imageResolutions)
+        {
+            ff
+                .edges(pve => pve
+                    .node(pnv => Metafieldvariants(pnv, imageResolutions))
+                    .cursor()
+                )
+                .pageInfo(pvp => pvp
+                    .hasNextPage()
+                );
+        }
+
+        private void Metafieldvariants(MetafieldQuery pnv, Dictionary<string, int> imageResolutions)
+        {
+            pnv
+                .id()
+                .namespaceValue()
+                .description()
+                .valueType()
+                .key()
+                .value();
+        }
+
+        private void MetafieldDelegate(MetafieldQuery ss)
+        {
+            throw new NotImplementedException();
         }
 
         public void ImageConnection(ImageConnectionQuery imageConnection, Dictionary<string, int> imageResolutions) {
@@ -98,6 +127,10 @@ namespace Shopify.Unity.SDK {
             variant
                 .id()
                 .availableForSale()
+                .metafields(
+                     ff => MetafieldConnectionDelegate(ff, imageResolutions),
+                     first: DefaultQueries.MaxPageSize
+                 )
                 .image(i => AliasedTransformedSrcImages(i.altText().transformedSrc(), imageResolutions))
                 .price()
                 .title()

@@ -242,4 +242,93 @@ namespace goorinAR
         public string URL;
         public Sprite Image;
     }
+
+
+
+
+    //public class Color
+    //{
+    //    public string group { get; set; }
+    //    public string name { get; set; }
+    //    public string code { get; set; }
+    //}
+
+    //public class Size
+    //{
+    //    public string name { get; set; }
+    //    public string code { get; set; }
+    //    public int order { get; set; }
+    //    public string cm { get; set; }
+    //}
+
+    //public class Material
+    //{
+    //    public string climate { get; set; }
+    //    public string main_fabric { get; set; }
+    //    public string fabric_details { get; set; }
+    //    public string sweatband { get; set; }
+    //    public string lining { get; set; }
+    //    public string UPF { get; set; }
+    //}
+
+    //public class Inventory
+    //{
+    //    public string tax_class { get; set; }
+    //    public string intl_avail { get; set; }
+    //    public string reason { get; set; }
+    //    public string notes { get; set; }
+    //}
+    [System.Serializable]
+    public class SummaryBox
+    {
+        public string title;
+        public string text;
+    }
+    [System.Serializable]
+    public class SpecsVariant
+    {
+        public string title;
+        public string text;
+    }
+    [System.Serializable]
+    public class Materials
+    {
+        public string title;
+        public string text;
+    }
+
+    //public class Band
+    //{
+    //    public string dimension { get; set; }
+    //    public string material { get; set; }
+    //    public string finish { get; set; }
+    //}
+
+    //public class Look
+    //{
+    //    public string gender { get; set; }
+    //}
+    [System.Serializable]
+    public class Info_JSON
+    {
+        // public Color color { get; set; }
+        // public Size size { get; set; }
+        // public Material material { get; set; }
+        //   public Inventory inventory { get; set; }
+        public List<SummaryBox> summary_box = new List<SummaryBox>();
+        public List<SpecsVariant> specs_variant = new List<SpecsVariant>();
+        public List<Materials> materials = new List<Materials>();
+       // public Band band { get; set; }
+       // public Look look { get; set; }
+    }
+
+
+
+
+
+
+
+
+
+
 }

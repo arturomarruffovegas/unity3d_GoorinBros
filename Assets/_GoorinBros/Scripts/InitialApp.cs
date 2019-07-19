@@ -24,7 +24,7 @@ public class InitialApp : MonoBehaviour
 
         ShopifyBuy.Init(AccessToken, ShopDomain);
 
-        DefaultQueries.MaxProductPageSize = 5;
+        DefaultQueries.MaxProductPageSize = 5;  /// 5
 
         FetchProducts((list, cursor) => 
         {
@@ -80,6 +80,8 @@ public class InitialApp : MonoBehaviour
             }
             successCallback(products, after);
 
-        },60);
+        },60); /// 60
     }
+
+  
 }

@@ -20,6 +20,8 @@ public static class FirebaseController
 
     public static string ConstantStorageURL = "gs://goorin-bros.appspot.com";
 
+    public static bool stopDownload;
+
     public static UnityAction OnErrorAssetBundle;
 
     public static void InitialStorageFirebase(string storageURL)
@@ -64,6 +66,7 @@ public static class FirebaseController
                 OnDownloadAssetBundles(name, myURLM, (mo) =>
                 {
                     model = mo;
+                    stopDownload = false;
 
                     if (!uriC.IsFaulted && !uriC.IsCanceled)
                     {
@@ -74,6 +77,7 @@ public static class FirebaseController
                         {
                             content = co;
                             _URLS?.Invoke(model, content);
+                            stopDownload = false;
                         });
                     }
                 });
@@ -92,15 +96,22 @@ public static class FirebaseController
 
     private static void OnDownloadAssetBundles(string Name, string UrlModel, UnityAction<UnityEngine.Object> model)
     {
+        stopDownload = true;
         UnityWebRequest www = UnityWebRequestAssetBundle.GetAssetBundle(UrlModel);
         var a = www.SendWebRequest();
 
         a.completed += (b) => {
+            if (stopDownload == true)
+            {
+                
+                stopDownload = false;
+                AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(www);
+                AssetBundleRequest object3D = bundle.LoadAssetAsync<UnityEngine.Object>(Name);
+                model?.Invoke(object3D.asset);
+                bundle.Unload(false);
+            }
 
-            AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(www);
-            AssetBundleRequest object3D = bundle.LoadAssetAsync<UnityEngine.Object>(Name);
-            model?.Invoke(object3D.asset);
-            bundle.Unload(false);
+            
         };
     }
 

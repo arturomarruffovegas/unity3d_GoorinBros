@@ -31,6 +31,8 @@ namespace goorinAR
         [SerializeField]
         private GameObject empty;
         [SerializeField]
+        private GameObject infoBasic;
+        [SerializeField]
         private Transform info;
         [SerializeField]
         private Transform portada;
@@ -73,14 +75,36 @@ namespace goorinAR
         private Text productTitle;
         [SerializeField]
         private Image productImage;
+        //[SerializeField]
+        //private Text brimGruop;
+        //[SerializeField]
+        //private Text brimGruopTitle;
+        //[SerializeField]
+        //private Text crown;
+        //[SerializeField]
+        //private Text crownTitle;
+
+
+
+
         [SerializeField]
-        private Text brimGruop;
+        private Transform contentInfoBasic;
         [SerializeField]
-        private Text brimGruopTitle;
+        private GameObject infoBasicPanel;
         [SerializeField]
-        private Text crown;
+        private GameObject line;
+
+        private List<GameObject> infoB = new List<GameObject>();
+        private List<GameObject> lines = new List<GameObject>();
+
         [SerializeField]
-        private Text crownTitle;
+        private Text specifications;
+        [SerializeField]
+        private Text materials;
+
+        [SerializeField]
+        private Info_JSON info_JSON; 
+
 
 
 
@@ -136,6 +160,7 @@ namespace goorinAR
             if (product != null)
             {
                 HatSlidingContentAR.OnSearchHat(m_ColorsAndSizes, product, CurrentVariant);
+                FirebaseController.stopDownload = false;
             }
         }
 
@@ -146,6 +171,7 @@ namespace goorinAR
                 info.DOLocalMoveY(0, 0.2f);
                 portada.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 0.2f);
                 empty.SetActive(true);
+                infoBasic.SetActive(false);
                 isEnabled = false;
             }
         }
@@ -157,6 +183,7 @@ namespace goorinAR
                 info.DOLocalMoveY(280, 0.2f);
                 portada.DOScale(Vector3.one, 0.2f);
                 empty.SetActive(false);
+                infoBasic.SetActive(true);
                 isEnabled = true;
             }
             else
@@ -164,6 +191,7 @@ namespace goorinAR
                 info.DOLocalMoveY(0, 0.2f);
                 portada.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 0.2f);
                 empty.SetActive(true);
+                infoBasic.SetActive(false);
                 isEnabled = false;
             }
         }
@@ -191,6 +219,35 @@ namespace goorinAR
             onlyHat.gameObject.SetActive(false);
             productImage.sprite = waitIcon;
 
+            specifications.text = "";
+            materials.text = "";
+
+            ResetInfoBasic();
+
+        }
+
+        private void ResetInfoBasic()
+        {
+            //int amountInfoBasic = infoBasicPanel.gameObject.transform.parent.childCount;
+            //if (amountInfoBasic > 2)
+            //{
+            //    for (int i = amountInfoBasic - 2; i > 0; i--)
+            //    {
+            //        Destroy(infoBasicPanel.gameObject.transform.parent.GetChild(i).gameObject);
+            //    }
+            //}
+            for (int i = 0; i < infoB.Count; i++)
+            {
+                Destroy(infoB[i].gameObject);
+            }
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                Destroy(lines[i].gameObject);
+            }
+
+            infoB.Clear();
+            lines.Clear();
         }
 
         public void SetCurrentProduct(Shopify.Unity.Product product)
@@ -202,6 +259,7 @@ namespace goorinAR
             else
             {
                 ResetValue();
+
                 finishDownloadImage = false;
                 //productImage.sprite = waitIcon;
             }
@@ -209,14 +267,70 @@ namespace goorinAR
 
             hatName = product.title();
             productTitle.text = hatName;
-           // brimGruop.text = 
-           Utils.GetBrimGruop(product, brimGruop , brimGruopTitle);
-           Utils.GetCrownShape(product, crown, crownTitle);
+
+
+            var variants = (List<Shopify.Unity.ProductVariant>)product.variants();
+
+            string metafield = variants[0].metafields().edges()[0].node().value();
+
+            var splitData = metafield.Split('\v');
+            string data = "";
+            for (int i = 0; i < splitData.Length; i++)
+            {
+                data = data + splitData[i];
+            }
+
+            info_JSON = JsonUtility.FromJson<Info_JSON>(data);
+
+            //specifications
+            for (int i = 0; i < info_JSON.specs_variant.Count; i++)
+            {
+                string title = "<b>" +info_JSON.specs_variant[i].title + "</b>" + " : ";
+
+                string text = info_JSON.specs_variant[i].text;
+                text = text.Replace("&#34", "''");
+                specifications.text = specifications.text + title + text + "\n";
+            }
+
+            //materials
+            for (int i = 0; i < info_JSON.materials.Count; i++)
+            {
+                string title = "<b>" + info_JSON.materials[i].title + "</b>" + " : ";
+                string text = info_JSON.materials[i].text;
+
+                materials.text = materials.text + title + text + "\n";
+            }
+
+            //information basic
+            for (int i = 0; i < info_JSON.summary_box.Count; i++)
+            {
+                string title =  info_JSON.summary_box[i].title ;
+                string text = "<b>" + info_JSON.summary_box[i].text + "</b>";
+
+                var info = Instantiate(infoBasicPanel, contentInfoBasic);
+                info.SetActive(true);
+                info.GetComponent<InfoBasic>().title.text = title;
+                info.GetComponent<InfoBasic>().text.text = text;
+
+                if(i< info_JSON.summary_box.Count-1)
+                {
+                    var lin = Instantiate(line, contentInfoBasic);
+                    lin.SetActive(true);
+                    lines.Add(lin);
+                }
+                infoB.Add(info);
+
+            }
+
+
+
+
+         //   Utils.GetBrimGruop(product, brimGruop , brimGruopTitle);
+          // Utils.GetCrownShape(product, crown, crownTitle);
 
             // productImage.sprite = hatData.GethatImage();
 
             var options = new List<string>();
-            var variants = (List<Shopify.Unity.ProductVariant>)product.variants();
 
             var List_color_code_map = product.tags();
 
@@ -481,8 +595,7 @@ namespace goorinAR
                 if (name == m_ColorsAndSizes[i].NameColor)
                 {
                     colors[i].gameObject.transform.GetChild(1).GetComponent<Image>().enabled = true;
-
-
+                    
                     //Instanciar botones de medidas
                     for (int j  = 0; j < m_ColorsAndSizes[i].sizes.Count; j++)
                     {

@@ -147,20 +147,24 @@ public class HatArController : MonoBehaviour
 
     public void InstantiateHat(Object s, Object c)
     {
-        Debug.Log("<color=blue> descargo </color>");
-        m_HatLoadingPanel.SetActive(false);
-        m_HatErrorPanel.SetActive(false);
-        //m_CurrentHat = (GameObject)Instantiate(Resources.Load(m_CurrentHatId + "/" + m_CurrentHatId));
-        m_CurrentHat = (GameObject)Instantiate((GameObject)s);
-        //m_CurrentHatContent  = Resources.Load<HatContent>(m_CurrentHatId + "/" + m_CurrentHatId + "_content") as HatContent;
-        m_CurrentHatContent = (HatContent)c;
+        if (FirebaseController.stopDownload == false)
+        {
+            Debug.Log("<color=blue> descargo </color>");
+            m_HatLoadingPanel.SetActive(false);
+            m_HatErrorPanel.SetActive(false);
+            //m_CurrentHat = (GameObject)Instantiate(Resources.Load(m_CurrentHatId + "/" + m_CurrentHatId));
+            m_CurrentHat = (GameObject)Instantiate((GameObject)s);
+            //m_CurrentHatContent  = Resources.Load<HatContent>(m_CurrentHatId + "/" + m_CurrentHatId + "_content") as HatContent;
+            m_CurrentHatContent = (HatContent)c;
 
-        m_CurrentId = m_CurrentHatId;
-        m_HatPosition = FindObjectOfType<Object3D_Complete>().m_hatPosition;
-        m_CurrentHat.transform.parent = m_HatPosition;
-        m_CurrentHat.transform.localPosition = Vector3.zero;
-        m_CurrentHat.transform.localRotation = Quaternion.identity;
-        m_CurrentHat.transform.localScale = Vector3.one;
+            m_CurrentId = m_CurrentHatId;
+            m_HatPosition = FindObjectOfType<Object3D_Complete>().m_hatPosition;
+            m_CurrentHat.transform.parent = m_HatPosition;
+            m_CurrentHat.transform.localPosition = Vector3.zero;
+            m_CurrentHat.transform.localRotation = Quaternion.identity;
+            m_CurrentHat.transform.localScale = Vector3.one;
+        }
+       
 
        // LoadMaterialsforBundle(m_CurrentHat, m_CurrentHatContent, m_CurrentId, m_CurrentHatColor);
 
