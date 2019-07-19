@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.6140333, g: 0.65288585, b: 0.6690649, a: 1}
+  m_IndirectSpecularColor: {r: 0.61545914, g: 0.6541467, b: 0.6691226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -316,6 +316,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 545132286}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &545132288 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: ba860157c2776174587212c2c79a141a,
+    type: 3}
+  m_PrefabInstance: {fileID: 545132286}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &638872321
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,8 +354,8 @@ MonoBehaviour:
   m_ZoomFix: 5
   m_Zoom: 0.223
   m_ZoomSpeed: 1.5
-  m_HatPosition: {fileID: 0}
-  m_HatHead: {fileID: 0}
+  m_HatPosition: {fileID: 893964471}
+  m_HatHead: {fileID: 545132288}
   m_HatHead2: {fileID: 0}
   m_HatRotationReference: {fileID: 0}
   m_FrontHatMaxRotation: 9
