@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.61545914, g: 0.6541467, b: 0.6691226, a: 1}
+  m_IndirectSpecularColor: {r: 0.6140333, g: 0.65288585, b: 0.6690649, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a770168666677984488b6398aa063e26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_hatPosition: {fileID: 893964472}
+  m_hatPosition: {fileID: 826042241}
   marker: {fileID: 9005874272417609306, guid: b661a1523b6ad1445880bd227120bea5, type: 3}
   _focal_length: 5120
   _anchor2d: {fileID: 963091581}
@@ -346,7 +346,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 638872321}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2c52ca44296f6454296a441f9ce67a46, type: 3}
   m_Name: 
@@ -354,10 +354,9 @@ MonoBehaviour:
   m_ZoomFix: 5
   m_Zoom: 0.223
   m_ZoomSpeed: 1.5
-  m_HatPosition: {fileID: 893964471}
+  m_HatPosition: {fileID: 826042240}
   m_HatHead: {fileID: 545132288}
-  m_HatHead2: {fileID: 0}
-  m_HatRotationReference: {fileID: 0}
+  m_HatRotationReference: {fileID: 893964471}
   m_FrontHatMaxRotation: 9
   m_FrontHatMinRotation: -5
   m_YawHatMaxRotation: 7
@@ -560,6 +559,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 703461485}
   m_CullTransparentMesh: 0
+--- !u!1 &826042240
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 826042241}
+  m_Layer: 5
+  m_Name: HatPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &826042241
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 826042240}
+  m_LocalRotation: {x: -0, y: -0, z: 4.6566123e-10, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 893964472}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: -8.787001, y: -2.069, z: -1.6860001}
 --- !u!1 &843681422
 GameObject:
   m_ObjectHideFlags: 0
@@ -735,7 +764,7 @@ GameObject:
   m_Component:
   - component: {fileID: 893964472}
   m_Layer: 5
-  m_Name: HatParentPosition
+  m_Name: RE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -751,7 +780,8 @@ Transform:
   m_LocalRotation: {x: 0.07632269, y: 0.01912465, z: 0.016047008, w: -0.9967706}
   m_LocalPosition: {x: 0.07, y: 1.03, z: -11.89}
   m_LocalScale: {x: 104, y: 104, z: 104}
-  m_Children: []
+  m_Children:
+  - {fileID: 826042241}
   m_Father: {fileID: 1016970657}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -8.787001, y: -2.069, z: -1.6860001}
@@ -1284,7 +1314,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6eff0e995f056c4478f5a572a5b86d37, type: 2}
+  - {fileID: 2100000, guid: 5adf036bc0f04b44db94a98d4e47e3ec, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1358,7 +1388,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 000d7d40142445f4cb3aa5e01bceb31c, type: 2}
+  - {fileID: 2100000, guid: 3d9fa874cbe912d4aa6461fb21b3e686, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1413,7 +1443,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6eff0e995f056c4478f5a572a5b86d37, type: 2}
+  - {fileID: 2100000, guid: 5adf036bc0f04b44db94a98d4e47e3ec, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

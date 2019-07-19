@@ -18,7 +18,6 @@ public class HatZoomController : MonoBehaviour
     [Header("Hat Reference")]
     public GameObject m_HatPosition;
     public GameObject m_HatHead;
-    public GameObject m_HatHead2;
     public GameObject m_HatRotationReference;
 
     [Header("Front Rotation Limits")]
@@ -58,7 +57,6 @@ public class HatZoomController : MonoBehaviour
                 //m_CurrentHatScale = m_HatPosition.transform.GetChild(0).transform.localScale;
                 m_CurrentHatScale = m_HatPosition.transform.localScale;
                 m_CurrentHatHeadScale = m_HatHead.transform.localScale;
-                m_CurrentHatHeadScale2 = m_HatHead2.transform.localScale;
                 m_CurrenteReferenceEulerAnglesX = m_HatRotationReference.transform.localEulerAngles;
                 Debug.Log(m_CurrentHatScale);
             }
@@ -110,12 +108,11 @@ public class HatZoomController : MonoBehaviour
                         m_Zoom = Mathf.Clamp(m_Zoom + ((d1 - d0) * m_ZoomSpeed / d1), -1.0f, 1.0f);
 
                         //Zoom
-                        if (m_HatHead.transform.localScale.x > 0.75f || m_HatHead2.transform.localScale.x > 0.75f ||
-                            m_HatHead.transform.localScale.x < 1.25f || m_HatHead2.transform.localScale.x < 1.25f)
+                        if (m_HatHead.transform.localScale.x > 0.75f ||
+                            m_HatHead.transform.localScale.x < 1.25f )
                         {
                             m_HatPosition.transform.localScale = m_CurrentHatScale * (((m_Zoom + 2.0f) / 4.0f) + 0.5f);
                             m_HatHead.transform.localScale = m_CurrentHatHeadScale * (((m_Zoom + 2.0f) / 4.0f) + 0.5f);
-                            m_HatHead2.transform.localScale = m_CurrentHatHeadScale2 * (((m_Zoom + 2.0f) / 4.0f) + 0.5f);
                         }
 
                         //Rotation
@@ -191,12 +188,11 @@ public class HatZoomController : MonoBehaviour
                     if (m_HatPosition.transform.childCount > 0)
                     {
                         //m_HatPosition.transform.GetChild(0).transform.localScale = m_CurrentHatScale * (((m_Zoom + 2.0f) / 4.0f) + 0.5f);
-                        if (m_HatHead.transform.localScale.x > 0.75f || m_HatHead2.transform.localScale.x > 0.75f ||
-                           m_HatHead.transform.localScale.x < 1.25f || m_HatHead2.transform.localScale.x < 1.25f)
+                        if (m_HatHead.transform.localScale.x > 0.75f ||
+                           m_HatHead.transform.localScale.x < 1.25f)
                         {
                             m_HatPosition.transform.localScale = m_CurrentHatScale * (((m_Zoom + 2.0f) / 4.0f) + 0.5f);
                             m_HatHead.transform.localScale = m_CurrentHatHeadScale * (((m_Zoom + 2.0f) / 4.0f) + 0.5f);
-                            m_HatHead2.transform.localScale = m_CurrentHatHeadScale2 * (((m_Zoom + 2.0f) / 4.0f) + 0.5f);
                         }
 
                     }
