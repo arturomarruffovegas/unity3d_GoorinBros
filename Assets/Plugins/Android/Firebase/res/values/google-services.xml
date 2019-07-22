@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources tools:keep="@string/firebase_database_url,@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_web_client_id" xmlns:tools="http://schemas.android.com/tools">
-  <string name="firebase_database_url" translatable="false">https://goorin-bros.firebaseio.com</string>
-  <string name="gcm_defaultSenderId" translatable="false">622431147626</string>
-  <string name="google_storage_bucket" translatable="false">goorin-bros.appspot.com</string>
-  <string name="project_id" translatable="false">goorin-bros</string>
-  <string name="google_api_key" translatable="false">AIzaSyC6BkilN9C-ypLYEAzQZEA6qtuFfJIW46c</string>
-  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyC6BkilN9C-ypLYEAzQZEA6qtuFfJIW46c</string>
-  <string name="google_app_id" translatable="false">1:622431147626:android:07d440136e1039aa</string>
-  <string name="default_web_client_id" translatable="false">622431147626-jd0ns36qbqmcpo8d583portkud3ro8bp.apps.googleusercontent.com</string>
+  <string name="firebase_database_url" translatable="false">https://goorin-3d-models.firebaseio.com</string>
+  <string name="gcm_defaultSenderId" translatable="false">323836978802</string>
+  <string name="google_storage_bucket" translatable="false">goorin-3d-models.appspot.com</string>
+  <string name="project_id" translatable="false">goorin-3d-models</string>
+  <string name="google_api_key" translatable="false">AIzaSyBTzKb7k_tNkzcGXjjGGFoLooLFnAIhOck</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBTzKb7k_tNkzcGXjjGGFoLooLFnAIhOck</string>
+  <string name="google_app_id" translatable="false">1:323836978802:android:07d440136e1039aa</string>
+  <string name="default_web_client_id" translatable="false">323836978802-2dnpsr8t24a42r38na9ofhrac8a8rhld.apps.googleusercontent.com</string>
 </resources>

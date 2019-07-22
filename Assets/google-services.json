@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "622431147626",
-    "firebase_url": "https://goorin-bros.firebaseio.com",
-    "project_id": "goorin-bros",
-    "storage_bucket": "goorin-bros.appspot.com"
+    "project_number": "323836978802",
+    "firebase_url": "https://goorin-3d-models.firebaseio.com",
+    "project_id": "goorin-3d-models",
+    "storage_bucket": "goorin-3d-models.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:622431147626:android:07d440136e1039aa",
+        "mobilesdk_app_id": "1:323836978802:android:07d440136e1039aa",
         "android_client_info": {
           "package_name": "com.NextLatam.GoorinBros"
         }
       },
       "oauth_client": [
         {
-          "client_id": "622431147626-jd0ns36qbqmcpo8d583portkud3ro8bp.apps.googleusercontent.com",
+          "client_id": "323836978802-2dnpsr8t24a42r38na9ofhrac8a8rhld.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC6BkilN9C-ypLYEAzQZEA6qtuFfJIW46c"
+          "current_key": "AIzaSyBTzKb7k_tNkzcGXjjGGFoLooLFnAIhOck"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "622431147626-jd0ns36qbqmcpo8d583portkud3ro8bp.apps.googleusercontent.com",
+              "client_id": "323836978802-2dnpsr8t24a42r38na9ofhrac8a8rhld.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

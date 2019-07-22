@@ -18,7 +18,7 @@ public static class FirebaseController
     static StorageReference gs_referenceM;
     static StorageReference gs_referenceC;
 
-    public static string ConstantStorageURL = "gs://goorin-bros.appspot.com";
+    public static string ConstantStorageURL = "gs://goorin-3d-models.appspot.com";
 
     public static bool stopDownload;
 
@@ -38,8 +38,8 @@ public static class FirebaseController
 #elif UNITY_IOS
       string Platform = "ios";
 #endif
-        string modelURL = ConstantStorageURL + "/" + hatName + "/" + Platform + "/" + hatName;
-        string contentURL = ConstantStorageURL + "/" + hatName + "/" + Platform + "/" + hatName + "_content";
+        string modelURL = ConstantStorageURL + "/" + "Hats" + "/" + Platform + "/" + hatName;
+        string contentURL = ConstantStorageURL + "/" + "Hats" + "/" + Platform + "/" + hatName + "_content";
         gs_referenceM = storage.GetReferenceFromUrl(modelURL);
         gs_referenceC = storage.GetReferenceFromUrl(contentURL);
         GG(gs_referenceM.GetDownloadUrlAsync(), gs_referenceC.GetDownloadUrlAsync(), hatName, URLS);
