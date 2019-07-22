@@ -149,7 +149,7 @@ namespace goorinAR
 
             sizingGuideButton.onClick.AddListener(() => 
             {
-                Application.OpenURL("https://firebasestorage.googleapis.com/v0/b/goorin-bros.appspot.com/o/Sizes_pdf.pdf?alt=media&token=30e99e0c-e101-4a3d-a9a7-181740ec84cd");
+                Application.OpenURL("https://firebasestorage.googleapis.com/v0/b/goorin-3d-models.appspot.com/o/Sizes_pdf.pdf?alt=media&token=3039861a-56d2-4092-afa8-c0a10d5c9069");
             });
         }
 
