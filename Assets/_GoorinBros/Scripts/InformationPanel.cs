@@ -24,6 +24,8 @@ namespace goorinAR
         [Header("Icons")]
         [SerializeField]
         private Sprite waitIcon;
+        [SerializeField]
+        private GameObject sizesPanel;
 
         [Header("Animations")]
         [SerializeField]
@@ -31,7 +33,7 @@ namespace goorinAR
         [SerializeField]
         private GameObject empty;
         [SerializeField]
-        private GameObject infoBasic;
+        private List<GameObject> infoBasic;
         [SerializeField]
         private Transform info;
         [SerializeField]
@@ -149,9 +151,17 @@ namespace goorinAR
 
             sizingGuideButton.onClick.AddListener(() => 
             {
-                Application.OpenURL("https://firebasestorage.googleapis.com/v0/b/goorin-3d-models.appspot.com/o/Sizes_pdf.pdf?alt=media&token=3039861a-56d2-4092-afa8-c0a10d5c9069");
+                sizesPanel.SetActive(true);
+                sizesPanel.transform.GetChild(0).GetComponent<Image>().DOFade(1, 2f);
             });
         }
+
+        public void OnBackSizesPanel()
+        {
+            sizesPanel.SetActive(false);
+            sizesPanel.transform.GetChild(0).GetComponent<Image>().DOFade(0,0.01f);
+        }
+
 
         public void OnActionTry()
         {
@@ -171,7 +181,11 @@ namespace goorinAR
                 info.DOLocalMoveY(0, 0.2f);
                 portada.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 0.2f);
                 empty.SetActive(true);
-                infoBasic.SetActive(false);
+
+                for (int i = 0; i < infoBasic.Count; i++)
+                {
+                    infoBasic[i].SetActive(false);
+                }
                 isEnabled = false;
             }
         }
@@ -183,7 +197,10 @@ namespace goorinAR
                 info.DOLocalMoveY(280, 0.2f);
                 portada.DOScale(Vector3.one, 0.2f);
                 empty.SetActive(false);
-                infoBasic.SetActive(true);
+                for (int i = 0; i < infoBasic.Count; i++)
+                {
+                    infoBasic[i].SetActive(true);
+                }
                 isEnabled = true;
             }
             else
@@ -191,7 +208,10 @@ namespace goorinAR
                 info.DOLocalMoveY(0, 0.2f);
                 portada.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 0.2f);
                 empty.SetActive(true);
-                infoBasic.SetActive(false);
+                for (int i = 0; i < infoBasic.Count; i++)
+                {
+                    infoBasic[i].SetActive(false);
+                }
                 isEnabled = false;
             }
         }
@@ -595,12 +615,15 @@ namespace goorinAR
                 if (name == m_ColorsAndSizes[i].NameColor)
                 {
                     colors[i].gameObject.transform.GetChild(1).GetComponent<Image>().enabled = true;
-                    
+
                     //Instanciar botones de medidas
-                    for (int j  = 0; j < m_ColorsAndSizes[i].sizes.Count; j++)
+
+                    List<string> localSize = Utils.OrdenarList(m_ColorsAndSizes[i].sizes);
+
+                    for (int j  = 0; j < localSize.Count ; j++)
                     {
                         var size = Instantiate(SizeButton.gameObject, SizeButton.gameObject.transform.parent);
-                        size.name = m_ColorsAndSizes[i].sizes[j];
+                        size.name = localSize[j];
                         sizes.Add(size);
 
                         var nameSize = size.name;
@@ -608,8 +631,18 @@ namespace goorinAR
                         string[] characters = nameSize.Split('-');
                         string theName = s.ToString();
 
+                        if(size.name == "One Size")
+                        {
+                            string[] charac = nameSize.Split(' ');
+                            if(charac.Length > 1)
+                                theName = charac[0].FirstOrDefault().ToString() + charac[1].FirstOrDefault().ToString();
+
+                        }
+
+
                         if (characters.Length > 1)
                             theName = characters[0] + characters[1].FirstOrDefault().ToString();
+
                         
                         size.transform.GetChild(0).GetComponent<Text>().text = theName;
 

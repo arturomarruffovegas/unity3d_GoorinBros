@@ -48,7 +48,7 @@ namespace goorinAR
             OnShoopingCartPanelAR += ShoopingCartPanelAR;
             OnBackAR += BackAR;
 
-           //ShopifyHelper.Init(AccessToken, ShopDomain);
+           ShopifyHelper.Init(AccessToken, ShopDomain);
 
             GalleryPanel.Init();
 

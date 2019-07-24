@@ -18,70 +18,76 @@ public class InitialApp : MonoBehaviour
 
     public static List<Product> m_product = new List<Product>();
 
-    public void Start()
+    public IEnumerator Start()
     {
-        Tags.SetTag(true);
-
-        ShopifyBuy.Init(AccessToken, ShopDomain);
-
-        DefaultQueries.MaxProductPageSize = 5;  /// 5
-
-        FetchProducts((list, cursor) => 
-        {
-            foreach (var product in list)
-            {
-
-                var tags = product.tags();
-                foreach (var item in tags)
-                {
-                    string[] letters = item.Split(':');
-                    if (letters.Length > 0)
-                    {
-                        if (letters[0] == "shape")
-                        {
-                            if (ValueShape(shapes, letters[1]) == false)
-                            {
-                                shapes.Add(letters[1]);
-                            }
-                           
-                        }
-                    }
-                }
-
-                m_product.Add(product);
-
-                DefaultQueries.MaxProductPageSize = 10;
-                SceneManager.LoadScene(1);
-            }
-        });
-        
-
+        yield return new WaitForSeconds(2f);
+        SceneManager.LoadScene(1);
     }
 
-    private bool ValueShape(List<string> m_shapes, string m_shape)
-    {
-        for (int i = 0; i < m_shapes.Count; i++)
-        {
-            if (m_shapes[i] == m_shape)
-                return true;
-        }
+    //public void Start()
+    //{
+    //    Tags.SetTag(true);
 
-        return false;
-    }
-    
-    private void FetchProducts(Action<List<Product>, string> successCallback)
-    {
-        ShopifyBuy.Client().products((products, error, after) =>
-        {
+    //    ShopifyBuy.Init(AccessToken, ShopDomain);
 
-            if (error != null)
-            {
-                return;
-            }
-            successCallback(products, after);
+    //  //  DefaultQueries.MaxProductPageSize = 5;  /// 5
 
-        },60); /// 60
-    }
+    //    FetchProducts((list, cursor) => 
+    //    {
+    //        foreach (var product in list)
+    //        {
 
-  
+    //            var tags = product.tags();
+    //            foreach (var item in tags)
+    //            {
+    //                string[] letters = item.Split(':');
+    //                if (letters.Length > 0)
+    //                {
+    //                    if (letters[0] == "shape")
+    //                    {
+    //                        if (ValueShape(shapes, letters[1]) == false)
+    //                        {
+    //                            shapes.Add(letters[1]);
+    //                        }
+
+    //                    }
+    //                }
+    //            }
+
+    //            m_product.Add(product);
+
+    //          //  DefaultQueries.MaxProductPageSize = 10;
+    //           // SceneManager.LoadScene(1);
+    //        }
+    //    });
+
+
+    //}
+
+    //private bool ValueShape(List<string> m_shapes, string m_shape)
+    //{
+    //    for (int i = 0; i < m_shapes.Count; i++)
+    //    {
+    //        if (m_shapes[i] == m_shape)
+    //            return true;
+    //    }
+
+    //    return false;
+    //}
+
+    //private void FetchProducts(Action<List<Product>, string> successCallback)
+    //{
+    //    ShopifyBuy.Client().products((products, error, after) =>
+    //    {
+
+    //        if (error != null)
+    //        {
+    //            return;
+    //        }
+    //        successCallback(products, after);
+
+    //    },null); /// 60
+    //}
+
+
 }

@@ -1,4 +1,5 @@
 ﻿using Shopify.Unity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -208,6 +209,82 @@ namespace goorinAR
             return Code;
         }
 
+        public static List<string> OrdenarList(List<string> sizes)
+        {
+            List<string> newSize = new List<string>();
+            string size = "";
+            List<int> amount = new List<int>();
+            int index = -1;
+            foreach (var item in sizes)
+            {
+                switch (item)
+                {
+                        //Kid
+                    case "One Size":
+                        index = 0;
+                        break;
+                        //adult
+                    case "Small":
+                        index = 1;
+                        break;
+                    case "Medium":
+                        index = 2;
+                        break;
+                    case "Large":
+                        index = 3;
+                        break;
+                    case "X-Large":
+                        index = 4;
+                        break;
+                    case "XX-Large":
+                        index = 5;
+                        break;
+                    default:
+                        index = 6;
+                        break;
+                }
+
+                amount.Add(index);
+            }
+
+            int[] arr = amount.ToArray();
+            Array.Sort(arr);
+            Array.Reverse(arr);
+            foreach (var item in arr)
+            {
+                switch (item)
+                {
+                    //Kid
+                    case 0:
+                        size = "One Size";
+                        break;
+                    //adult
+                    case 1:
+                        size = "Small";
+                        break;
+                    case 2:
+                        size = "Medium";
+                        break;
+                    case 3:
+                        size = "Large";
+                        break;
+                    case 4:
+                        size = "X-Large";
+                        break;
+                    case 5:
+                        size = "XX-Large";
+                        break;
+                    default:
+                        size = "Other";
+                        break;
+                }
+
+                newSize.Add(size);
+            }
+            
+            return newSize;
+        }
+
 
     }
 
@@ -243,41 +320,7 @@ namespace goorinAR
         public Sprite Image;
     }
 
-
-
-
-    //public class Color
-    //{
-    //    public string group { get; set; }
-    //    public string name { get; set; }
-    //    public string code { get; set; }
-    //}
-
-    //public class Size
-    //{
-    //    public string name { get; set; }
-    //    public string code { get; set; }
-    //    public int order { get; set; }
-    //    public string cm { get; set; }
-    //}
-
-    //public class Material
-    //{
-    //    public string climate { get; set; }
-    //    public string main_fabric { get; set; }
-    //    public string fabric_details { get; set; }
-    //    public string sweatband { get; set; }
-    //    public string lining { get; set; }
-    //    public string UPF { get; set; }
-    //}
-
-    //public class Inventory
-    //{
-    //    public string tax_class { get; set; }
-    //    public string intl_avail { get; set; }
-    //    public string reason { get; set; }
-    //    public string notes { get; set; }
-    //}
+    
     [System.Serializable]
     public class SummaryBox
     {
@@ -297,29 +340,15 @@ namespace goorinAR
         public string text;
     }
 
-    //public class Band
-    //{
-    //    public string dimension { get; set; }
-    //    public string material { get; set; }
-    //    public string finish { get; set; }
-    //}
-
-    //public class Look
-    //{
-    //    public string gender { get; set; }
-    //}
+    
     [System.Serializable]
     public class Info_JSON
     {
-        // public Color color { get; set; }
-        // public Size size { get; set; }
-        // public Material material { get; set; }
-        //   public Inventory inventory { get; set; }
+        
         public List<SummaryBox> summary_box = new List<SummaryBox>();
         public List<SpecsVariant> specs_variant = new List<SpecsVariant>();
         public List<Materials> materials = new List<Materials>();
-       // public Band band { get; set; }
-       // public Look look { get; set; }
+   
     }
 
 

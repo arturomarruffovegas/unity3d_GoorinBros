@@ -6,8 +6,8 @@ using DG.Tweening;
 
 public class ChangeImages : MonoBehaviour
 {
-    public List<Texture2D> images;
-    public RawImage UIimg;
+    public List<Sprite> images;
+    public Image UIimg;
     public int index;
 
     private void Start()
@@ -25,7 +25,7 @@ public class ChangeImages : MonoBehaviour
                 index++;
                 UIimg.DOFade(0, 0.2f).OnComplete(() => 
                 {
-                    UIimg.texture = images[index];
+                    UIimg.sprite = images[index];
                     UIimg.DOFade(1, 0.2f);
                 });
                
@@ -35,7 +35,7 @@ public class ChangeImages : MonoBehaviour
                 index = 0;
                 UIimg.DOFade(0, 0.2f).OnComplete(() =>
                 {
-                    UIimg.texture = images[index];
+                    UIimg.sprite = images[index];
                     UIimg.DOFade(1, 0.2f);
                 });
             }

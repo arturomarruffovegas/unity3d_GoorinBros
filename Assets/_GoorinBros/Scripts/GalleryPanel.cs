@@ -53,15 +53,14 @@ namespace goorinAR
         //private Button fedora;
         //[SerializeField]
         //private Button flatcap;
+        public GameObject objGlobal;
 
-
-        public IEnumerator OnCreateCategoryButtons()
+        public void OnCreateCategoryButtons()
         {
             var categories = FindObjectOfType<InitialApp>().shapes;
 
             for (int i = 0; i < categories.Count; i++)
             {
-                yield return new WaitForEndOfFrame();
                 var cat = Instantiate(categoryButton, contentCategoryButtons);
                 cat.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = categories[i];
                 cat.name = categories[i];
@@ -73,14 +72,12 @@ namespace goorinAR
                 scroll.name = scroll.name + " " + categories[i];
                 scroll.SetActive(true);
 
-                scroll.GetComponent<ScrollRect>().onValueChanged.AddListener(OnScrollRectPositionChanged);
+               // scroll.GetComponent<ScrollRect>().onValueChanged.AddListener(OnScrollRectPositionChanged);
 
                 scrollViews.Add(scroll);
             }
 
-            yield return new WaitForEndOfFrame();
-
-            StartCoroutine(OnInstantiateHats());
+          //  StartCoroutine(OnInstantiateHats());
         }
 
         private IEnumerator OnInstantiateHats()
@@ -103,7 +100,7 @@ namespace goorinAR
                         if (item == "shape:" + categories[j])
                         {
                             yield return new WaitForEndOfFrame();
-                            StartCoroutine(AddProduct(products[i], scrollViews[j]));
+                            AddProduct(products[i], scrollViews[j]);
                         }
                     }
                 }
@@ -115,28 +112,34 @@ namespace goorinAR
         {
             Tags.SetTag(true, name);
 
-
             for (int i = 0; i < scrollViews.Count; i++)
             {
                 if (scrollViews[i].name.Contains(name))
                 {
                     listCategoryButtons[i].GetComponent<UnityEngine.UI.Image>().color = Color.black;
-                    scrollViews[i].SetActive(true);
+                    objGlobal = scrollViews[i];
+
+                    StartCoroutine(FetchProducts(objGlobal));
+
+                    scrollViews[i].GetComponent<RectTransform>().localScale = Vector3.one;
 
                 }
                 else
                 {
                     listCategoryButtons[i].GetComponent<UnityEngine.UI.Image>().color = Color.white;
-                    scrollViews[i].SetActive(false);
+                    scrollViews[i].GetComponent<RectTransform>().localScale = Vector3.zero;
                 }
             }
 
         }
 
-        public void Start()
+        public void Awake()
         {
+            var categories = FindObjectOfType<InitialApp>().shapes;
+            OnCreateCategoryButtons();
 
-            StartCoroutine(OnCreateCategoryButtons());
+            OnDisableScrolls(categories[0]);
+
            // DefaultQueries.MaxProductPageSize = 10;
 
             //feminine.onClick.AddListener(() => 
@@ -172,14 +175,7 @@ namespace goorinAR
             //    FetchProducts();
             //});
         }
-
-        public void OnChangeScroll(string name)
-        {
-            //ScrollViewFeminine.gameObject.SetActive(ScrollViewFeminine.name.Equals(name));
-            //ScrollViewFedora.gameObject.SetActive(ScrollViewFedora.name.Equals(name));
-            //ScrollViewFlatcap.gameObject.SetActive(ScrollViewFlatcap.name.Equals(name));
-        }
-
+        
 
         public void Init()
         {
@@ -187,12 +183,12 @@ namespace goorinAR
 
             hatData = FindObjectOfType<HatData>();
 
-          //  FetchProducts();
-
+            objGlobal = scrollViews[0];
             _rectTransform = GetComponent<RectTransform>();
            // ScrollViewFeminine.onValueChanged.AddListener(OnScrollRectPositionChanged);
            // ScrollViewFedora.onValueChanged.AddListener(OnScrollRectPositionChanged);
             //ScrollViewFlatcap.onValueChanged.AddListener(OnScrollRectPositionChanged);
+            //StartCoroutine( FetchProducts(objGlobal));
 
             ActionProduct += OnProduct;
 
@@ -204,18 +200,37 @@ namespace goorinAR
 
         }
 
-        private void FetchProducts()
+        public void Update()
         {
+            
+        }
+
+        private IEnumerator FetchProducts(GameObject obj)
+        {
+
+            List<Product> pt = new List<Product>();
+
+            yield return new WaitForEndOfFrame();
             ShopifyHelper.FetchProducts(
                 delegate (List<Product> products, string cursor)
                 {
 
                     foreach (var product in products)
                     {
-
-                        //AddProduct(product);
+                        //;
+                        //  
+                       
                     }
 
+                    pt = products;
+
+                    for (int i = 0; i < pt.Count; i++)
+                    {
+                        GameObject GG = obj;
+                        AddProduct(pt[i], GG);
+                    }
+
+                    Debug.Log("Termino");
 
                     _after = cursor;
                     _hitEndCursor = _after == null;
@@ -230,11 +245,11 @@ namespace goorinAR
 
         }
 
-        public IEnumerator AddProduct(Product product, GameObject obj)
+        public void AddProduct(Product product, GameObject obj)
         {
             if (_addedProductIds.Contains(product.id()))
             {
-                yield return null;
+                return;
             }
 
             laodingPanel.SetActive(false);
@@ -242,16 +257,16 @@ namespace goorinAR
             Debug.Log(Utils.GetHatShape(product));
 
             _addedProductIds.Add(product.id());
-
-            HatGallery hatGallery = obj.GetComponent<ScrollGallery>().hatGallery;
-            Transform trans = obj.GetComponent<ScrollGallery>().content.transform;
+            GameObject objs = obj;
+            HatGallery hatGallery = objs.GetComponent<ScrollGallery>().hatGallery;
+            Transform trans = objs.GetComponent<ScrollGallery>().content.transform;
 
            var instance = Instantiate(hatGallery);
 
             instance.transform.SetParent(trans, false);
-            yield return new WaitForEndOfFrame();
+         
            instance.SetCurrentProduct(product, _lineItems.Count);
-            yield return new WaitForEndOfFrame();
+          
             instance.Load();
 
             instance.OnClick.AddListener(delegate { OnProduct(product, instance); });
@@ -290,7 +305,7 @@ namespace goorinAR
             {
                 if (!_hitEndCursor)
                 {
-                    FetchProducts();
+                    StartCoroutine(FetchProducts(objGlobal));
                 }
             }
 

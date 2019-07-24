@@ -21,6 +21,7 @@ namespace goorinAR
         private ProductVariant _currentVariant;
 
         public Text ProductTitle;
+        public Text info;
         public string VariantTitle;
         public Text Quantity;
         public Text Price;
@@ -38,7 +39,7 @@ namespace goorinAR
         public void SetCurrentProduct(Product product, ProductVariant variant, int quantity)
         {
             gameObject.SetActive(true);
-
+            info.text ="";
             ProductTitle.text = product.title();
             Quantity.text = quantity.ToString();
             Price.text = "$ " +  variant.price().ToString();
@@ -48,6 +49,13 @@ namespace goorinAR
             string code = "";
             if (options.Count > 0)
             {
+                for (int i = 0; i < options.Count; i++)
+                {
+                    info.text = info.text + options[i].value();
+                    if (i == 0)
+                        info.text = info.text + " / ";
+                }
+
                 string tagColor = "color_code_map:" + options[0].value();
                 code = Utils.GetColorCodeMap(product.tags(), tagColor);
                 sku = Utils.GetSKU(product.tags());
