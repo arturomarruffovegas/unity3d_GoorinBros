@@ -5,6 +5,8 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using DG.Tweening;
+
 
 public enum materialLayer
 {
@@ -82,6 +84,14 @@ public class HatArController : MonoBehaviour
         FirebaseController.OnErrorAssetBundle += OnErrorAssetBundle;
         LoadAssetBundlesFromFirebase.FinishProccess += InstantiateHat;
 
+        OnAnimLoadTryOn();
+
+    }
+
+    private void OnAnimLoadTryOn()
+    {
+        m_HatLoadingPanel.transform.GetChild(0).transform.DOLocalRotate(Vector3.back*300, 1).SetLoops(-1,LoopType.Incremental);
+        Debug.Log("rotando");
     }
 
     private void OnDestroy()

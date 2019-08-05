@@ -27,9 +27,17 @@ namespace goorinAR
         [SerializeField]
         private GameObject sizesPanel;
 
-        [Header("Animations")]
+        [Header("Zoom hat")]
         [SerializeField]
         private Button hatButton;
+        [SerializeField]
+        private Button backZoomButton;
+        [SerializeField]
+        private GameObject hatZoomPanel;
+
+        [Header("Animations")]
+        [SerializeField]
+        private Button ViewDetailButton;
         [SerializeField]
         private GameObject empty;
         [SerializeField]
@@ -131,7 +139,21 @@ namespace goorinAR
             // Utils.CutImage(Image, (text) => { icon.sprite = text; });
             hatData = FindObjectOfType<HatData>();
 
-            hatButton.onClick.AddListener(EnableInfo);
+            ViewDetailButton.onClick.AddListener(EnableInfo);
+            hatButton.onClick.AddListener(() => 
+            {
+                hatZoomPanel.SetActive(true);
+                Sprite sp = hatButton.transform.GetChild(0).GetComponent<Image>().sprite;
+
+                FindObjectOfType<ZoomAndRotateController>().SetTexture(sp);
+
+            });
+
+            backZoomButton.onClick.AddListener(() => 
+            {
+                FindObjectOfType<ZoomAndRotateController>().OnReset();
+                hatZoomPanel.SetActive(false);
+            });
 
             backPanelButton.onClick.AddListener(() =>
             {
@@ -367,9 +389,9 @@ namespace goorinAR
                     var NameColor = names[0].Trim();
                     var NameSize = names[1].Trim();
 
-                    if(m_ColorsAndSizes.Count > 0)
+                    if (m_ColorsAndSizes.Count > 0)
                     {
-                        
+
                         if (SearchColorName(m_ColorsAndSizes, NameColor) == false)
                         {
                             ColorsAndSizes d = new ColorsAndSizes();
@@ -396,7 +418,7 @@ namespace goorinAR
 
                                     //if(SearchReferienceceName(rh, URLglobal) == false)
                                     //{
-                                        
+
                                     //}
                                     SearchTypeViewHat(rh, URLglobal, text);
 
@@ -410,7 +432,7 @@ namespace goorinAR
                                         _URLExperienceImage = URLExperienceglobal;
 
                                 }
-                                
+
                             }
 
                             d.URLImage = _URLImage;
@@ -420,12 +442,14 @@ namespace goorinAR
                             d.ReferenceHats = rh;
 
                             m_ColorsAndSizes.Add(d);
-                            
+
                         }
                         else
                             AddSizes(m_ColorsAndSizes, NameColor, NameSize);
 
-                        
+
+
+
                     }
                     else
                     {
@@ -454,7 +478,7 @@ namespace goorinAR
 
                                 //if (SearchReferienceceName(rh, URLglobal) == false)
                                 //{
-                                    
+
                                 //}
                                 SearchTypeViewHat(rh, URLglobal, text);
 
@@ -468,9 +492,11 @@ namespace goorinAR
                                     _URLExperienceImage = URLExperienceglobal;
                             }
 
-                            
+
 
                         }
+
+                      
 
                         d.URLImage = _URLImage;
                         d.URLExperience = _URLExperienceImage;
@@ -486,6 +512,11 @@ namespace goorinAR
                 }
                 
             }
+
+            if (m_ColorsAndSizes.Count > 1)
+                tryButton.interactable = true;
+            else
+                tryButton.interactable = false;
 
              //GetImages
             OnGetHatImageColors();
