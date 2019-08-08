@@ -60,7 +60,7 @@ class Object3D : MonoBehaviour
 		}
 #endif
 	
-		//InitializeTrackerAndCheckKey();
+		InitializeTrackerAndCheckKey();
 		Application.targetFrameRate = 60;
 	}
 
@@ -132,15 +132,22 @@ class Object3D : MonoBehaviour
 		transform.parent.localPosition = transform.parent.transform.TransformPoint(-transform.localPosition); //move to center
 
 		if (Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight) {
-			Camera.main.orthographicSize = h/2;			
+			Camera.main.orthographicSize = h/2;
+#if FULL_SCREEN
+#else
 			float v =  (float)(w * Screen.height) / (h * Screen.width);
 			ARCamera.rect = new Rect ((1-v)*0.5f, 0, v, 1); // AR viewport
+#endif
 			ARCamera.fieldOfView = _fovy[0];
 		} else {
+#if FULL_SCREEN
+			Camera.main.orthographicSize = w/2;
+#else
 			float aspect = ((float)Screen.height)/((float)Screen.width)*h/w;
 			float v = 1f / aspect;
 			Camera.main.orthographicSize = w/2 * aspect; 
 			ARCamera.rect = new Rect (0, (1-v)*0.5f, 1, v); // AR viewport
+#endif
 			ARCamera.fieldOfView = _fovx[0];
 		}
 
@@ -159,7 +166,7 @@ class Object3D : MonoBehaviour
 #if DRAW_MARKERS
 			for(int j=0;j<Plugins.MAX_TRACKER_POINTS;++j) {
 				_marker2d[j].transform.localPosition = new Vector3 (_trackPoints [j * 2], _trackPoints [j * 2 + 1], 0);
-				_marker2d[j].SetActive(true);
+				_marker2d[j].SetActive(drawMarkers);
 			}		
 #endif
 			// get transform matrix for alignment 3d objects
@@ -174,7 +181,7 @@ class Object3D : MonoBehaviour
 			Plugins.ULS_UnityGetScale3D (_scaleX,_scaleY,_scaleZ);
 			Vector3 s = new Vector3 (_scaleX [0], _scaleY [0], _scaleZ [0]);
 			s.Scale (_original_scale);
-			//_helmet.transform.localScale = s;
+			_helmet.transform.localScale = s;
 		}
 	}
 
@@ -199,17 +206,11 @@ class Object3D : MonoBehaviour
 				Plugins.ULS_UnitySetupCamera (1280, 720, 60, false);
 		}
 #endif
-        GUILayout.Space(8);
-        if (GUILayout.Button("play", GUILayout.Height(80)))
-        {
-            InitializeTrackerAndCheckKey();
-            //SceneManager.LoadScene ("faceMask");
-        }
 
-        GUILayout.Space (8);
-		if (GUILayout.Button ("Stop", GUILayout.Height (80))) {
+		GUILayout.Space (8);
+		if (GUILayout.Button ("Change Scene", GUILayout.Height (80))) {
 			Plugins.ULS_UnityTrackerTerminate ();
-			//SceneManager.LoadScene ("faceMask");
+			SceneManager.LoadScene ("faceMask");
 		}
 	}
 }

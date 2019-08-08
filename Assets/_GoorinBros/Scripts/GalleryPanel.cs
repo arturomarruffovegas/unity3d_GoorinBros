@@ -7,6 +7,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace goorinAR
 {
@@ -44,25 +45,46 @@ namespace goorinAR
 
         private HatData hatData;
 
-        public static UnityAction<Product> galleryAR;
-
-        //[Header("Buttons")]
-        //[SerializeField]
-        //private Button feminine;
-        //[SerializeField]
-        //private Button fedora;
-        //[SerializeField]
-        //private Button flatcap;
         public GameObject objGlobal;
+
+
+        [Header("View Instructionals")]
+        [SerializeField]
+        private Button viewInstruct;
+
+        public static UnityAction<Product> galleryAR;
+        
+        public void Awake()
+        {
+            var categories = FindObjectOfType<InitialApp>().shapes;
+            OnCreateCategoryButtons();
+
+            OnDisableScrolls(categories[0]);
+
+        }
+
+        public void Start()
+        {
+            laodingPanel.transform.GetChild(0).transform.DOLocalRotate(Vector3.back * 300, 1).SetLoops(-1, LoopType.Incremental);
+
+            viewInstruct.onClick.AddListener(OnViewInstructional);
+        }
+
+        private void OnViewInstructional()
+        {
+            FindObjectOfType<InitialApp>().OnEnableInstructionalPanel();
+        }
 
         public void OnCreateCategoryButtons()
         {
             var categories = FindObjectOfType<InitialApp>().shapes;
+            var icons = FindObjectOfType<InitialApp>().iconsShape;
 
             for (int i = 0; i < categories.Count; i++)
             {
                 var cat = Instantiate(categoryButton, contentCategoryButtons);
                 cat.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = categories[i];
+                cat.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = icons[i];
                 cat.name = categories[i];
                 cat.GetComponent<Button>().onClick.AddListener(delegate { OnDisableScrolls(cat.name); });
                 cat.SetActive(true);
@@ -80,33 +102,33 @@ namespace goorinAR
           //  StartCoroutine(OnInstantiateHats());
         }
 
-        private IEnumerator OnInstantiateHats()
-        {
-            var products = InitialApp.m_product;
-            var categories = FindObjectOfType<InitialApp>().shapes;
+        //private IEnumerator OnInstantiateHats()
+        //{
+        //    var products = InitialApp.m_product;
+        //    var categories = FindObjectOfType<InitialApp>().shapes;
 
-            listCategoryButtons[listCategoryButtons.Count-1].GetComponent<UnityEngine.UI.Image>().color = Color.black;
+        //    listCategoryButtons[listCategoryButtons.Count-1].GetComponent<UnityEngine.UI.Image>().color = Color.black;
 
-            for (int i = 0; i < products.Count; i++)
-            {
-                yield return new WaitForEndOfFrame();
-                var tags = products[i].tags();
+        //    for (int i = 0; i < products.Count; i++)
+        //    {
+        //        yield return new WaitForEndOfFrame();
+        //        var tags = products[i].tags();
 
-                foreach (var item in tags)
-                {
-                    for (int j = 0; j < categories.Count; j++)
-                    {
+        //        foreach (var item in tags)
+        //        {
+        //            for (int j = 0; j < categories.Count; j++)
+        //            {
                    
-                        if (item == "shape:" + categories[j])
-                        {
-                            yield return new WaitForEndOfFrame();
-                            AddProduct(products[i], scrollViews[j]);
-                        }
-                    }
-                }
-            }
+        //                if (item == "shape:" + categories[j])
+        //                {
+        //                    yield return new WaitForEndOfFrame();
+        //                    AddProduct(products[i], scrollViews[j]);
+        //                }
+        //            }
+        //        }
+        //    }
 
-        }
+        //}
 
         private void OnDisableScrolls(string name)
         {
@@ -133,63 +155,17 @@ namespace goorinAR
 
         }
 
-        public void Awake()
-        {
-            var categories = FindObjectOfType<InitialApp>().shapes;
-            OnCreateCategoryButtons();
-
-            OnDisableScrolls(categories[0]);
-
-           // DefaultQueries.MaxProductPageSize = 10;
-
-            //feminine.onClick.AddListener(() => 
-            //{
-            //    Tags.SetTag(true, "Feminine");
-            //    OnChangeScroll(ScrollViewFeminine.name);
-            //    galleryContent = galleryContentFeminine;
-            //    feminine.GetComponent<UnityEngine.UI.Image>().color = Color.black;
-            //    fedora.GetComponent<UnityEngine.UI.Image>().color = Color.white;
-            //    flatcap.GetComponent<UnityEngine.UI.Image>().color = Color.white;
-            //    FetchProducts();
-            //});
-
-            //fedora.onClick.AddListener(() =>
-            //{
-            //    Tags.SetTag(true, "Fedora");
-            //    OnChangeScroll(ScrollViewFedora.name);
-            //    galleryContent = galleryContentFedora;
-            //    feminine.GetComponent<UnityEngine.UI.Image>().color = Color.white;
-            //    fedora.GetComponent<UnityEngine.UI.Image>().color = Color.black;
-            //    flatcap.GetComponent<UnityEngine.UI.Image>().color = Color.white;
-            //    FetchProducts();
-            //});
-
-            //flatcap.onClick.AddListener(() =>
-            //{
-            //    Tags.SetTag(true, "Flatcap");
-            //    OnChangeScroll(ScrollViewFlatcap.name);
-            //    galleryContent = galleryContentFlatcap;
-            //    feminine.GetComponent<UnityEngine.UI.Image>().color = Color.white;
-            //    fedora.GetComponent<UnityEngine.UI.Image>().color = Color.white;
-            //    flatcap.GetComponent<UnityEngine.UI.Image>().color = Color.black;
-            //    FetchProducts();
-            //});
-        }
+       
         
 
         public void Init()
         {
-          // galleryContent = galleryContentFedora;
-
+          
             hatData = FindObjectOfType<HatData>();
 
             objGlobal = scrollViews[0];
             _rectTransform = GetComponent<RectTransform>();
-           // ScrollViewFeminine.onValueChanged.AddListener(OnScrollRectPositionChanged);
-           // ScrollViewFedora.onValueChanged.AddListener(OnScrollRectPositionChanged);
-            //ScrollViewFlatcap.onValueChanged.AddListener(OnScrollRectPositionChanged);
-            //StartCoroutine( FetchProducts(objGlobal));
-
+          
             ActionProduct += OnProduct;
 
         }

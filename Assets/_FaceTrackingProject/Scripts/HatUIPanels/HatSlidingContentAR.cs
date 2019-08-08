@@ -201,21 +201,24 @@ public class HatSlidingContentAR : MonoBehaviour
                         UnityEngine.UI.Image hatPhoto = m_ListContentHatPanel[i].GetComponent<HatPanelArPrefab>().m_HatPhoto;
                         var objC = Instantiate(colorButton, parent);
 
-                        objC.transform.GetChild(0).GetChild(0).transform.GetComponent<UnityEngine.UI.Image>().sprite = Utils.CutTexture(IconColor.texture);
+                        NewMethod(IconColor, objC);
 
                         objC.name = colorsAndSizes[j].NameColor;
                         int indexHat = j;
                         objC.SetActive(true);
                         colors.Add(objC);
                         objC.GetComponent<Button>().onClick.RemoveAllListeners();
-                        objC.GetComponent<Button>().onClick.AddListener(delegate { InstantiateSizes(sizePrefabButton, hatPhoto, colorsAndSizes,
-                                                                                                    objC.name, indexHat); });
+                        objC.GetComponent<Button>().onClick.AddListener(delegate
+                        {
+                            InstantiateSizes(sizePrefabButton, hatPhoto, colorsAndSizes,
+                                             objC.name, indexHat);
+                        });
 
                         InstantiateSizes(sizePrefabButton, hatPhoto, colorsAndSizes, colorsAndSizes[0].NameColor, 0);
 
                     }
 
-                    if(colorsAndSizes.Count>0)
+                    if (colorsAndSizes.Count>0)
                         m_ListContentHatPanel[i].GetComponent<HatPanelArPrefab>().m_HatPhoto.sprite = colorsAndSizes[0].HatImage;
                 }
 
@@ -238,6 +241,11 @@ public class HatSlidingContentAR : MonoBehaviour
 
             }
         }
+    }
+
+    private static void NewMethod(Sprite IconColor, GameObject objC)
+    {
+        objC.transform.GetChild(0).GetChild(0).transform.GetComponent<UnityEngine.UI.Image>().sprite = Utils.CutTexture(IconColor.texture);
     }
 
     private void InstantiateSizes(GameObject sizePrefab, UnityEngine.UI.Image image ,

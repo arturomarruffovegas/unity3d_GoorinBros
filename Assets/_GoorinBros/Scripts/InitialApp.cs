@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class InitialApp : MonoBehaviour
 {
@@ -16,13 +17,50 @@ public class InitialApp : MonoBehaviour
 
     public List<string> shapes = new List<string>();
 
+    public List<Sprite> iconsShape = new List<Sprite>();
+
     public static List<Product> m_product = new List<Product>();
 
-    public IEnumerator Start()
+    [SerializeField]
+    private GameObject instructionalPanel;
+    [SerializeField]
+    private Button goInstructional;
+
+    public void Start()
     {
-        yield return new WaitForSeconds(2f);
+        //yield return new WaitForSeconds(2f);
+        //SceneManager.LoadScene(1);
+
+        goInstructional.onClick.AddListener(OnDisableInstructionalPanel);
+    }
+
+    public void OnEnableInstructionalPanel()
+    {
+        instructionalPanel.SetActive(true);
+    }
+
+    public void OnDisableInstructionalPanel()
+    {
+
+        instructionalPanel.SetActive(false);
+
+        Scene scene = SceneManager.GetActiveScene();
+
+        if(scene.buildIndex == 0)
+        {
+            StartCoroutine(OnNextScene());
+        }
+
+       
+    }
+
+    private IEnumerator OnNextScene()
+    {
+        yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(1);
     }
+
+
 
     //public void Start()
     //{

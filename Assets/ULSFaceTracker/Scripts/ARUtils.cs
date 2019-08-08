@@ -41,6 +41,6 @@ using System.Collections;
         {
             transform.localPosition = GetTranslationFromMatrix (ref matrix);
             transform.localRotation = GetRotationFromMatrix (ref matrix);
-          //  transform.localScale = GetScaleFromMatrix (ref matrix);
+            transform.localScale = GetScaleFromMatrix (ref matrix);
         }
     }
