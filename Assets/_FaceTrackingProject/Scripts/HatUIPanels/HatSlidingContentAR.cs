@@ -189,8 +189,9 @@ public class HatSlidingContentAR : MonoBehaviour
 
                 hatNameCapturePhoto.text = product.title();
 
-                if (colorsAndSizes != null)
+                if (colorsAndSizes != null )
                 {
+
                     for (int j = 0; j < colorsAndSizes.Count; j++)
                     {
                         Transform parent = m_ListContentHatPanel[i].GetComponent<HatPanelArPrefab>().m_ColorOptionPrefab.transform.parent;
@@ -216,10 +217,17 @@ public class HatSlidingContentAR : MonoBehaviour
 
                         InstantiateSizes(sizePrefabButton, hatPhoto, colorsAndSizes, colorsAndSizes[0].NameColor, 0);
 
+                        if (colorsAndSizes.Count <=1)
+                        {
+                            objC.SetActive(false);
+                        }
+
+
                     }
 
                     if (colorsAndSizes.Count>0)
                         m_ListContentHatPanel[i].GetComponent<HatPanelArPrefab>().m_HatPhoto.sprite = colorsAndSizes[0].HatImage;
+
                 }
 
                 if (cartButton != null)

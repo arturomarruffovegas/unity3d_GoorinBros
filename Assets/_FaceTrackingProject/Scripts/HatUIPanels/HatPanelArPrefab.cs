@@ -39,17 +39,21 @@ public class HatPanelArPrefab : MonoBehaviour
         m_HatBrand.text = hatBrand;
         m_HatPhoto.sprite = hatPhoto;
 
-        for(int i = 0; i < hatColorList.Count; i++)
-        {
-            GameObject col = (GameObject)Instantiate(m_ColorOptionPrefab, m_HatColorList.transform);
-            col.SetActive(true);
+       
+            for (int i = 0; i < hatColorList.Count; i++)
+            {
+                GameObject col = (GameObject)Instantiate(m_ColorOptionPrefab, m_HatColorList.transform);
+                col.SetActive(true);
 
-            //Change Color Temp
-            col.GetComponent<Image>().color = Random.ColorHSV();
+                //Change Color Temp
+                col.GetComponent<Image>().color = Random.ColorHSV();
 
-            col.GetComponent<HatColorButtonAR>().InitializeValues(hatId, hatColorList[i]);
-            //m_HatColors.Add(col);
-        }
+                col.GetComponent<HatColorButtonAR>().InitializeValues(hatId, hatColorList[i]);
+
+
+                //m_HatColors.Add(col);
+            }
+       
 
         for (int i = 0; i < hatSizeList.Count; i++)
         {

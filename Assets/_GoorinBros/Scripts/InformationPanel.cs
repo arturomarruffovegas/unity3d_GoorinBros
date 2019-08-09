@@ -513,10 +513,10 @@ namespace goorinAR
                 
             }
 
-            if (m_ColorsAndSizes.Count > 1)
-                tryButton.interactable = true;
-            else
-                tryButton.interactable = false;
+            //if (m_ColorsAndSizes.Count > 1)
+            //    tryButton.interactable = true;
+            //else
+            //    tryButton.interactable = false;
 
              //GetImages
             OnGetHatImageColors();
