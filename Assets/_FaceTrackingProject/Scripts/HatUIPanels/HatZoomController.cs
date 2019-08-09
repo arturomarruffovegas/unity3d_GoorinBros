@@ -42,7 +42,8 @@ public class HatZoomController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        m_HatRotationReference.transform.localEulerAngles = Vector3.zero;
+       //m_HatPosition.transform.localPosition = Vector3.one;
     }
 
     // Update is called once per frame
