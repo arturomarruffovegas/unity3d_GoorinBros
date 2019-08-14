@@ -11348,6 +11348,7 @@ MonoBehaviour:
   - {fileID: 383279687}
   - {fileID: 658406277}
   - {fileID: 1728154407}
+  scrollInfomation: {fileID: 868048988}
   info: {fileID: 452935997}
   portada: {fileID: 990382990}
   backPanelButton: {fileID: 1796382245}
