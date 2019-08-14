@@ -204,10 +204,10 @@ namespace goorinAR
                 portada.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 0.2f);
                 empty.SetActive(true);
 
-                for (int i = 0; i < infoBasic.Count; i++)
-                {
-                    infoBasic[i].SetActive(false);
-                }
+                //for (int i = 0; i < infoBasic.Count; i++)
+                //{
+                //    infoBasic[i].SetActive(false);
+                //}
                 isEnabled = false;
             }
         }
@@ -219,10 +219,10 @@ namespace goorinAR
                 info.DOLocalMoveY(280, 0.2f);
                 portada.DOScale(Vector3.one, 0.2f);
                 empty.SetActive(false);
-                for (int i = 0; i < infoBasic.Count; i++)
-                {
-                    infoBasic[i].SetActive(true);
-                }
+                //for (int i = 0; i < infoBasic.Count; i++)
+                //{
+                //    infoBasic[i].SetActive(true);
+                //}
                 isEnabled = true;
             }
             else
@@ -230,10 +230,10 @@ namespace goorinAR
                 info.DOLocalMoveY(0, 0.2f);
                 portada.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 0.2f);
                 empty.SetActive(true);
-                for (int i = 0; i < infoBasic.Count; i++)
-                {
-                    infoBasic[i].SetActive(false);
-                }
+                //for (int i = 0; i < infoBasic.Count; i++)
+                //{
+                //    infoBasic[i].SetActive(false);
+                //}
                 isEnabled = false;
             }
         }
