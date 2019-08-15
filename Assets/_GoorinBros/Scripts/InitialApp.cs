@@ -39,6 +39,8 @@ public class InitialApp : MonoBehaviour
 
         if (viewInstructional)
         {
+
+            goInstructional.onClick.AddListener(OnDisableInstructionalPanel);
             OnDisableInstructionalPanel();
         }
         else
