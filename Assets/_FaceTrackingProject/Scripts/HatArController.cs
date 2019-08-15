@@ -163,7 +163,7 @@ public class HatArController : MonoBehaviour
             m_HatLoadingPanel.SetActive(false);
             m_HatErrorPanel.SetActive(false);
             //m_CurrentHat = (GameObject)Instantiate(Resources.Load(m_CurrentHatId + "/" + m_CurrentHatId));
-            m_CurrentHat = (GameObject)Instantiate((GameObject)s);
+            m_CurrentHat = (GameObject)Instantiate(s) ;
             //m_CurrentHatContent  = Resources.Load<HatContent>(m_CurrentHatId + "/" + m_CurrentHatId + "_content") as HatContent;
             m_CurrentHatContent = (HatContent)c;
 

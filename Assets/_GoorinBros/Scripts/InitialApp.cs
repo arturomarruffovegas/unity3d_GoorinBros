@@ -26,12 +26,27 @@ public class InitialApp : MonoBehaviour
     [SerializeField]
     private Button goInstructional;
 
+    public bool viewInstructional;
+
     public void Start()
     {
         //yield return new WaitForSeconds(2f);
         //SceneManager.LoadScene(1);
 
-        goInstructional.onClick.AddListener(OnDisableInstructionalPanel);
+        //PlayerPrefs.DeleteAll();
+
+        viewInstructional = IntToBool(PlayerPrefs.GetInt(InfoPlayerPrefs()));
+
+        if (viewInstructional)
+        {
+            OnDisableInstructionalPanel();
+        }
+        else
+        {
+            goInstructional.onClick.AddListener(OnDisableInstructionalPanel);
+        }
+
+       
     }
 
     public void OnEnableInstructionalPanel()
@@ -42,6 +57,8 @@ public class InitialApp : MonoBehaviour
     public void OnDisableInstructionalPanel()
     {
 
+        PlayerPrefs.SetInt(InfoPlayerPrefs(), BoolToInt(true));
+
         instructionalPanel.SetActive(false);
 
         Scene scene = SceneManager.GetActiveScene();
@@ -50,8 +67,26 @@ public class InitialApp : MonoBehaviour
         {
             StartCoroutine(OnNextScene());
         }
+    }
 
-       
+    private string InfoPlayerPrefs()
+    {
+        return "instructional";
+    }
+
+    private int BoolToInt(bool b)
+    {
+        if (b)
+            return 1;
+        else
+            return 0;
+    }
+    private bool IntToBool(int b)
+    {
+        if (b >= 1)
+            return true;
+        else
+            return false;
     }
 
     private IEnumerator OnNextScene()
