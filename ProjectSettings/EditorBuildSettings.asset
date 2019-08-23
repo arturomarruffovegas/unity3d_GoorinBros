@@ -6,15 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_FaceTrackingProject/Scenes/Initial.unity
+    path: Assets/_GoorinBros/Scenes/Initial.unity
     guid: 09347cda137af4e4c885aaa5bec3b033
   - enabled: 1
-    path: Assets/_FaceTrackingProject/Scenes/SceneUIGoorin.unity
+    path: Assets/_GoorinBros/Scenes/SceneUIGoorin.unity
     guid: 709884f4245b181489714c01e262a019
   - enabled: 1
-    path: Assets/_FaceTrackingProject/Scenes/SceneFaceTrackerGoorin.unity
+    path: Assets/_GoorinBros/Scenes/SceneFaceTrackerGoorin.unity
     guid: add259a0a0abc8e468e12d860e99f713
   - enabled: 0
     path: Assets/ULSFaceTracker/Scenes/Object3D.unity
     guid: f7769b924ec7f43d987cb287c56461e8
+  - enabled: 0
+    path: Assets/_GoorinBros/Scenes/Test_ZoomAndMove.unity
+    guid: c1ecfce6a7586cc4d9be03fa653fa04e
   m_configObjects: {}

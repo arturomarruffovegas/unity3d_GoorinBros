@@ -209,6 +209,7 @@ public class HatSlidingContentAR : MonoBehaviour
                         objC.SetActive(true);
                         colors.Add(objC);
                         objC.GetComponent<Button>().onClick.RemoveAllListeners();
+
                         objC.GetComponent<Button>().onClick.AddListener(delegate
                         {
                             InstantiateSizes(sizePrefabButton, hatPhoto, colorsAndSizes,
@@ -256,9 +257,9 @@ public class HatSlidingContentAR : MonoBehaviour
         objC.transform.GetChild(0).GetChild(0).transform.GetComponent<UnityEngine.UI.Image>().sprite = Utils.CutTexture(IconColor.texture);
     }
 
-    private void InstantiateSizes(GameObject sizePrefab, UnityEngine.UI.Image image ,
-                                  List<ColorsAndSizes> colorsAndSizes,string name, 
-                                  int indexhat)
+    private void InstantiateSizes(GameObject sizePrefab, UnityEngine.UI.Image image , List<ColorsAndSizes> colorsAndSizes, string name, int indexhat)
+
+
     {
         DeleteSizes(sizePrefab);
 
@@ -273,10 +274,13 @@ public class HatSlidingContentAR : MonoBehaviour
             {
                 colors[i].gameObject.transform.GetChild(1).GetComponent<UnityEngine.UI.Image>().enabled = true;
 
-                for (int j = 0; j < colorsAndSizes[i].sizes.Count; j++)
+                List<string> localSize = Utils.OnSortSizeList(colorsAndSizes[i].sizes);
+
+                //for (int j = 0; j < localSize.Count; j++)
+                for (int j = localSize.Count-1; j >= 0; j--)
                 {
                     var size = Instantiate(sizePrefab, sizePrefab.transform.parent);
-                    size.name = colorsAndSizes[i].sizes[j];
+                    size.name = localSize[j];
                     sizes.Add(size);
                     var nameSize = size.name;
                     char s = nameSize.FirstOrDefault();

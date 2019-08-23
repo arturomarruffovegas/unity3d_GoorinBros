@@ -392,7 +392,7 @@ namespace goorinAR
                             string tagColor = "color_code_map:" + NameColor;
                             d.color_code_map = Utils.GetColorCodeMap(List_color_code_map, tagColor);
 
-                            List<ReferienceHats> rh = new List<ReferienceHats>();
+                            List<ReferienceHats> m_ReferienceHats = new List<ReferienceHats>();
 
                             string _URLImage = "";
                             string _URLExperienceImage = "";
@@ -412,7 +412,10 @@ namespace goorinAR
                                     //{
 
                                     //}
-                                    SearchTypeViewHat(rh, URLglobal, text);
+                                    SearchTypeViewHat(m_ReferienceHats, URLglobal, text);
+
+                                    //ordenar la lista(vistas del sombrero)
+                                    m_ReferienceHats = Utils.onSortReferienceList(m_ReferienceHats);
 
                                     string v = d.sku + "-" + d.color_code_map;
 
@@ -431,7 +434,7 @@ namespace goorinAR
                             d.URLExperience = _URLExperienceImage;
                             d.sizes.Add(NameSize);
 
-                            d.ReferenceHats = rh;
+                            d.ReferenceHats = m_ReferienceHats;
 
                             m_ColorsAndSizes.Add(d);
 
@@ -451,13 +454,13 @@ namespace goorinAR
                         string tagColor = "color_code_map:" + NameColor;
                         d.color_code_map = Utils.GetColorCodeMap(List_color_code_map, tagColor);
 
-                        List<ReferienceHats> rh = new List<ReferienceHats>();
+                        List<ReferienceHats> m_ReferienceHats = new List<ReferienceHats>();
 
                         string _URLImage = "";
                         string _URLExperienceImage = "";
                         foreach (Shopify.Unity.ImageEdge item in img.edges())
                         {
-                            string URLglobal = item.node().transformedSrc("large");
+                            string URLglobal = item.node().transformedSrc("resolution_1024");
                             string URLExperienceglobal = item.node().transformedSrc("grande");
 
                             if (d.sku != "" && d.color_code_map != "")
@@ -472,7 +475,10 @@ namespace goorinAR
                                 //{
 
                                 //}
-                                SearchTypeViewHat(rh, URLglobal, text);
+                                SearchTypeViewHat(m_ReferienceHats, URLglobal, text);
+
+                                //ordenar la lista(vistas del sombrero)
+                                m_ReferienceHats = Utils.onSortReferienceList(m_ReferienceHats);
 
                                 string v = d.sku + "-" + d.color_code_map;
 
@@ -494,7 +500,7 @@ namespace goorinAR
                         d.URLExperience = _URLExperienceImage;
                         d.sizes.Add(NameSize);
 
-                        d.ReferenceHats = rh;
+                        d.ReferenceHats = m_ReferienceHats;
 
                         m_ColorsAndSizes.Add(d);
                         
@@ -522,12 +528,12 @@ namespace goorinAR
             }
             for (int i = 0; i < m_ColorsAndSizes.Count; i++)
             {
-                var cl = Instantiate(colorButton.gameObject, colorButton.gameObject.transform.parent);
-                cl.name = m_ColorsAndSizes[i].NameColor;
+                var colorLocalButton = Instantiate(colorButton.gameObject, colorButton.gameObject.transform.parent);
+                colorLocalButton.name = m_ColorsAndSizes[i].NameColor;
                 int indexHat = i;
-                colors.Add(cl);
-                cl.GetComponent<Button>().onClick.AddListener(delegate { InstantiateSizes(true,cl.name, indexHat);});
-                cl.SetActive(true);
+                colors.Add(colorLocalButton);
+                colorLocalButton.GetComponent<Button>().onClick.AddListener(delegate { InstantiateSizes(true,colorLocalButton.name, indexHat);});
+                colorLocalButton.SetActive(true);
                 nameLocal = m_ColorsAndSizes[0].NameColor;
             }
 
@@ -641,7 +647,7 @@ namespace goorinAR
 
                     //Instanciar botones de medidas
 
-                    List<string> localSize = Utils.OrdenarList(m_ColorsAndSizes[i].sizes);
+                    List<string> localSize = Utils.OnSortSizeList(m_ColorsAndSizes[i].sizes);
 
                     for (int j  = 0; j < localSize.Count ; j++)
                     {
@@ -813,15 +819,7 @@ namespace goorinAR
             return false;
         }
 
-        private bool SearchReferienceceName(List<ReferienceHats> list, string name)
-        {
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (list[i].URL.Contains(name))
-                    return true;
-            }
-            return false;
-        }
+        
 
         private void SearchTypeViewHat(List<ReferienceHats> rh, string URLglobal, string text)
         {
@@ -857,16 +855,6 @@ namespace goorinAR
                 if (SearchReferienceceName(rh, text + "-B01") == false)
                     rh.Add(s);
             }
-            else if (URLglobal.Contains(text + "-U01"))
-            {
-                ReferienceHats s = new ReferienceHats
-                {
-                    name = "Under",
-                    URL = URLglobal
-                };
-                if (SearchReferienceceName(rh, text + "-U01") == false)
-                    rh.Add(s);
-            }
             else if (URLglobal.Contains(text + "-T01"))
             {
                 ReferienceHats s = new ReferienceHats
@@ -877,7 +865,30 @@ namespace goorinAR
                 if (SearchReferienceceName(rh, text + "-T01") == false)
                     rh.Add(s);
             }
+            else if (URLglobal.Contains(text + "-U01"))
+            {
+                ReferienceHats s = new ReferienceHats
+                {
+                    name = "Under",
+                    URL = URLglobal
+                };
+                if (SearchReferienceceName(rh, text + "-U01") == false)
+                    rh.Add(s);
+            }
+
+
         }
+
+        private bool SearchReferienceceName(List<ReferienceHats> list, string name)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].URL.Contains(name))
+                    return true;
+            }
+            return false;
+        }
+
 
         private void AddSizes(List<ColorsAndSizes> list, string name, string size)
         {

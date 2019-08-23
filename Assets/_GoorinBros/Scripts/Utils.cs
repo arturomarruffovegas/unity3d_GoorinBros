@@ -187,7 +187,6 @@ namespace goorinAR
             return;
         }
 
-
         public static string GetColorCodeMap(List<string> List_color_code_map, string tagColor)
         {
             string Code = "";
@@ -209,7 +208,104 @@ namespace goorinAR
             return Code;
         }
 
-        public static List<string> OrdenarList(List<string> sizes)
+        public static List<ReferienceHats> onSortReferienceList(List<ReferienceHats> referienceList)
+        {
+            List<ReferienceHats> newReferience = new List<ReferienceHats>();
+
+            ReferienceHats referience = null;
+            List<int> amount = new List<int>();
+            int index = -1;
+            foreach (var item in referienceList)
+            {
+                switch (item.name)
+                {
+                    case "Front":
+                        index = 0;
+                        item.orden = 0;
+                        break;
+                    case "Left":
+                        index = 1;
+                        item.orden = 1;
+                        break;
+                    case "Back":
+                        index = 2;
+                        item.orden = 2;
+                        break;
+                    case "Top":
+                        index = 3;
+                        item.orden = 3;
+                        break;
+                    case "Under":
+                        index = 4;
+                        item.orden = 4;
+                        break;
+                }
+
+                amount.Add(index);
+
+                Debug.Log(index);
+            }
+
+            int[] arr = amount.ToArray();
+            Array.Sort(arr);
+            Array.Reverse(arr);
+            foreach (var item in arr)
+            {
+                switch (item)
+                {
+                    //Kid
+                    case 0:
+                        foreach (var refeien in referienceList)
+                        {
+                            if (refeien.orden == 0)
+                                referience = refeien;
+                        }
+                        break;
+                    //adult
+                    case 1:
+                        foreach (var refeien in referienceList)
+                        {
+                            if (refeien.orden == 1)
+                                referience = refeien;
+                        }
+                        break;
+                    case 2:
+                        foreach (var refeien in referienceList)
+                        {
+                            if (refeien.orden == 2)
+                                referience = refeien;
+                        }
+                        break;
+                    case 3:
+                        foreach (var refeien in referienceList)
+                        {
+                            if (refeien.orden == 3)
+                                referience = refeien;
+                        }
+                        break;
+                    case 4:
+                        foreach (var refeien in referienceList)
+                        {
+                            if (refeien.orden == 4)
+                                referience = refeien;
+                        }
+                        break;
+                }
+
+                newReferience.Add(referience);
+            }
+
+
+            List<ReferienceHats> newReferienceInver = new List<ReferienceHats>();
+            for (int i = newReferience.Count -1 ; i >= 0; i--)
+            {
+                newReferienceInver.Add(newReferience[i]);
+            }
+
+            return newReferienceInver;
+        }
+
+        public static List<string> OnSortSizeList(List<string> sizes)
         {
             List<string> newSize = new List<string>();
             string size = "";
@@ -316,6 +412,7 @@ namespace goorinAR
     public class ReferienceHats
     {
         public string name;
+        public int orden;
         public string URL;
         public Sprite Image;
     }

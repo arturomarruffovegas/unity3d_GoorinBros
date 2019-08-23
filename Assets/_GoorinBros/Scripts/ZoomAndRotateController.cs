@@ -7,13 +7,25 @@ public class ZoomAndRotateController : MonoBehaviour
 {
     public GameObject selectedObject;
     
-    [HideInInspector]
-    public static bool IsScale;
+   
+    public  bool IsScale;
 
-    private bool zoomActivated;
-    
+    public bool zoomActivated;
+
+    [Header("Movement")]
+    public Vector3 direction;
+    public Vector3 StartPosition;
+
+    [Header("Clamping")]
+    public float scale;
+    public Vector2 ClampPosition;
+
     void Update()
     {
+
+        //MovementPlayer();
+     //   ZoomPlayer();
+
 
         if (zoomActivated)
         {
@@ -21,7 +33,8 @@ public class ZoomAndRotateController : MonoBehaviour
             if (selectedObject != null)
             {
                 ZoomPlayer();
-                // RotationPlayer();
+                MovementPlayer();
+                //  RotationPlayer();
 
             }
         }
@@ -36,8 +49,61 @@ public class ZoomAndRotateController : MonoBehaviour
 
     public void OnReset()
     {
-        selectedObject.transform.localEulerAngles = Vector3.one;
+        selectedObject.transform.localScale = Vector3.one;
+        selectedObject.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         zoomActivated = false;
+    }
+
+
+    
+
+    public void MovementPlayer()
+    {
+        if (IsScale == false)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                StartPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            }
+
+            if (Input.GetMouseButton(0))
+            {
+
+                direction = StartPosition - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+                Vector3 value = direction * 10;
+
+                selectedObject.transform.position -= value;
+
+                float PosclampX = Mathf.Clamp(selectedObject.GetComponent<RectTransform>().anchoredPosition.x, -ClampPosition.x, ClampPosition.x);
+                float PosclampY = Mathf.Clamp(selectedObject.GetComponent<RectTransform>().anchoredPosition.y, -ClampPosition.y, ClampPosition.y);
+
+                selectedObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(PosclampX, PosclampY);
+
+            }
+            
+        }
+    }
+
+    public void ClampMovement()
+    {
+        if(selectedObject != null)
+        {
+            scale = selectedObject.transform.localScale.x;
+
+            float ClampX = 315;
+            float ClampY = 360;
+            float maxScale = 1.5f;
+
+            //Clamping in X
+            float resX = scale - 1;
+            float clampAspectX = (ClampX * resX) / maxScale;
+            //Clamping in Y
+            float resY = scale - 1;
+            float clampAspectY = (ClampY * resY) / maxScale;
+
+            ClampPosition = new Vector2(clampAspectX, clampAspectY);
+        }
     }
 
     public void ZoomPlayer()
@@ -50,7 +116,7 @@ public class ZoomAndRotateController : MonoBehaviour
             Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
             Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
 
-
+            ClampMovement();
 
             float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
             float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
@@ -71,6 +137,7 @@ public class ZoomAndRotateController : MonoBehaviour
 
 #if UNITY_EDITOR
     private Vector3 previousMousePos;
+    
 #endif
 
     public void RotationPlayer()
@@ -82,6 +149,8 @@ public class ZoomAndRotateController : MonoBehaviour
             {
                 Vector3 mousePosDelta = Input.mousePosition - previousMousePos;
                 selectedObject.transform.Rotate(0, -0.3f * mousePosDelta.x, 0);
+
+                Debug.Log("FFF");
             }
             previousMousePos = Input.mousePosition;
 #endif
