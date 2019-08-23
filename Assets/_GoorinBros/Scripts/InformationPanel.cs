@@ -126,6 +126,20 @@ namespace goorinAR
         [SerializeField]
         private Image onlyHat;
 
+        [Header("out of stock")]
+        [SerializeField]
+        private Image iconAddCart;
+        [SerializeField]
+        private Text messageText;
+        [SerializeField]
+        private Color colorRed;
+        [SerializeField]
+        private string messageRed = "Add to Cart";
+        [SerializeField]
+        private Color colorLead;
+        [SerializeField]
+        private string messageLead = "Out of Stock";
+
         private HatData hatData;
 
         private string nameLocal;
@@ -230,10 +244,27 @@ namespace goorinAR
             }
         }
 
+
+        private void ChangeColorAddCartButton(bool v)
+        {
+            if (v)
+            {
+                iconAddCart.color = colorRed;
+                messageText.text = messageRed;
+            }
+            else
+            {
+                iconAddCart.color = colorLead;
+                messageText.text = messageLead;
+            }
+        }
+
         private void ResetValue()
         {
             m_ColorsAndSizes.Clear();
             addToCartButton.interactable = true;
+            ChangeColorAddCartButton(true);
+
 
             //colors
             int amountColors = colorButton.gameObject.transform.parent.childCount;
@@ -525,6 +556,7 @@ namespace goorinAR
             if (m_ColorsAndSizes.Count <= 0)
             {
                 addToCartButton.interactable = false;
+                ChangeColorAddCartButton(false);
             }
             for (int i = 0; i < m_ColorsAndSizes.Count; i++)
             {
@@ -768,6 +800,7 @@ namespace goorinAR
 
 
             addToCartButton.interactable = true;
+            ChangeColorAddCartButton(true);
 
             foreach (var item in sizes)
                 item.transform.GetChild(1).GetComponent<Image>().enabled = false;

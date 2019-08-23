@@ -11375,6 +11375,12 @@ MonoBehaviour:
   icon: {fileID: 990382991}
   iconMask: {fileID: 307984033}
   onlyHat: {fileID: 1850629660}
+  iconAddCart: {fileID: 801451881}
+  messageText: {fileID: 1487346056}
+  colorRed: {r: 0.5568628, g: 0.08235294, b: 0.21568629, a: 1}
+  messageRed: Add to Cart
+  colorLead: {r: 0.61960787, g: 0.627451, b: 0.627451, a: 1}
+  messageLead: Out of Stock
 --- !u!1 &1057790234
 GameObject:
   m_ObjectHideFlags: 0
