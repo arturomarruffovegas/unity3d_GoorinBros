@@ -14,17 +14,17 @@ public class ZoomAndRotateController : MonoBehaviour
 
     [Header("Movement")]
     public Vector3 direction;
-    public Vector3 StartPosition;
+    public Vector2 StartPosition;
 
     [Header("Clamping")]
     public float scale;
     public Vector2 ClampPosition;
 
-    void Update()
+    void FixedUpdate()
     {
 
         //MovementPlayer();
-     //   ZoomPlayer();
+      //  ZoomPlayer();
 
 
         if (zoomActivated)
@@ -55,32 +55,55 @@ public class ZoomAndRotateController : MonoBehaviour
     }
 
 
-    
-
+   
     public void MovementPlayer()
     {
         if (IsScale == false)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.touchCount > 0)
             {
-                StartPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Touch touch = Input.GetTouch(0);
+
+                if(touch.phase == TouchPhase.Began)
+                {
+                    StartPosition = Input.GetTouch(0).position;
+                }
+
+                
+                //if (touch.phase == TouchPhase.Moved)
+                //{
+                //    Debug.Log("GGG");
+                //    direction = StartPosition - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+                //    Vector3 value = direction;
+
+                //    selectedObject.transform.position -= value;
+
+                //    //float PosclampX = Mathf.Clamp(selectedObject.GetComponent<RectTransform>().anchoredPosition.x, -ClampPosition.x, ClampPosition.x);
+                //    //float PosclampY = Mathf.Clamp(selectedObject.GetComponent<RectTransform>().anchoredPosition.y, -ClampPosition.y, ClampPosition.y);
+
+                //    //selectedObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(PosclampX, PosclampY);
+
+                //}
+
+                if(touch.phase == TouchPhase.Moved)
+                {
+                    direction = StartPosition - Input.GetTouch(0).position;
+
+                    float distance = Vector3.Distance(StartPosition, Input.GetTouch(0).position);
+                    Debug.Log(distance);
+                    Vector3 value = direction*0.1f;
+
+                    selectedObject.transform.position -= value;
+
+                    float PosclampX = Mathf.Clamp(selectedObject.GetComponent<RectTransform>().anchoredPosition.x, -ClampPosition.x, ClampPosition.x);
+                    float PosclampY = Mathf.Clamp(selectedObject.GetComponent<RectTransform>().anchoredPosition.y, -ClampPosition.y, ClampPosition.y);
+
+                    selectedObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(PosclampX, PosclampY);
+                }
             }
 
-            if (Input.GetMouseButton(0))
-            {
-
-                direction = StartPosition - Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-                Vector3 value = direction * 10;
-
-                selectedObject.transform.position -= value;
-
-                float PosclampX = Mathf.Clamp(selectedObject.GetComponent<RectTransform>().anchoredPosition.x, -ClampPosition.x, ClampPosition.x);
-                float PosclampY = Mathf.Clamp(selectedObject.GetComponent<RectTransform>().anchoredPosition.y, -ClampPosition.y, ClampPosition.y);
-
-                selectedObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(PosclampX, PosclampY);
-
-            }
+            
             
         }
     }

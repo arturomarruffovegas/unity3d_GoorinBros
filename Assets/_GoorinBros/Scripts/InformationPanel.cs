@@ -429,7 +429,7 @@ namespace goorinAR
                             string _URLExperienceImage = "";
                             foreach (Shopify.Unity.ImageEdge item in img.edges())
                             {
-                                string URLglobal = item.node().transformedSrc("large");
+                                string URLglobal = item.node().transformedSrc("grande");
                                 string URLExperienceglobal = item.node().transformedSrc("grande");
                                 if (d.sku != "" && d.color_code_map != "")
                                 {
@@ -491,7 +491,7 @@ namespace goorinAR
                         string _URLExperienceImage = "";
                         foreach (Shopify.Unity.ImageEdge item in img.edges())
                         {
-                            string URLglobal = item.node().transformedSrc("resolution_1024");
+                            string URLglobal = item.node().transformedSrc("grande");
                             string URLExperienceglobal = item.node().transformedSrc("grande");
 
                             if (d.sku != "" && d.color_code_map != "")
