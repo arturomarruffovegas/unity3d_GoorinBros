@@ -28,6 +28,20 @@ public class InitialApp : MonoBehaviour
 
     public bool viewInstructional;
 
+    [Header("Login")]
+    [SerializeField]
+    private GameObject loginPanel;
+    [SerializeField]
+    private InputField inputField;
+
+    public void CheckCode()
+    {
+        if(inputField.text == "GoorinBros")
+        {
+            loginPanel.SetActive(false);
+        }
+    }
+
     public void Start()
     {
         //yield return new WaitForSeconds(2f);
