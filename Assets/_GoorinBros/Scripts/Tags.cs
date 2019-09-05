@@ -8,8 +8,8 @@ namespace goorinAR
     public class Tags
     {
         public static bool useTag = false;
+        private static string basic = "tag:'3d_model:true''category_enabled:true'";
         public static string tag = "tag:'3d_model:true'";
-        private static string basic = "tag:'3d_model:true'";
 
 
 
