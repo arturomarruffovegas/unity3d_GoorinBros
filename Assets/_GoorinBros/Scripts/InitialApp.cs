@@ -47,7 +47,7 @@ public class InitialApp : MonoBehaviour
         //yield return new WaitForSeconds(2f);
         //SceneManager.LoadScene(1);
 
-        //PlayerPrefs.DeleteAll();
+      // PlayerPrefs.DeleteAll();
 
         viewInstructional = IntToBool(PlayerPrefs.GetInt(InfoPlayerPrefs()));
 
