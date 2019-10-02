@@ -85,17 +85,6 @@ namespace goorinAR
         private Text productTitle;
         [SerializeField]
         private Image productImage;
-        //[SerializeField]
-        //private Text brimGruop;
-        //[SerializeField]
-        //private Text brimGruopTitle;
-        //[SerializeField]
-        //private Text crown;
-        //[SerializeField]
-        //private Text crownTitle;
-
-
-
 
         [SerializeField]
         private Transform contentInfoBasic;
@@ -114,8 +103,6 @@ namespace goorinAR
 
         [SerializeField]
         private Info_JSON info_JSON; 
-
-
 
 
         [Header("Data")]

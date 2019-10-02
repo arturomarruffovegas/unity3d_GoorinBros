@@ -56,6 +56,7 @@ public class HatArController : MonoBehaviour
     [Header("Messages")]
     public GameObject m_HatErrorPanel;
     public GameObject m_HatLoadingPanel;
+    public Image gif;
 
     //[Header("Head Movement")]
     //public GameObject m_Anchor3DHead;
@@ -86,6 +87,17 @@ public class HatArController : MonoBehaviour
 
         OnAnimLoadTryOn();
 
+    }
+
+    public IEnumerator OnViewGif()
+    {
+        gif.gameObject.SetActive(true);
+        yield return new WaitForSeconds(6f);
+        gif.DOFade(0, 1f).OnComplete(() => 
+        {
+            gif.DOFade(1, 0f);
+            gif.gameObject.SetActive(false);
+        });
     }
 
     private void OnAnimLoadTryOn()
@@ -161,6 +173,7 @@ public class HatArController : MonoBehaviour
         {
             Debug.Log("<color=blue> descargo </color>");
             m_HatLoadingPanel.SetActive(false);
+            StartCoroutine(OnViewGif());
             m_HatErrorPanel.SetActive(false);
             //m_CurrentHat = (GameObject)Instantiate(Resources.Load(m_CurrentHatId + "/" + m_CurrentHatId));
             m_CurrentHat = (GameObject)Instantiate(s) ;
